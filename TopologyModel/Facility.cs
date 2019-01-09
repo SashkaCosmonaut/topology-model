@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TopologyModel.Enumerations;
+﻿using TopologyModel.Enumerations;
 
 namespace TopologyModel
 {
+	/// <summary>
+	/// Класс объекта предприятия.
+	/// </summary>
 	public class Facility
 	{
 		/// <summary>
@@ -25,6 +23,10 @@ namespace TopologyModel
 		public Control[] RequiredСontrols { get; set; } = new Control[] { };
 
 
+		/// <summary>
+		/// Все ли требования по покрытию измерений и управляющих воздействий покрыты.
+		/// </summary>
+		/// <returns>True, если да.</returns>
 		public bool AllRequirementsMet()
 		{
 			return false;

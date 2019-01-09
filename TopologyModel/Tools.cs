@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TopologyModel.Devices;
+﻿using TopologyModel.Devices;
 
 namespace TopologyModel
 {
+	/// <summary>
+	/// БД инструментов для использования в проекте.
+	/// </summary>
 	public class Tools
 	{
 		public MeasurementAndControlDevice[] MCDs { get; set; } = new MeasurementAndControlDevice[] { };

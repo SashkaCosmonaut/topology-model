@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TopologyModel.Enumerations;
+﻿using TopologyModel.Enumerations;
 
 namespace TopologyModel.Devices
 {
+	/// <summary>
+	/// Класс конечного устройства.
+	/// </summary>
 	public class MeasurementAndControlDevice : Device
 	{
 		/// <summary>

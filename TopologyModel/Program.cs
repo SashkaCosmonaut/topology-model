@@ -3,7 +3,7 @@
 	public class Program
 	{
 		/// <summary>
-		/// 
+		/// Объект проекта, пока один.
 		/// </summary>
 		public Project CurrentProject { get; set; } = new Project();
 

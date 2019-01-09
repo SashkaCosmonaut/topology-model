@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using TopologyModel.Enumerations;
 
 namespace TopologyModel.Devices
 {
+	/// <summary>
+	/// Класс передатчика для КПД.
+	/// </summary>
 	public class TransceiverDevice : Device
 	{
 		/// <summary>

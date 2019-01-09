@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TopologyModel.Enumerations
+﻿namespace TopologyModel.Enumerations
 {
+	/// <summary>
+	/// Измерения потребления энергоресурсов.
+	/// </summary>
 	public enum Measurement
 	{
 		ElectricityConsumption,

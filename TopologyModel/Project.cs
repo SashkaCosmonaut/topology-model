@@ -1,64 +1,72 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TopologyModel.Devices;
 using TopologyModel.Enumerations;
 
 namespace TopologyModel
 {
+	/// <summary>
+	/// Класс всего проекта.
+	/// </summary>
 	public class Project
 	{
 		/// <summary>
-		/// бюджет всего проекта, за рамки которого затраты на реализацию проекта не должны выходить 
+		/// Бюджет всего проекта, за рамки которого затраты на реализацию проекта не должны выходить.
 		/// </summary>
 		public double Budget { get; set; }
 
 		/// <summary>
-		/// планируемый период эксплуатации системы для расчёта затрат на её использование во времени
+		/// Планируемый период эксплуатации системы для расчёта затрат на её использование во времени.
 		/// </summary>
 		public uint UsageMonths { get; set; }
 
 		/// <summary>
-		/// требуется ли использовать локальный сервер, иначе будет использоваться удалённый сервер
+		/// Требуется ли использовать локальный сервер, иначе будет использоваться удалённый сервер.
 		/// </summary>
 		public bool UseLocalServer { get; set; }
 
 		/// <summary>
-		/// допустимо ли проведение монтажных работ его сотрудниками
+		/// Допустимо ли проведение монтажных работ его сотрудниками.
 		/// </summary>
 		public bool UseLocalEmployee { get; set; }
 
 
 		/// <summary>
-		/// абонентская плата в месяц за использование и обслуживание локального сервера 
+		/// Абонентская плата в месяц за использование и обслуживание локального сервера.
 		/// </summary>
 		public double LocalServerMonthlyPayment { get; set; }
 
 		/// <summary>
-		/// абонентская плата в месяц за использование и обслуживание предоставляемого удалённого сервера
+		/// Абонентская плата в месяц за использование и обслуживание предоставляемого удалённого сервера.
 		/// </summary>
 		public double RemoteServerMonthlyPayment { get; set; }
 
 
 		/// <summary>
-		/// множество стоимостей в месяц абонентского обслуживания
+		/// Множество стоимостей в месяц абонентского обслуживания технологий мобильной передачи данных на сервер.
 		/// </summary>
 		public Dictionary<InternetConnection, double> MobileInternetMonthlyPayment { get; set; } = new Dictionary<InternetConnection, double>();
 
+
 		/// <summary>
-		/// множество рассматриваемых участков всех объектов всего предприятия
+		/// Множество рассматриваемых участков всех объектов всего предприятия.
 		/// </summary>
 		public Region StartRegion { get; set; }
 
-
+		/// <summary>
+		/// Множество объектов предприятия.
+		/// </summary>
 		public Facility[] Facilities { get; set; } = new Facility[] { };
 
-
+		/// <summary>
+		/// База данных доступного инструментария.
+		/// </summary>
 		public Tools AvailableTools { get; set; }
 
-
+		/// <summary>
+		/// Рассчитать затраты на проект.
+		/// </summary>
+		/// <returns>Полученные результаты расчета проекта.</returns>
 		public CalculationResult Calculate()
 		{
 			var result = new CalculationResult();
@@ -72,6 +80,10 @@ namespace TopologyModel
 			return result;
 		}
 
+		/// <summary>
+		/// Заново рассчитать затраты на проект.
+		/// </summary>
+		/// <param name="currentResult">Обновляемый объект результатов.</param>
 		protected void RecalculateResult(ref CalculationResult currentResult)
 		{
 			currentResult.InstallationFinancialCost = GetCurrentInstallationFinancialCost();
@@ -79,21 +91,35 @@ namespace TopologyModel
 			currentResult.PeriodFinancialCost = GetCurrentPeriodFinancialCost();
 		}
 
+		/// <summary>
+		/// Рассчитать начальную стоимость проекта.
+		/// </summary>
 		protected double GetCurrentInstallationFinancialCost()
 		{
 			return 0;
 		}
 
+		/// <summary>
+		/// Рассчитать затраты во времени на проект.
+		/// </summary>
 		protected TimeSpan GetCurrentInstallationTimeCost()
 		{
 			return new TimeSpan(); ;
 		}
 
+		/// <summary>
+		/// Рассчитать затраченное время на реализацию проекта.
+		/// </summary>
 		protected double GetCurrentPeriodFinancialCost()
 		{
 			return 0;
 		}
 
+		/// <summary>
+		/// Проверить, завершён ли расчет.
+		/// </summary>
+		/// <param name="currentResult">Текущий полученный результат.</param>
+		/// <returns>True, если расчет завершён.</returns>
 		protected bool IsCalculationFinished(CalculationResult currentResult)
 		{
 			return 
