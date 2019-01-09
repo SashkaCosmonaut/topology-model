@@ -1,13 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TopologyModel
+﻿namespace TopologyModel
 {
+	/// <summary>
+	/// Класс участка объекта предприятия.
+	/// </summary>
 	public class Region
 	{
+		/// <summary>
+		/// Ширина участка по схеме в метрах.
+		/// </summary>
+		public uint Width { get; set; }
+
+		/// <summary>
+		/// Высота участка по схеме в метрах.
+		/// </summary>
+		public uint Height { get; set; }
+
 		/// <summary>
 		/// наличие на данном участке проводного подключения к локальной сети предприятия 
 		/// </summary>
@@ -30,30 +37,54 @@ namespace TopologyModel
 
 
 		/// <summary>
-		/// экспертная оценка агрессивности окружающей среды на участке (включая его стены)
+		/// Экспертная оценка агрессивности окружающей среды внутри самого участка
 		/// </summary>
-		public ushort AggressivenessEstimate { get; set; }          // Вес проводной связи внутри, на стене, сквозь стену
+		public ushort InsideAggressivenessEstimate { get; set; }
 
 		/// <summary>
-		/// экспертная оценка от 1 до 10 трудоемкости проведения монтажных работ внутри участка, вдоль стены участка или проведения связи (кабелей) на соседний участок через стену
+		/// Экспертная оценка непригодности пространства внутри участка для монтажа оборудования
 		/// </summary>
-		public ushort LaboriousnessEstimate { get; set; }           // Вес проводной связи внутри, на стене, сквозь стену
+		public ushort InsideUnavailabilityEstimate { get; set; }
 
 		/// <summary>
-		/// экспертная оценка не пригодности участка (включая стены) для размещения на нём КУ, УСПД, сервера или приемопередатчиков
+		/// Экспертная оценка от 1 до 10 трудоемкости проведения монтажных работ внутри участка
 		/// </summary>
-		public ushort UnavailabilityEstimate { get; set; }          // Вес проводной связи внутри, на стене, сквозь стену
+		public ushort InsideLaboriousnessEstimate { get; set; }
 
 		/// <summary>
 		/// непроходимость радиоволн на самом участке (наличие металлоконструкций, электромагнитных помех, экранов)
 		/// </summary>
-		public ushort BadTransmittanceEstimate { get; set; }		// Вес беспроводной связи внутри и вдоль стен
+		public ushort InsideBadRadioTransmittanceEstimate { get; set; }
 
-		
 		/// <summary>
-		/// связанные регионы
+		/// Экспертная оценка агрессивности окружающей среды на стенах участка: сверху, справа, снизу, слева
 		/// </summary>
-		public Region[] AdjacentRegions { get; set; } = new Region[] { };
+		public ushort[] WallsAggressivenessEstimate { get; set; }
+
+		/// <summary>
+		/// Экспертная оценка непригодности стен участка для монтажа оборудования: сверху, справа, снизу, слева
+		/// </summary>
+		public ushort[] WallsUnavailabilityEstimate { get; set; }
+
+		/// <summary>
+		/// экспертная оценка трудоемкости проведения монтажных работ на стенах участка: сверху, справа, снизу, слева
+		/// </summary>
+		public ushort[] WallsLaboriousnessEstimate { get; set; }
+
+		/// <summary>
+		/// непроходимость радиоволн через стены участка: сверху, справа, снизу, слева
+		/// </summary>
+		public ushort[] WallsBadRadioTransmittanceEstimate { get; set; } = new ushort[] { };
+
+		/// <summary>
+		/// Трудоемкость проведения связи (кабелей) на соседние участки через стены: сверху, справа, снизу, слева
+		/// </summary>
+		public ushort[] WallsBadWiredTransmittanceEstimate { get; set; } = new ushort[] { };
+
+		/// <summary>
+		/// связанные регионы, 4 штуки, сверху, справа, снизу, слева
+		/// </summary>
+		public Region[] AdjacentRegions { get; set; } = new Region[4];
 
 		/// <summary>
 		/// Объект данных участков.
@@ -61,23 +92,14 @@ namespace TopologyModel
 		public Facility ParentFacility { get; set; }
 
 
-
 		/// <summary>
 		/// перечень имеющихся на участке ТУУ
 		/// </summary>
 		public MeasurementAndControlPoint[] MCPs { get; set; } = new MeasurementAndControlPoint[] { };
 
-
+		/// <summary>
+		/// Установленное на участке оборудование.
+		/// </summary>
 		public Tools InstalledTools { get; set; }
-
-		public double NodeWeight()
-		{
-			return 0;
-		}
-
-		public double ConnectionWeight(Region other)
-		{
-			return 0;
-		}
 	}
 }

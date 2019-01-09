@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TopologyModel.Enumerations;
+﻿using TopologyModel.Enumerations;
 
 namespace TopologyModel
 {
+	/// <summary>
+	/// Класс канала передачи данных.
+	/// </summary>
 	public class DataChannel
 	{
 		/// <summary>
@@ -43,8 +41,5 @@ namespace TopologyModel
 		/// максимально допустимое количество устройств, которые могут передавать данные через данный КПД
 		/// </summary>
 		public uint MaxDevicesConnected { get; set; }
-
-
-		public Region[][] Channels { get; set; } = new Region[][] { };
 	}
 }
