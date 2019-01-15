@@ -72,7 +72,6 @@
     <Compile Include="Devices\DataAcquisitionDevice.cs" />
     <Compile Include="DataChannel.cs" />
     <Compile Include="Devices\Device.cs" />
-    <Compile Include="Facility.cs" />
     <Compile Include="Enumerations\Measurement.cs" />
     <Compile Include="Devices\MeasurementAndControlDevice.cs" />
     <Compile Include="MeasurementAndControlPoint.cs" />

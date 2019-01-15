@@ -30,6 +30,11 @@ namespace TopologyModel
 		/// </summary>
 		public bool UseLocalEmployee { get; set; }
 
+		/// <summary>
+		/// будет ли доступен выход в сеть Интернет из локальной сети предприятия
+		/// </summary>
+		public bool IsInternetAvailable { get; set; }
+
 
 		/// <summary>
 		/// Абонентская плата в месяц за использование и обслуживание локального сервера.
@@ -52,11 +57,6 @@ namespace TopologyModel
 		/// Множество рассматриваемых участков всех объектов всего предприятия.
 		/// </summary>
 		public Region StartRegion { get; set; }
-
-		/// <summary>
-		/// Множество объектов предприятия.
-		/// </summary>
-		public Facility[] Facilities { get; set; } = new Facility[] { };
 
 		/// <summary>
 		/// База данных доступного инструментария.
@@ -122,9 +122,7 @@ namespace TopologyModel
 		/// <returns>True, если расчет завершён.</returns>
 		protected bool IsCalculationFinished(CalculationResult currentResult)
 		{
-			return 
-				Facilities.All(f => f.AllRequirementsMet()) &&
-				currentResult.InstallationFinancialCost < Budget;
+			return currentResult.InstallationFinancialCost < Budget;
 		}
 	}
 }
