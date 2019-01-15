@@ -9,7 +9,12 @@ namespace TopologyModel.Devices
 	public abstract class Device
 	{
 		/// <summary>
-		/// множество стандартов передачи данных, по которым данное устройство отправляет данные
+		/// уникальный идентификатор устройства
+		/// </summary>
+		public uint Id { get; set; }
+
+		/// <summary>
+		/// множество стандартов отправки данных, по которым данное устройство отправляет данные
 		/// </summary>
 		public Protocol[] SendingProtocols { get; set; } = new Protocol[] { };
 

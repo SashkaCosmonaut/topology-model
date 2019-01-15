@@ -8,6 +8,16 @@ namespace TopologyModel
 	public class MeasurementAndControlPoint
 	{
 		/// <summary>
+		/// уникальный идентификатор ТУУ
+		/// </summary>
+		public uint Id { get; set; }
+
+		/// <summary>
+		/// экспертная оценка приоритета покрытия ТУУ сетью
+		/// </summary>
+		public uint Priority { get; set; }
+
+		/// <summary>
 		/// множество всех измерений потребления энергоресурсов, доступных на данной ТУУ
 		/// </summary>
 		public Measurement[] AllMeasurements { get; set; } = new Measurement[] { };

@@ -5,6 +5,10 @@
 	/// </summary>
 	public class Region
 	{
+		/// уникальный идентификатор участка
+		/// </summary>
+		public uint Id { get; set; }
+
 		/// <summary>
 		/// Ширина участка по схеме в метрах.
 		/// </summary>
@@ -85,11 +89,6 @@
 		/// связанные регионы, 4 штуки, сверху, справа, снизу, слева
 		/// </summary>
 		public Region[] AdjacentRegions { get; set; } = new Region[4];
-
-		/// <summary>
-		/// Объект данных участков.
-		/// </summary>
-		public Facility ParentFacility { get; set; }
 
 
 		/// <summary>

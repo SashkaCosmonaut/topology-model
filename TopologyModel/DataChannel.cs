@@ -8,6 +8,11 @@ namespace TopologyModel
 	public class DataChannel
 	{
 		/// <summary>
+		/// идентификатор канала передачи данных 
+		/// </summary>
+		public uint Id { get; set; }
+
+		/// <summary>
 		/// является ли канал передачи данных беспроводным 
 		/// </summary>
 		public bool IsWireless { get; set; }
