@@ -126,6 +126,7 @@
     <Compile Include="Devices\Device.cs" />
     <Compile Include="Enumerations\Measurement.cs" />
     <Compile Include="Devices\MeasurementAndControlDevice.cs" />
+    <Compile Include="GA\TopologyChromosome .cs" />
     <Compile Include="GA\TopologyFitness.cs" />
     <Compile Include="MeasurementAndControlPoint.cs" />
     <Compile Include="Enumerations\InternetConnection.cs" />
