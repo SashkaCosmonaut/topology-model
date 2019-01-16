@@ -86,19 +86,8 @@
 		public ushort[] WallsBadWiredTransmittanceEstimate { get; set; } = new ushort[] { };
 
 		/// <summary>
-		/// связанные регионы, 4 штуки, сверху, справа, снизу, слева
-		/// </summary>
-		public Region[] AdjacentRegions { get; set; } = new Region[4];
-
-
-		/// <summary>
 		/// перечень имеющихся на участке ТУУ
 		/// </summary>
 		public MeasurementAndControlPoint[] MCPs { get; set; } = new MeasurementAndControlPoint[] { };
-
-		/// <summary>
-		/// Установленное на участке оборудование.
-		/// </summary>
-		public Tools InstalledTools { get; set; }
 	}
 }
