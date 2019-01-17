@@ -13,6 +13,15 @@ namespace TopologyModel.GA
 		/// </summary>
 		/// <param name="chromosome"></param>
 		/// <returns></returns>
-		public double Evaluate(IChromosome chromosome) => throw new System.NotImplementedException();
+		public double Evaluate(IChromosome chromosome)
+		{
+			double n = 9;
+
+			var ch = chromosome as TopologyChromosome;
+
+			if (ch == null) return 0;
+
+			return (ch.X + ch.Y) / ch.Z;
+		}
 	}
 }

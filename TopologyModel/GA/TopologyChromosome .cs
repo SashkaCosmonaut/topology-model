@@ -1,4 +1,5 @@
 ﻿using GeneticSharp.Domain.Chromosomes;
+using GeneticSharp.Domain.Randomizations;
 
 namespace TopologyModel.GA
 {
@@ -7,28 +8,65 @@ namespace TopologyModel.GA
 	/// </summary>
 	public class TopologyChromosome : ChromosomeBase
 	{
-		/// <summary>
-		/// Change the argument value passed to base construtor to change the length of your chromosome.
-		/// </summary>
-		public TopologyChromosome() : base(10)
+		public TopologyChromosome() : base (3)
 		{
-			CreateGenes();
+			ReplaceGene(0, GenerateGene(0));
+			ReplaceGene(1, GenerateGene(1));
+			ReplaceGene(2, GenerateGene(2));
 		}
 
-		/// <summary>
-		/// Generate a gene base on my problem chromosome representation.
-		/// </summary>
-		/// <param name="geneIndex"></param>
-		/// <returns></returns>
-		public override Gene GenerateGene(int geneIndex) => throw new System.NotImplementedException();
+		// These properties represents your phenotype.
+		public int X
+		{
+			get {
+				return (int)GetGene(0).Value;
+			}
+		}
 
-		/// <summary>
-		/// Создать новую хромосому текущего класса.
-		/// </summary>
-		/// <returns>Новый объект текущего класса (хромосомы).</returns>
+		public int Y
+		{
+			get {
+				return (int)GetGene(1).Value;
+			}
+		}
+
+		public int Z
+		{
+			get {
+				return (int)GetGene(2).Value;
+			}
+		}
+
+		public override Gene GenerateGene(int geneIndex)
+		{
+			int value;
+
+			if (geneIndex == 0)
+			{
+				value = RandomizationProvider.Current.GetInt(0, 101);
+			}
+			else if (geneIndex == 1)
+			{
+				value = RandomizationProvider.Current.GetInt(0, 101);
+			}
+			else
+			{
+				value = RandomizationProvider.Current.GetInt(1, 101);
+			}
+
+			return new Gene(value);
+		}
+
 		public override IChromosome CreateNew()
 		{
 			return new TopologyChromosome();
+		}
+
+		public override IChromosome Clone()
+		{
+			var clone = base.Clone() as TopologyChromosome;
+
+			return clone;
 		}
 	}
 }
