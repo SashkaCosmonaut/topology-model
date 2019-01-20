@@ -15,6 +15,16 @@
 		public uint Id { get; set; }
 
 		/// <summary>
+		/// Координата Х левого верхнего угла участка на территории предприятия.
+		/// </summary>
+		public uint X { get; set; }
+
+		/// <summary>
+		/// Координата Y левого верхнего угла участка на территории предприятия.
+		/// </summary>
+		public uint Y { get; set; }
+
+		/// <summary>
 		/// Ширина участка по схеме в метрах.
 		/// </summary>
 		public uint Width { get; set; }

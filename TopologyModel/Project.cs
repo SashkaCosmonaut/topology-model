@@ -9,6 +9,16 @@ namespace TopologyModel
 	public class Project
 	{
 		/// <summary>
+		/// Высота учитываемого размера всей территории предприятия.
+		/// </summary>
+		public uint Height { get; set; }
+
+		/// <summary>
+		/// Ширина учитываемого размера всей территории предприятия.
+		/// </summary>
+		public uint Width { get; set; }
+
+		/// <summary>
 		/// Бюджет всего проекта, за рамки которого затраты на реализацию проекта не должны выходить.
 		/// </summary>
 		public double Budget { get; set; }
