@@ -83,16 +83,16 @@
 		/// <summary>
 		/// непроходимость радиоволн через стены участка: сверху, справа, снизу, слева
 		/// </summary>
-		public ushort[] WallsBadRadioTransmittanceEstimate { get; set; } = new ushort[] { };
+		public ushort[] WallsBadRadioTransmittanceEstimate { get; set; }
 
 		/// <summary>
 		/// Трудоемкость проведения связи (кабелей) на соседние участки через стены: сверху, справа, снизу, слева
 		/// </summary>
-		public ushort[] WallsBadWiredTransmittanceEstimate { get; set; } = new ushort[] { };
+		public ushort[] WallsBadWiredTransmittanceEstimate { get; set; }
 
 		/// <summary>
 		/// перечень имеющихся на участке ТУУ
 		/// </summary>
-		public MeasurementAndControlPoint[] MCPs { get; set; } = new MeasurementAndControlPoint[] { };
+		public MeasurementAndControlPoint[] MCPs { get; set; }
 	}
 }

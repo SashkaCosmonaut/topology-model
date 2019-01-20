@@ -5,7 +5,7 @@
 		/// <summary>
 		/// Объект проекта, пока один.
 		/// </summary>
-		public Project CurrentProject { get; set; } = new Project();
+		public static Project CurrentProject { get; set; } = new Project();
 
 		public static void Main(string[] args)
 		{

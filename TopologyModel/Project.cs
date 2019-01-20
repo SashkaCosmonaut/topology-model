@@ -1,6 +1,8 @@
-﻿using QuickGraph;
+﻿using Newtonsoft.Json;
+using QuickGraph;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TopologyModel.Enumerations;
 using TopologyModel.TopologyGraphs;
@@ -77,6 +79,12 @@ namespace TopologyModel
 		{
 			Budget = 100000;
 			UsageMonths = 12;
+			UseLocalServer = false;
+			UseLocalEmployee = false;
+			IsInternetAvailable = false;
+			LocalServerMonthlyPayment = 999999;
+			RemoteServerMonthlyPayment = 2000;
+			MobileInternetMonthlyPayment.Add(InternetConnection._3G, 300);
 
 			InitializeRegions();
 			InitializeGraph();
@@ -88,10 +96,18 @@ namespace TopologyModel
 		/// </summary>
 		protected void InitializeRegions()
 		{
-			Regions = new Region[] 
+			try
 			{
-
-			};
+				using (var sr = File.OpenText("./Config/Regions.json"))
+				{
+					Regions = JsonConvert.DeserializeObject<Region[]>(sr.ReadToEnd());
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+				Regions = new Region[] { };
+			}
 		}
 
 		/// <summary>
@@ -108,68 +124,6 @@ namespace TopologyModel
 		protected void InitializeTools()
 		{
 
-		}
-
-		/// <summary>
-		/// Рассчитать затраты на проект.
-		/// </summary>
-		/// <returns>Полученные результаты расчета проекта.</returns>
-		public CalculationResult Calculate()
-		{
-			var result = new CalculationResult();
-
-			do
-			{
-				RecalculateResult(ref result);
-			}
-			while (!IsCalculationFinished(result));
-
-			return result;
-		}
-
-		/// <summary>
-		/// Заново рассчитать затраты на проект.
-		/// </summary>
-		/// <param name="currentResult">Обновляемый объект результатов.</param>
-		protected void RecalculateResult(ref CalculationResult currentResult)
-		{
-			currentResult.InstallationFinancialCost = GetCurrentInstallationFinancialCost();
-			currentResult.InstallationTimeCost = GetCurrentInstallationTimeCost();
-			currentResult.PeriodFinancialCost = GetCurrentPeriodFinancialCost();
-		}
-
-		/// <summary>
-		/// Рассчитать начальную стоимость проекта.
-		/// </summary>
-		protected double GetCurrentInstallationFinancialCost()
-		{
-			return 0;
-		}
-
-		/// <summary>
-		/// Рассчитать затраты во времени на проект.
-		/// </summary>
-		protected TimeSpan GetCurrentInstallationTimeCost()
-		{
-			return new TimeSpan(); ;
-		}
-
-		/// <summary>
-		/// Рассчитать затраченное время на реализацию проекта.
-		/// </summary>
-		protected double GetCurrentPeriodFinancialCost()
-		{
-			return 0;
-		}
-
-		/// <summary>
-		/// Проверить, завершён ли расчет.
-		/// </summary>
-		/// <param name="currentResult">Текущий полученный результат.</param>
-		/// <returns>True, если расчет завершён.</returns>
-		protected bool IsCalculationFinished(CalculationResult currentResult)
-		{
-			return currentResult.InstallationFinancialCost < Budget;
 		}
 	}
 }
