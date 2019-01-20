@@ -1,11 +1,5 @@
-﻿using Newtonsoft.Json;
-using QuickGraph;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Collections.Generic;
 using TopologyModel.Enumerations;
-using TopologyModel.TopologyGraphs;
 
 namespace TopologyModel
 {
@@ -66,64 +60,5 @@ namespace TopologyModel
 		/// База данных доступного инструментария.
 		/// </summary>
 		public Tools AvailableTools { get; set; } = new Tools();
-
-		/// <summary>
-		/// Граф всего предприятия.
-		/// </summary>
-		public TopologyGraph Graph { get; set; } = new TopologyGraph();
-
-		/// <summary>
-		/// Создать и инициализировать класс проекта по умолчанию.
-		/// </summary>
-		public Project()
-		{
-			Budget = 100000;
-			UsageMonths = 12;
-			UseLocalServer = false;
-			UseLocalEmployee = false;
-			IsInternetAvailable = false;
-			LocalServerMonthlyPayment = 999999;
-			RemoteServerMonthlyPayment = 2000;
-			MobileInternetMonthlyPayment.Add(InternetConnection._3G, 300);
-
-			InitializeRegions();
-			InitializeGraph();
-			InitializeTools();
-		}
-
-		/// <summary>
-		/// Инициализировать участки всего предприятия.
-		/// </summary>
-		protected void InitializeRegions()
-		{
-			try
-			{
-				using (var sr = File.OpenText("./Config/Regions.json"))
-				{
-					Regions = JsonConvert.DeserializeObject<Region[]>(sr.ReadToEnd());
-				}
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex.Message);
-				Regions = new Region[] { };
-			}
-		}
-
-		/// <summary>
-		/// Инициализировать граф всего предприятия.
-		/// </summary>
-		protected void InitializeGraph()
-		{
-
-		}
-
-		/// <summary>
-		/// Инициализировать базу данных инструментария.
-		/// </summary>
-		protected void InitializeTools()
-		{
-
-		}
 	}
 }
