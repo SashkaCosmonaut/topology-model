@@ -5,6 +5,11 @@
 	/// </summary>
 	public class Region
 	{
+		/// <summary>
+		/// Наименование участка предприятия.
+		/// </summary>
+		public string Name { get; set; }
+
 		/// уникальный идентификатор участка
 		/// </summary>
 		public uint Id { get; set; }
