@@ -1,7 +1,9 @@
-﻿using System;
+﻿using QuickGraph;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TopologyModel.Enumerations;
+using TopologyModel.TopologyGraphs;
 
 namespace TopologyModel
 {
@@ -52,16 +54,61 @@ namespace TopologyModel
 		/// </summary>
 		public Dictionary<InternetConnection, double> MobileInternetMonthlyPayment { get; set; } = new Dictionary<InternetConnection, double>();
 
-
+		
 		/// <summary>
-		/// Множество рассматриваемых участков всех объектов всего предприятия.
+		/// Массив всех участков предприятия.
 		/// </summary>
-		public Region StartRegion { get; set; }
+		public Region[] Regions { get; set; }
 
 		/// <summary>
 		/// База данных доступного инструментария.
 		/// </summary>
-		public Tools AvailableTools { get; set; }
+		public Tools AvailableTools { get; set; } = new Tools();
+
+		/// <summary>
+		/// Граф всего предприятия.
+		/// </summary>
+		public TopologyGraph Graph { get; set; } = new TopologyGraph();
+
+		/// <summary>
+		/// Создать и инициализировать класс проекта по умолчанию.
+		/// </summary>
+		public Project()
+		{
+			Budget = 100000;
+			UsageMonths = 12;
+
+			InitializeRegions();
+			InitializeGraph();
+			InitializeTools();
+		}
+
+		/// <summary>
+		/// Инициализировать участки всего предприятия.
+		/// </summary>
+		protected void InitializeRegions()
+		{
+			Regions = new Region[] 
+			{
+
+			};
+		}
+
+		/// <summary>
+		/// Инициализировать граф всего предприятия.
+		/// </summary>
+		protected void InitializeGraph()
+		{
+
+		}
+
+		/// <summary>
+		/// Инициализировать базу данных инструментария.
+		/// </summary>
+		protected void InitializeTools()
+		{
+
+		}
 
 		/// <summary>
 		/// Рассчитать затраты на проект.
