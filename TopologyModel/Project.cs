@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TopologyModel.Enumerations;
 
 namespace TopologyModel
@@ -64,11 +65,79 @@ namespace TopologyModel
 		/// <summary>
 		/// Массив всех участков предприятия.
 		/// </summary>
-		public Region[] Regions { get; set; }
+		public Dictionary<uint, Region> Regions { get; set; }
 
 		/// <summary>
 		/// База данных доступного инструментария.
 		/// </summary>
 		public Tools AvailableTools { get; set; } = new Tools();
+
+		/// <summary>
+		/// Инициализировать граф всего предприятия.
+		/// </summary>
+		/// <returns></returns>
+		public bool InitializeGraph()
+		{
+			Console.WriteLine("Initialize the graph... ");
+
+			try
+			{
+				var regionsMatrix = CreateRegionsMatrix();
+				// создаём граф, перебирая каждую вершину, создавая её и генерируя связи в соответствии с имеющимися вершинами
+
+				Console.Write("Done!");
+
+				return true;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Создать матрицу вершин участков для будущего графа.
+		/// </summary>
+		/// <returns>Матрица вершин участков бдущего графа.</returns>
+		protected uint[,] CreateRegionsMatrix()
+		{
+			Console.Write("Create regions matrix... ");
+
+			try
+			{
+				var resultMatrix = new uint[Height, Width];
+
+				foreach (var region in Regions)		// Перебираем все имеющиеся регионы
+				{
+					// Определяем начальные и конечные координаты участков
+					var startX = region.Value.X - 1;
+					var startY = region.Value.Y - 1;
+					var endX = startX + region.Value.Width;
+					var endY = startY + region.Value.Height;
+
+					for (var i = startY; i < endY; i++)			// Наполняем матрицу идентификаторами участков по координатам
+						for (var j = startX; j < endX; j++)
+							resultMatrix[i, j] = region.Key;
+				}
+
+				Console.WriteLine("Done! Result matix: ");
+
+				for (var i = 0; i < Height; i++)				// Выводим матрицу для наглядности
+				{
+					for (var j = 0; j < Width; j++)
+						Console.Write("{0,3}", resultMatrix[i, j]);
+
+					Console.WriteLine();
+				}
+
+				return resultMatrix;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+				return new uint[,] { };
+			}
+		}
 	}
 }

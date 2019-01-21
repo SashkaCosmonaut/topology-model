@@ -9,13 +9,13 @@
 	"LocalServerMonthlyPayment": 999999.0,
 	"RemoteServerMonthlyPayment": 2000.0,
 	"MobileInternetMonthlyPayment": { "_3G": 300.0 },
-	"Regions": [
-		{
+	"Regions": {
+		"1": {
 			"Name": "1. Улица",
-			"Id": 1,
+			"Id": 2,
 			"X": 1,
 			"Y": 1,
-			"Width": 8,
+			"Width": 9,
 			"Height": 1,
 			"HasLan": false,
 			"HasWiFi": false,
@@ -32,13 +32,13 @@
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 2, 2 ],
 			"MCPs": null
 		},
-		{
+		"2": {
 			"Name": "2. Иные помещения",
 			"Id": 2,
 			"X": 1,
 			"Y": 2,
-			"Width": 4,
-			"Height": 1,
+			"Width": 1,
+			"Height": 4,
 			"HasLan": false,
 			"HasWiFi": false,
 			"HasPower": false,
@@ -54,7 +54,7 @@
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 2, 2 ],
 			"MCPs": null
 		},
-		{
+		"3": {
 			"Name": "3. Склад",
 			"Id": 3,
 			"X": 2,
@@ -76,7 +76,7 @@
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 1, 2 ],
 			"MCPs": null
 		},
-		{
+		"4": {
 			"Name": "4. Цех",
 			"Id": 4,
 			"X": 5,
@@ -98,13 +98,13 @@
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 2, 2 ],
 			"MCPs": null
 		},
-		{
+		"5": {
 			"Name": "5. Иные помещения",
 			"Id": 5,
 			"X": 9,
 			"Y": 2,
-			"Width": 4,
-			"Height": 1,
+			"Width": 1,
+			"Height": 4,
 			"HasLan": false,
 			"HasWiFi": false,
 			"HasPower": false,
@@ -120,12 +120,12 @@
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 2, 2 ],
 			"MCPs": null
 		},
-		{
+		"6": {
 			"Name": "6. Проезд 1",
 			"Id": 6,
 			"X": 1,
 			"Y": 6,
-			"Width": 6,
+			"Width": 4,
 			"Height": 2,
 			"HasLan": false,
 			"HasWiFi": false,
@@ -142,7 +142,7 @@
 			"WallsBadWiredTransmittanceEstimate": [ 1, 1, 2, 2 ],
 			"MCPs": null
 		},
-		{
+		"7": {
 			"Name": "7. Проезд 2",
 			"Id": 7,
 			"X": 5,
@@ -164,13 +164,13 @@
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 2, 1 ],
 			"MCPs": null
 		},
-		{
+		"8": {
 			"Name": "8. Иные помещения",
 			"Id": 7,
 			"X": 1,
 			"Y": 8,
-			"Width": 2,
-			"Height": 1,
+			"Width": 1,
+			"Height": 2,
 			"HasLan": false,
 			"HasWiFi": false,
 			"HasPower": false,
@@ -186,7 +186,7 @@
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 2, 2 ],
 			"MCPs": null
 		},
-		{
+		"9": {
 			"Name": "9. Щитовая",
 			"Id": 9,
 			"X": 2,
@@ -208,7 +208,7 @@
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 2, 2 ],
 			"MCPs": null
 		},
-		{
+		"10": {
 			"Name": "10. Санузел",
 			"Id": 10,
 			"X": 4,
@@ -230,7 +230,7 @@
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 2, 2 ],
 			"MCPs": null
 		},
-		{
+		"11": {
 			"Name": "11. Админ. помещение",
 			"Id": 11,
 			"X": 7,
@@ -252,7 +252,7 @@
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 2, 2 ],
 			"MCPs": null
 		}
-	],
+	},
 	"AvailableTools": {
 		"MCDs": [],
 		"DCs": [],

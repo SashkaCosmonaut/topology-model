@@ -15,9 +15,13 @@ namespace TopologyModel
 		/// <param name="args">Параметры командной строки.</param>
 		public static void Main(string[] args)
 		{
+			Console.WriteLine("Started!");
+
 			var project = ReadProject();
 
 			if (project == null) return;
+
+			if (!project.InitializeGraph()) return;
 		}
 
 		/// <summary>
@@ -26,11 +30,20 @@ namespace TopologyModel
 		/// <returns>Считанный новый объект проекта.</returns>
 		public static Project ReadProject()
 		{
+			Console.Write("Reading the project config... ");
+
 			try
 			{
 				using (var sr = File.OpenText("./Configs/Config.json"))
 				{
-					return JsonConvert.DeserializeObject<Project>(sr.ReadToEnd());
+					var result = JsonConvert.DeserializeObject<Project>(sr.ReadToEnd());
+
+					if (result == null)
+						Console.WriteLine("Failed!");
+					else
+						Console.WriteLine("Done!");
+
+					return result;
 				}
 			}
 			catch (Exception ex)
