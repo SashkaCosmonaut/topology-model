@@ -66,7 +66,7 @@ namespace TopologyModel
 		/// <summary>
 		/// Массив всех участков предприятия.
 		/// </summary>
-		public Dictionary<uint, Region> Regions { get; set; }
+		public Region[] Regions { get; set; }
 
 		/// <summary>
 		/// База данных доступного инструментария.
@@ -94,11 +94,11 @@ namespace TopologyModel
 
 			try
 			{
-				var regionsMatrix = CreateRegionsMatrix();
+				var verticesMatrix = CreateVerticesMatrix();
 
-				if (regionsMatrix.Length == 0) return false;
+				if (verticesMatrix.Length == 0) return false;
 
-				Graph = CreateRegionsGraph(regionsMatrix);
+				Graph = CreateRegionsGraph(verticesMatrix);
 
 				if (Graph == null) return false;
 
@@ -120,43 +120,45 @@ namespace TopologyModel
 		/// Создать матрицу вершин участков для будущего графа.
 		/// </summary>
 		/// <returns>Матрица вершин участков бдущего графа.</returns>
-		protected uint[,] CreateRegionsMatrix()
+		protected TopologyVertex[,] CreateVerticesMatrix()
 		{
 			Console.Write("Create regions matrix... ");
 
 			try
 			{
-				var resultMatrix = new uint[Height, Width];
+				var verticesMatrix = new TopologyVertex[Height, Width];
 
 				foreach (var region in Regions)		// Перебираем все имеющиеся регионы
 				{
-					// Определяем начальные и конечные координаты участков
-					var startX = region.Value.X - 1;
-					var startY = region.Value.Y - 1;
-					var endX = startX + region.Value.Width;
-					var endY = startY + region.Value.Height;
+					// Определяем начальные и конечные координаты участков в матрице
+					var startX = region.X - 1;			// В конфигурационном файле координаты начинаются с 1
+					var startY = region.Y - 1;
+					var endX = startX + region.Width;
+					var endY = startY + region.Height;
 
 					for (var i = startY; i < endY; i++)			// Наполняем матрицу идентификаторами участков по координатам
-						for (var j = startX; j < endX; j++)
-							resultMatrix[i, j] = region.Key;
+						for (var j = startX; j < endX; j++)     // Создаём вершину, привязанную к учаску и задаём её координаты внутри самого участка
+																// +1 из-за того, что в конфигурационном файле координаты начинаются с 1
+							verticesMatrix[i, j] = new TopologyVertex(region, j - region.X + 1, i - region.Y + 1);
 				}
 
 				Console.WriteLine("Done! Result matix: ");
 
-				for (var i = 0; i < Height; i++)				// Выводим матрицу для наглядности
+				for (var i = 0; i < Height; i++)				// Выводим матрицу идентификаторов регионов в вершинах для наглядности
 				{
 					for (var j = 0; j < Width; j++)
-						Console.Write("{0,3}", resultMatrix[i, j]);
+						// Делаем отступ исходя из строкового представления вершины и максимально трёхзначного идентификатора участка
+						Console.Write("{0,8}", verticesMatrix[i, j].ToString());	
 
 					Console.WriteLine();
 				}
 
-				return resultMatrix;
+				return verticesMatrix;
 			}
 			catch (Exception ex)
 			{
 				Console.WriteLine("Failed! {0}", ex.Message);
-				return new uint[,] { };
+				return new TopologyVertex[,] { };
 			}
 		}
 
@@ -164,15 +166,53 @@ namespace TopologyModel
 		/// Создать граф всего предприятия на основе матрицы участков предприятия, перебирая каждый её элемент, 
 		/// создавая на его основе вершину и генерируя связи в соответствии с имеющимися вершинами.
 		/// </summary>
-		/// <param name="regionsMatrix">Матрица с индификаторами участков предприятия.</param>
+		/// <param name="verticesMatrix">Матрица с вершинами участков предприятия.</param>
 		/// <returns>Граф с вершинами, ребрами и их весами.</returns>
-		protected TopologyGraph CreateRegionsGraph(uint [,] regionsMatrix)
+		protected TopologyGraph CreateRegionsGraph(TopologyVertex[,] verticesMatrix)
 		{
 			Console.Write("Create regions graph... ");
 
 			try
 			{
-				return null;
+				var resultGraph = new TopologyGraph();
+
+				for (var i = 0; i < Height; i++)                            // Проходимся по матрице
+					for (var j = 0; j < Width; j++)
+					{
+						var vertex = verticesMatrix[i, j];                  // Берём текущую вершину в матрице
+
+						if (!resultGraph.ContainsVertex(vertex))            // Добавляем её в граф, если ещё ранее этого не делали
+							resultGraph.AddVertex(vertex);
+
+                        for (var yShift = -1; yShift < 2; yShift++)         // Обходим все соседние вершины для текущей вершины матрицы, какие есть
+							for (var xShift = -1; xShift < 2; xShift++)
+							{
+								if (xShift == 0 && yShift == 0) continue;	// Пропускаем текущую ячейку
+
+								var neighborX = j + xShift;                 // Вычисляем позицию соседней вершины
+								var neighborY = i + yShift;
+
+								// Если нет соседней вершины с такими координатами соседней позиции, пропускаем её
+								if (neighborX < 0 || neighborY < 0 || neighborX >= Width || neighborY >= Height) continue;
+
+								var neighborVertex = verticesMatrix[neighborY, neighborX];
+
+								if (!resultGraph.ContainsVertex(neighborVertex))	// Добавляем соседнюю вершину, если её ещё нет в графе
+									resultGraph.AddVertex(neighborVertex);
+
+								// Если соседняя вершина не диагональная, то гарантировано добавляем к ней грань
+								if (neighborX == 0 || neighborY == 0)
+									resultGraph.AddEdge(new QuickGraph.SUndirectedTaggedEdge<TopologyVertex, float>(vertex, neighborVertex, 0));
+
+								// Добавляем диагональную грань между вершинами, только если вершины находятся на одном участке
+								else if (neighborVertex.Region == vertex.Region)
+									resultGraph.AddEdge(new QuickGraph.SUndirectedTaggedEdge<TopologyVertex, float>(vertex, neighborVertex, 0));
+							}
+					}
+
+				Console.WriteLine("Done!");
+
+				return resultGraph;
 			}
 			catch (Exception ex)
 			{
@@ -191,6 +231,9 @@ namespace TopologyModel
 
 			try
 			{
+
+				Console.WriteLine("Done!");
+
 				return true;
 			}
 			catch (Exception ex)
