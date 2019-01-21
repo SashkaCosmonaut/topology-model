@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using TopologyModel.Enumerations;
+using TopologyModel.TopologyGraphs;
 
 namespace TopologyModel
 {
@@ -73,9 +74,20 @@ namespace TopologyModel
 		public Tools AvailableTools { get; set; } = new Tools();
 
 		/// <summary>
+		/// Граф всего предприятия.
+		/// </summary>
+		public TopologyGraph Graph { get; set; }
+
+		/// <summary>
+		/// Имя dot-файла графа участков предприятия.
+		/// </summary>
+		public string GraphDotFilename { get; set; } = "graph.dot";
+
+
+		/// <summary>
 		/// Инициализировать граф всего предприятия.
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>True, если операция выполнена успешно.</returns>
 		public bool InitializeGraph()
 		{
 			Console.WriteLine("Initialize the graph... ");
@@ -83,9 +95,17 @@ namespace TopologyModel
 			try
 			{
 				var regionsMatrix = CreateRegionsMatrix();
-				// создаём граф, перебирая каждую вершину, создавая её и генерируя связи в соответствии с имеющимися вершинами
 
-				Console.Write("Done!");
+				if (regionsMatrix.Length == 0) return false;
+
+				Graph = CreateRegionsGraph(regionsMatrix);
+
+				if (Graph == null) return false;
+
+				if (CreateGraphDotFile())
+					Console.WriteLine("Check the graph dot-file in {0}", GraphDotFilename);
+
+				Console.WriteLine("Done!");
 
 				return true;
 			}
@@ -135,8 +155,48 @@ namespace TopologyModel
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.Message);
+				Console.WriteLine("Failed! {0}", ex.Message);
 				return new uint[,] { };
+			}
+		}
+
+		/// <summary>
+		/// Создать граф всего предприятия на основе матрицы участков предприятия, перебирая каждый её элемент, 
+		/// создавая на его основе вершину и генерируя связи в соответствии с имеющимися вершинами.
+		/// </summary>
+		/// <param name="regionsMatrix">Матрица с индификаторами участков предприятия.</param>
+		/// <returns>Граф с вершинами, ребрами и их весами.</returns>
+		protected TopologyGraph CreateRegionsGraph(uint [,] regionsMatrix)
+		{
+			Console.Write("Create regions graph... ");
+
+			try
+			{
+				return null;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine("Failed! {0}", ex.Message);
+				return null;
+			}
+		}
+
+		/// <summary>
+		/// Создать dot-файл на основе 
+		/// </summary>
+		/// <returns>True, если операция выполнена успешно.</returns>
+		protected bool CreateGraphDotFile()
+		{
+			Console.Write("Create the graph dot-file... ");
+
+			try
+			{
+				return true;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine("Failed! {0}", ex.Message);
+				return false;
 			}
 		}
 	}

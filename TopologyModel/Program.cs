@@ -15,13 +15,20 @@ namespace TopologyModel
 		/// <param name="args">Параметры командной строки.</param>
 		public static void Main(string[] args)
 		{
-			Console.WriteLine("Started!");
+			Console.WriteLine("Main starting...");
 
-			var project = ReadProject();
+			try
+			{
+				var project = ReadProject();
 
-			if (project == null) return;
+				if (project == null) return;
 
-			if (!project.InitializeGraph()) return;
+				if (!project.InitializeGraph()) return;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine("Main failed! {0}", ex.Message);
+			}
 		}
 
 		/// <summary>
@@ -38,17 +45,14 @@ namespace TopologyModel
 				{
 					var result = JsonConvert.DeserializeObject<Project>(sr.ReadToEnd());
 
-					if (result == null)
-						Console.WriteLine("Failed!");
-					else
-						Console.WriteLine("Done!");
+					Console.WriteLine(result == null ? "Failed!" : "Done!");
 
 					return result;
 				}
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.Message);
+				Console.WriteLine("Failed! {0}", ex.Message);
 				return null;
 			}
 		}
