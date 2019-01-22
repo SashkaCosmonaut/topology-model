@@ -1,9 +1,11 @@
-﻿namespace TopologyModel.TopologyGraphs
+﻿using System;
+
+namespace TopologyModel.TopologyGraphs
 {
 	/// <summary>
 	/// Класс вершины графа топологии.
 	/// </summary>
-	public class TopologyVertex
+	public class TopologyVertex : IComparable
 	{
 		/// <summary>
 		/// Ссылка на участок, на котором располагается данная вершина.
@@ -42,5 +44,22 @@
 		{
 			return $"{Region.Id}.{RegionY + 1}.{RegionX + 1}";
 		}
-	}
+
+        /// <summary>
+        /// Сравнить две вершины графа.
+        /// </summary>
+        /// <param name="other">Другая вершина графа или иной объект.</param>
+        /// <returns>0 - данный экземпляр занимает ту же позицию в порядке сортировки, что и параметр other.
+        /// -1 - данный экземпляр предшествует параметру other в порядке сортировки.
+        /// 1- данный экземпляр следует за параметром obj в порядке сортировки.</returns>
+        public int CompareTo(object other)
+        {
+            var otherVertex = other as TopologyVertex;
+
+            if (otherVertex == null) return 0;  // Если поступил какой-то другой объект, то считаем, что они равны
+
+            // Для сравнения используются идентификаторы участков
+            return (int)Region.Id - (int)otherVertex.Region.Id;
+        }
+    }
 }
