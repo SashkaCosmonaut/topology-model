@@ -61,5 +61,15 @@ namespace TopologyModel.TopologyGraphs
             // Для сравнения используются идентификаторы участков
             return (int)Region.Id - (int)otherVertex.Region.Id;
         }
+
+        /// <summary>
+        /// Проверить, находится ли данная вершина внутри участка.
+        /// </summary>
+        /// <returns>True, если она внутри участка.</returns>
+        public bool IsInside()
+        {
+            // Вершина находится внутри участка, сли у неё нет ни одной координаты на границе участка
+            return RegionX > 0 && RegionY > 0 && RegionX < Region.Width - 1 && RegionY < Region.Height - 1;
+        }
     }
 }
