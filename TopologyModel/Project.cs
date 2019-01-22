@@ -1,5 +1,4 @@
-﻿using QuickGraph;
-using QuickGraph.Graphviz;
+﻿using QuickGraph.Graphviz;
 using QuickGraph.Graphviz.Dot;
 using System;
 using System.Collections.Generic;
@@ -61,9 +60,15 @@ namespace TopologyModel
 
 
         /// <summary>
-        /// Множество стоимостей в месяц абонентского обслуживания технологий мобильной передачи данных на сервер.
+        /// Словарь весовых коэффициентов параметров проекта, где ключ - это наименование параметра, а значение - вес.
         /// </summary>
-        public Dictionary<InternetConnection, double> MobileInternetMonthlyPayment { get; set; } = new Dictionary<InternetConnection, double>();
+        public Dictionary<string, float> WeightCoefficients { get; set; }
+
+        /// <summary>
+        /// Множество стоимостей в месяц абонентского обслуживания технологий мобильной передачи данных на сервер.
+        /// Где ключ - это тип соединения, а значение - это стоимость.
+        /// </summary>
+        public Dictionary<InternetConnection, double> MobileInternetMonthlyPayment { get; set; }
 
 
         /// <summary>
@@ -74,7 +79,7 @@ namespace TopologyModel
         /// <summary>
         /// База данных доступного инструментария.
         /// </summary>
-        public Tools AvailableTools { get; set; } = new Tools();
+        public Tools AvailableTools { get; set; }
 
         /// <summary>
         /// Граф всего предприятия.
@@ -84,7 +89,7 @@ namespace TopologyModel
         /// <summary>
         /// Имя dot-файла графа участков предприятия.
         /// </summary>
-        public string GraphDotFilename { get; set; } = "graph.dot";
+        public string GraphDotFilename { get; set; } = "unnamed.dot";
 
 
         /// <summary>

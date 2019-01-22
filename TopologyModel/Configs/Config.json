@@ -9,11 +9,15 @@
 	"LocalServerMonthlyPayment": 999999.0,
 	"RemoteServerMonthlyPayment": 2000.0,
 	"MobileInternetMonthlyPayment": { "_3G": 300.0 },
+	"GraphDotFilename": "graph.dot",
+	"WeightCoefficients": {
+		"InsideAggressivenessEstimate": 0.5
+	},
 	"Regions": [
 		{
 			"Name": "1. Улица",
 			"Id": 1,
-			"X": 1,	/* Координаты в данном файле начинаются с 1, а не с 0. */
+			"X": 1, /* Координаты в данном файле начинаются с 1, а не с 0. */
 			"Y": 1,
 			"Width": 9,
 			"Height": 1,

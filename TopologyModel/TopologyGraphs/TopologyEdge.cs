@@ -22,7 +22,18 @@ namespace TopologyModel.TopologyGraphs
         /// </summary>
         /// <param name="source">Вершина графа - источник грани.</param>
         /// <param name="target">Вершина графа - приемник грани.</param>
-        public TopologyEdge(TopologyVertex source, TopologyVertex target) : base(source, target) { }
+        public TopologyEdge(TopologyVertex source, TopologyVertex target) : base(source, target)
+        {
+            CalculateWeights();
+        }
+
+        /// <summary>
+        /// Рассчитать веса данной грани.
+        /// </summary>
+        protected void CalculateWeights()
+        {
+
+        }
 
         /// <summary>
         /// Сравнить две грани. Используется базовый метод.
