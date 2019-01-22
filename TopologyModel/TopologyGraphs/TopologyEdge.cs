@@ -12,12 +12,12 @@ namespace TopologyModel.TopologyGraphs
         /// <summary>
         /// Вес грани для проводной связи, строящийся на основе пераметров смежных участков.
         /// </summary>
-        public float WiredWeight { get; }
+        public float WiredWeight { get; protected set; }
 
         /// <summary>
         /// Вес грани для беспроводной связи, строящийся на основе пераметров смежных участков.
         /// </summary>
-        public float WirelessWeight { get; }
+        public float WirelessWeight { get; protected set; }
 
         /// <summary>
         /// Создать новую грань графа.
@@ -45,8 +45,10 @@ namespace TopologyModel.TopologyGraphs
         {
             try
             {
-                var sourceRegion = Source.Region;
-                var targetRegion = Target.Region;
+                // Если внутри участка, то вес беспроводной связи - соответствующая оценка, между участками - среднее от значений границ смежных участков
+                WirelessWeight = IsAcrossTheBorder()
+                    ? (GetWallsBadRadioTransmittanceEstimate(Source, Target) + GetWallsBadRadioTransmittanceEstimate(Target, Source)) / 2
+                    : Source.Region.InsideBadRadioTransmittanceEstimate;
             }
             catch (Exception ex)
             {
@@ -60,8 +62,8 @@ namespace TopologyModel.TopologyGraphs
         /// <returns>True, если она внутри участка.</returns>
         public bool IsInside()
         {
-            // Грань находится внутри участка, если хотя бы одна из вершин находится во внутренней части участка
-            return Source.IsInside() || Target.IsInside();
+            // Грань находится внутри участка, если связь не на границе и не через границу
+            return !IsAlongTheBorder() && !IsAcrossTheBorder();
         }
 
         /// <summary>
@@ -70,8 +72,10 @@ namespace TopologyModel.TopologyGraphs
         /// <returns>True, если она вдоль границы участка.</returns>
         public bool IsAlongTheBorder()
         {
+            // TODO: КАК БЫТЬ КОГДА УЗКИЙ УЧАСТОКК?
+
             // Грань проведена вдоль границы участка, когда обе вершины не внутри, но они на одном участке и имеют общую координату Х или Y
-            return Source.Region == Target.Region && !Source.IsInside() && !Target.IsInside() && (Source.RegionX == Target.RegionX || Source.RegionY == Target.RegionY);
+            return !IsAcrossTheBorder() && !Source.IsInside() && !Target.IsInside() && (Source.RegionX == Target.RegionX || Source.RegionY == Target.RegionY);
         }
 
         /// <summary>
@@ -104,6 +108,58 @@ namespace TopologyModel.TopologyGraphs
         public override string ToString()
         {
             return $"{WiredWeight:0.0}, {WirelessWeight:0.0}";
+        }
+
+        /// <summary>
+        /// Получить направление данной грани.
+        /// </summary>
+        /// <returns>Направление грани: 0 - верх, 1 - вправо, 2 - вниз, 3 - влево.</returns>
+        protected static uint Direction(TopologyVertex source, TopologyVertex target)
+        {
+            if (source.Region == target.Region) // Если вершины на одном участке, сравниваем их внутренние координаты
+                return CoordinateDirection(source.RegionX, target.RegionX, source.RegionY, target.RegionY);
+
+            // Иначе сравниваем реальные координаты самих участков
+            return CoordinateDirection(source.Region.X, target.Region.X, source.Region.Y, target.Region.Y);
+        }
+
+        /// <summary>
+        /// Получить направление в зависимости от координат.
+        /// </summary>
+        /// <param name="sourceX">Координата источника по Х.</param>
+        /// <param name="targetX">Координата цели по Х.</param>
+        /// <param name="sourceY">Координата источника по Y.</param>
+        /// <param name="targetY">Координата цели по Y.</param>
+        /// <returns>Направление грани: 0 - верх, 1 - вправо, 2 - вниз, 3 - влево.</returns>
+        protected static uint CoordinateDirection(uint sourceX, uint targetX, uint sourceY, uint targetY)
+        {
+            if (sourceY > targetY)
+                return 0;
+
+            if (sourceY < targetY)
+                return 2;
+
+            if (sourceX > targetX)
+                return 3;
+
+            return 1;
+        }
+
+        /// <summary>
+        /// Получить непроходимость радиоволн для соответствующих границ двух смежных участков.
+        /// </summary>
+        /// <param name="source">Исходный участок.</param>
+        /// <param name="target">Целевой участок.</param>
+        /// <returns>Значение непроходимости радиоволн.</returns>
+        protected static ushort GetWallsBadRadioTransmittanceEstimate(TopologyVertex source, TopologyVertex target)
+        {
+            var sourceEstimates = source.Region.WallsBadRadioTransmittanceEstimate; // Оценки границ исходного участка
+
+            if (sourceEstimates == null || sourceEstimates.Length == 0) return 0;
+
+            return sourceEstimates.Length == 4                  // Если в массиве все четыре значения
+                ? sourceEstimates[Direction(source, target)]    // Берём в зависимости от направления
+                : sourceEstimates[0];                           // Иначе берём первое
         }
     }
 }
