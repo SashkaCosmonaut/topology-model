@@ -226,7 +226,7 @@ namespace TopologyModel
                         // Если грань между вершинами уже есть, то пропускаем
                         if (Graph.ContainsEdge(vertex, neighborVertex) || Graph.ContainsEdge(neighborVertex, vertex)) continue;
 
-                        var newEdge = new SUndirectedTaggedEdge<TopologyVertex, float>(vertex, neighborVertex, 0);
+                        var newEdge = new TopologyEdge(vertex, neighborVertex);
 
                         // Если соседняя вершина не диагональная, то гарантировано добавляем к ней грань
                         if (neighborX == x || neighborY == y)
@@ -254,23 +254,23 @@ namespace TopologyModel
             try
             {
                 // Объект алгоритма Graphviz для используемого графа
-                var graphviz = new GraphvizAlgorithm<TopologyVertex, SUndirectedTaggedEdge<TopologyVertex, float>>(Graph);
+                var graphviz = new GraphvizAlgorithm<TopologyVertex, TopologyEdge>(Graph);
 
                 graphviz.GraphFormat.RankDirection = GraphvizRankDirection.LR;
 
                 graphviz.FormatVertex += (sender, args) =>
                 {
-                    args.VertexFormatter.Comment = args.Vertex.ToString();          // В вершине указываем id участка и координаты внутри участка
-                    args.VertexFormatter.Group = $"{args.Vertex.Region.Id}_{args.Vertex.RegionY}"; // Группируем участки на графе
+                    args.VertexFormatter.Comment = args.Vertex.ToString();      // В вершине указываем id участка и координаты внутри участка
+                    args.VertexFormatter.Group = $"{args.Vertex.Region.Id}_{args.Vertex.RegionY}";  // Группируем участки на графе
                 };
 
                 // Грани форматируем стандартно с двумя весами каждой грани
                 graphviz.FormatEdge += (sender, args) =>
                 {
-                    args.EdgeFormatter.Label.Value = args.Edge.Tag.ToString();      // Указываем метки граней
+                    args.EdgeFormatter.Label.Value = args.Edge.ToString();      // Указываем метки граней
                 };
 
-                graphviz.Generate(new FileDotEngine(), GraphDotFilename);   // Генерируем файл с укзанным именем
+                graphviz.Generate(new FileDotEngine(), GraphDotFilename);       // Генерируем файл с укзанным именем
 
                 Console.WriteLine("Done!");
 

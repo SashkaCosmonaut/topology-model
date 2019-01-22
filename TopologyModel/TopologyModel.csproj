@@ -141,6 +141,7 @@
     <Compile Include="Enumerations\Topology.cs" />
     <Compile Include="Devices\TransceiverDevice.cs" />
     <Compile Include="Tools.cs" />
+    <Compile Include="TopologyGraphs\TopologyEdge.cs" />
     <Compile Include="TopologyGraphs\TopologyGraph.cs" />
     <Compile Include="TopologyGraphs\TopologyVertex.cs" />
   </ItemGroup>
