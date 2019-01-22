@@ -2,6 +2,7 @@
 using QuickGraph.Graphviz.Dot;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using TopologyModel.Enumerations;
 using TopologyModel.TopologyGraphs;
 
@@ -231,7 +232,7 @@ namespace TopologyModel
                         // Если грань между вершинами уже есть, то пропускаем
                         if (Graph.ContainsEdge(vertex, neighborVertex) || Graph.ContainsEdge(neighborVertex, vertex)) continue;
 
-                        var newEdge = new TopologyEdge(vertex, neighborVertex);
+                        var newEdge = new TopologyEdge(vertex, neighborVertex, WeightCoefficients);
 
                         // Если соседняя вершина не диагональная, то гарантировано добавляем к ней грань
                         if (neighborX == x || neighborY == y)
@@ -265,14 +266,22 @@ namespace TopologyModel
 
                 graphviz.FormatVertex += (sender, args) =>
                 {
-                    args.VertexFormatter.Comment = args.Vertex.ToString();      // В вершине указываем id участка и координаты внутри участка
-                    args.VertexFormatter.Group = $"{args.Vertex.Region.Id}_{args.Vertex.RegionY}";  // Группируем участки на графе
+                    // В вершине указываем id участка и координаты внутри участка
+                    args.VertexFormatter.Comment = args.Vertex.ToString();                                      
+                    args.VertexFormatter.Group = $"{args.Vertex.Region.Id}_{args.Vertex.RegionY}";              // Группируем участки на графе
+                    args.VertexFormatter.StrokeColor = args.Vertex.IsInside() ? Color.Black : Color.Yellow;     // Граничные вершины окрашиваем в жёлтый цвет
                 };
 
                 // Грани форматируем стандартно с двумя весами каждой грани
                 graphviz.FormatEdge += (sender, args) =>
                 {
                     args.EdgeFormatter.Label.Value = args.Edge.ToString();      // Указываем метки граней
+
+                    if (args.Edge.IsAcrossTheBorder())                          // Грани через участки окрашиваем в красный цвет
+                        args.EdgeFormatter.StrokeColor = Color.Red;
+
+                    if (args.Edge.IsAlongTheBorder())                           // Грани вдоль границ участков окрашиваем в жёлтый цвет
+                        args.EdgeFormatter.StrokeColor = Color.Yellow;
                 };
 
                 graphviz.Generate(new FileDotEngine(), GraphDotFilename);       // Генерируем файл с укзанным именем
