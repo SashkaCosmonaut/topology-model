@@ -1,4 +1,6 @@
 ﻿using QuickGraph;
+using System;
+using System.Collections.Generic;
 
 namespace TopologyModel.TopologyGraphs
 {
@@ -22,17 +24,64 @@ namespace TopologyModel.TopologyGraphs
         /// </summary>
         /// <param name="source">Вершина графа - источник грани.</param>
         /// <param name="target">Вершина графа - приемник грани.</param>
-        public TopologyEdge(TopologyVertex source, TopologyVertex target) : base(source, target)
+        /// <param name="weightCoefficients">Весовые коэффициенты для рассчётов весов граней.</param>
+        public TopologyEdge(TopologyVertex source, TopologyVertex target, Dictionary<string, float> weightCoefficients = null) : base(source, target)
         {
-            CalculateWeights();
+            try
+            {
+                CalculateWeights(weightCoefficients);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("TopologyEdge failed! {1}", ex.Message);
+            }
         }
 
         /// <summary>
         /// Рассчитать веса данной грани.
         /// </summary>
-        protected void CalculateWeights()
+        /// <param name="weightCoefficients">Весовые коэффициенты для рассчётов весов граней.</param>
+        protected void CalculateWeights(Dictionary<string, float> weightCoefficients)
         {
+            try
+            {
+                var sourceRegion = Source.Region;
+                var targetRegion = Target.Region;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Edge weight calculation failed! {1}", ex.Message);
+            }
+        }
 
+        /// <summary>
+        /// Проверить, проведена ли данная грань внутри участка.
+        /// </summary>
+        /// <returns>True, если она внутри участка.</returns>
+        public bool IsInside()
+        {
+            // Грань находится внутри участка, если хотя бы одна из вершин находится во внутренней части участка
+            return Source.IsInside() || Target.IsInside();
+        }
+
+        /// <summary>
+        /// Проверить, проведена ли данная грань вдоль границы участка.
+        /// </summary>
+        /// <returns>True, если она вдоль границы участка.</returns>
+        public bool IsAlongTheBorder()
+        {
+            // Грань проведена вдоль границы участка, когда обе вершины не внутри, но они на одном участке и имеют общую координату Х или Y
+            return Source.Region == Target.Region && !Source.IsInside() && !Target.IsInside() && (Source.RegionX == Target.RegionX || Source.RegionY == Target.RegionY);
+        }
+
+        /// <summary>
+        /// Проверить, проведена ли данная грань через границу между участками.
+        /// </summary>
+        /// <returns>True, если она через границу между участками.</returns>
+        public bool IsAcrossTheBorder()
+        {
+            // Грань проведена через границу, когда она ведёт на другой участок
+            return Source.Region != Target.Region;
         }
 
         /// <summary>
