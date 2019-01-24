@@ -45,10 +45,16 @@ namespace TopologyModel.TopologyGraphs
         {
             try
             {
-                // Если внутри участка, то вес беспроводной связи - соответствующая оценка, между участками - среднее от значений границ смежных участков
-                WirelessWeight = IsAcrossTheBorder()
-                    ? (GetWallsBadRadioTransmittanceEstimate(Source, Target) + GetWallsBadRadioTransmittanceEstimate(Target, Source)) / 2
-                    : Source.Region.InsideBadRadioTransmittanceEstimate;
+                WirelessWeight = GetWirelessWeight(this);
+
+                if (IsAcrossTheBorder())
+                    WiredWeight = 0;
+
+                else if (IsAlongTheBorder())
+                    WiredWeight = 0;
+
+                else
+                    WiredWeight = 0;
             }
             catch (Exception ex)
             {
@@ -109,27 +115,45 @@ namespace TopologyModel.TopologyGraphs
         }
 
         /// <summary>
-        /// Получить непроходимость радиоволн для границы, исходящей из одного исходного в уелевой.
+        /// Получить беспроводной вес грани. Если беспроводная связь внутри участка, то берётся 
+        /// соответствующая оценка, а между участками - среднее от значений границ смежных участков.
         /// </summary>
-        /// <param name="source">Исходный участок.</param>
-        /// <param name="target">Целевой участок.</param>
-        /// <returns>Значение непроходимости радиоволн через границу из исходного участка.</returns>
-        protected static ushort GetWallsBadRadioTransmittanceEstimate(TopologyVertex source, TopologyVertex target)
+        /// <param name="edge">Грань, вес которой рассчитывается.</param>
+        /// <returns>Значение беспроводного веса грани.</returns>
+        protected static float GetWirelessWeight(TopologyEdge edge)
         {
-            var estimates = source.Region.WallsBadRadioTransmittanceEstimate; // Оценки границ исходного участка
+            // Берём оценки в исходном и целевом узлах
+            var sourceEstimates = edge.Source.Region.WallsBadRadioTransmittanceEstimate;
+            var targetEstimates = edge.Target.Region.WallsBadRadioTransmittanceEstimate;
 
+            return edge.IsAcrossTheBorder()
+                ? (GetEstimate(sourceEstimates, edge.Source, edge.Target) + GetEstimate(targetEstimates, edge.Target, edge.Source)) / 2
+                : edge.Source.Region.InsideBadRadioTransmittanceEstimate;
+        }
+
+        /// <summary>
+        /// Получить оценку грани из массива оценок в зависимости от количества оценок в нём.
+        /// </summary>
+        /// <param name="estimates">Массив экспертных оценок для границ участка.</param>
+        /// <param name="source">Исходный узел грани.</param>
+        /// <param name="target">Целевой узел грани.</param>
+        /// <returns>Значение оценки из массива.</returns>
+        protected static ushort GetEstimate(ushort[] estimates, TopologyVertex source, TopologyVertex target)
+        {
             if (estimates == null || estimates.Length == 0) return 0;
 
-            return estimates.Length == 4                  // Если в массиве все четыре значения
-                ? estimates[GetStraightDirection(source, target)]    // Берём в зависимости от направления грани
-                : estimates[0];                           // Иначе берём первое
+            return estimates.Length == 4                            // Если в массиве все четыре значения
+                ? estimates[GetStraightDirection(source, target)]   // Берём в зависимости от узла-источника и узла-цели
+                : estimates[0];                                     // Иначе берём первое значение
         }
 
         /// <summary>
         /// Получить направление грани, расположенной между участками (или внутри, но только не диагональные).
         /// </summary>
+        /// <param name="source">Исходный узел грани.</param>
+        /// <param name="target">Целевой узел грани.</param>
         /// <returns>Направление грани: 0 - верх, 1 - вправо, 2 - вниз, 3 - влево.</returns>
-        protected static uint GetStraightDirection(TopologyVertex source, TopologyVertex target)
+        protected static ushort GetStraightDirection(TopologyVertex source, TopologyVertex target)
         {
             if (source.Region == target.Region) // Если вершины на одном участке, сравниваем их внутренние координаты
                 return GetStraightDirectionByCoordinates(source.RegionX, target.RegionX, source.RegionY, target.RegionY);
@@ -146,7 +170,7 @@ namespace TopologyModel.TopologyGraphs
         /// <param name="sourceY">Координата источника по Y.</param>
         /// <param name="targetY">Координата цели по Y.</param>
         /// <returns>Направление грани: 0 - верх, 1 - вправо, 2 - вниз, 3 - влево.</returns>
-        protected static uint GetStraightDirectionByCoordinates(uint sourceX, uint targetX, uint sourceY, uint targetY)
+        protected static ushort GetStraightDirectionByCoordinates(uint sourceX, uint targetX, uint sourceY, uint targetY)
         {
             if (sourceY > targetY)
                 return 0;
@@ -157,7 +181,10 @@ namespace TopologyModel.TopologyGraphs
             if (sourceX > targetX)
                 return 3;
 
-            return 1;
+            if (sourceX < targetX)
+                return 1;
+
+            return 0;
         }
     }
 }
