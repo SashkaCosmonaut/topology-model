@@ -57,13 +57,12 @@ namespace TopologyModel.TopologyGraphs
         }
 
         /// <summary>
-        /// Проверить, проведена ли данная грань внутри участка.
+        /// Проверить, проведена ли данная грань через границу между участками.
         /// </summary>
-        /// <returns>True, если она внутри участка.</returns>
-        public bool IsInside()
+        /// <returns>True, если она через границу между участками.</returns>
+        public bool IsAcrossTheBorder()
         {
-            // Грань находится внутри участка, если связь не на границе и не через границу
-            return !IsAlongTheBorder() && !IsAcrossTheBorder();
+            return Source.Region != Target.Region;  // Грань проведена через границу, когда она ведёт на другой участок
         }
 
         /// <summary>
@@ -72,20 +71,19 @@ namespace TopologyModel.TopologyGraphs
         /// <returns>True, если она вдоль границы участка.</returns>
         public bool IsAlongTheBorder()
         {
-            // TODO: КАК БЫТЬ КОГДА УЗКИЙ УЧАСТОКК?
-
-            // Грань проведена вдоль границы участка, когда обе вершины не внутри, но они на одном участке и имеют общую координату Х или Y
-            return !IsAcrossTheBorder() && !Source.IsInside() && !Target.IsInside() && (Source.RegionX == Target.RegionX || Source.RegionY == Target.RegionY);
+            // Грань вдоль границы, когда её узлы в одном участке и они вдоль левой или правой границы или вдоль верхней или нижней границы
+            return !IsAcrossTheBorder() &&
+                ((Source.RegionX == Target.RegionX && (Source.RegionX == 0 || Source.RegionX == Source.Region.Width - 1)) ||
+                  (Source.RegionY == Target.RegionY && (Source.RegionY == 0 || Source.RegionY == Source.Region.Height - 1)));
         }
 
         /// <summary>
-        /// Проверить, проведена ли данная грань через границу между участками.
+        /// Проверить, проведена ли данная грань внутри участка.
         /// </summary>
-        /// <returns>True, если она через границу между участками.</returns>
-        public bool IsAcrossTheBorder()
+        /// <returns>True, если она внутри участка.</returns>
+        public bool IsInside()
         {
-            // Грань проведена через границу, когда она ведёт на другой участок
-            return Source.Region != Target.Region;
+            return !IsAlongTheBorder() && !IsAcrossTheBorder(); // Грань находится внутри участка, если она не вдоль границы и не через границу
         }
 
         /// <summary>
@@ -111,16 +109,33 @@ namespace TopologyModel.TopologyGraphs
         }
 
         /// <summary>
-        /// Получить направление данной грани.
+        /// Получить непроходимость радиоволн для границы, исходящей из одного исходного в уелевой.
+        /// </summary>
+        /// <param name="source">Исходный участок.</param>
+        /// <param name="target">Целевой участок.</param>
+        /// <returns>Значение непроходимости радиоволн через границу из исходного участка.</returns>
+        protected static ushort GetWallsBadRadioTransmittanceEstimate(TopologyVertex source, TopologyVertex target)
+        {
+            var estimates = source.Region.WallsBadRadioTransmittanceEstimate; // Оценки границ исходного участка
+
+            if (estimates == null || estimates.Length == 0) return 0;
+
+            return estimates.Length == 4                  // Если в массиве все четыре значения
+                ? estimates[GetStraightDirection(source, target)]    // Берём в зависимости от направления грани
+                : estimates[0];                           // Иначе берём первое
+        }
+
+        /// <summary>
+        /// Получить направление грани, расположенной между участками (или внутри, но только не диагональные).
         /// </summary>
         /// <returns>Направление грани: 0 - верх, 1 - вправо, 2 - вниз, 3 - влево.</returns>
-        protected static uint Direction(TopologyVertex source, TopologyVertex target)
+        protected static uint GetStraightDirection(TopologyVertex source, TopologyVertex target)
         {
             if (source.Region == target.Region) // Если вершины на одном участке, сравниваем их внутренние координаты
-                return CoordinateDirection(source.RegionX, target.RegionX, source.RegionY, target.RegionY);
+                return GetStraightDirectionByCoordinates(source.RegionX, target.RegionX, source.RegionY, target.RegionY);
 
             // Иначе сравниваем реальные координаты самих участков
-            return CoordinateDirection(source.Region.X, target.Region.X, source.Region.Y, target.Region.Y);
+            return GetStraightDirectionByCoordinates(source.Region.X, target.Region.X, source.Region.Y, target.Region.Y);
         }
 
         /// <summary>
@@ -131,7 +146,7 @@ namespace TopologyModel.TopologyGraphs
         /// <param name="sourceY">Координата источника по Y.</param>
         /// <param name="targetY">Координата цели по Y.</param>
         /// <returns>Направление грани: 0 - верх, 1 - вправо, 2 - вниз, 3 - влево.</returns>
-        protected static uint CoordinateDirection(uint sourceX, uint targetX, uint sourceY, uint targetY)
+        protected static uint GetStraightDirectionByCoordinates(uint sourceX, uint targetX, uint sourceY, uint targetY)
         {
             if (sourceY > targetY)
                 return 0;
@@ -143,23 +158,6 @@ namespace TopologyModel.TopologyGraphs
                 return 3;
 
             return 1;
-        }
-
-        /// <summary>
-        /// Получить непроходимость радиоволн для соответствующих границ двух смежных участков.
-        /// </summary>
-        /// <param name="source">Исходный участок.</param>
-        /// <param name="target">Целевой участок.</param>
-        /// <returns>Значение непроходимости радиоволн.</returns>
-        protected static ushort GetWallsBadRadioTransmittanceEstimate(TopologyVertex source, TopologyVertex target)
-        {
-            var sourceEstimates = source.Region.WallsBadRadioTransmittanceEstimate; // Оценки границ исходного участка
-
-            if (sourceEstimates == null || sourceEstimates.Length == 0) return 0;
-
-            return sourceEstimates.Length == 4                  // Если в массиве все четыре значения
-                ? sourceEstimates[Direction(source, target)]    // Берём в зависимости от направления
-                : sourceEstimates[0];                           // Иначе берём первое
         }
     }
 }
