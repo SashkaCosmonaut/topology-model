@@ -30,9 +30,8 @@ namespace TopologyModel.TopologyGraphs
 		/// <param name="regionY">Координата вершины внутри участка по оси Y в матрице и в графе.</param>
 		public TopologyVertex(Region region, uint regionX, uint regionY)
 		{
-            if (Region == null) throw new ArgumentNullException(nameof(region));
+            Region = region ?? throw new ArgumentNullException(nameof(region));
 
-			Region = region;
 			RegionX = regionX;
 			RegionY = regionY;
 		}
