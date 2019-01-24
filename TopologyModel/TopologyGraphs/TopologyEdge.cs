@@ -45,7 +45,7 @@ namespace TopologyModel.TopologyGraphs
         {
             try
             {
-                WirelessWeight = GetWirelessWeight(this);
+                WirelessWeight = GetWirelessWeight();
 
                 if (IsAcrossTheBorder())
                     WiredWeight = 0;
@@ -120,15 +120,42 @@ namespace TopologyModel.TopologyGraphs
         /// </summary>
         /// <param name="edge">Грань, вес которой рассчитывается.</param>
         /// <returns>Значение беспроводного веса грани.</returns>
-        protected static float GetWirelessWeight(TopologyEdge edge)
+        protected float GetWirelessWeight()
         {
             // Берём оценки в исходном и целевом узлах
-            var sourceEstimates = edge.Source.Region.WallsBadRadioTransmittanceEstimate;
-            var targetEstimates = edge.Target.Region.WallsBadRadioTransmittanceEstimate;
+            var sourceEstimates = Source.Region.WallsBadRadioTransmittanceEstimate;
+            var targetEstimates = Target.Region.WallsBadRadioTransmittanceEstimate;
 
-            return edge.IsAcrossTheBorder()
-                ? (GetEstimate(sourceEstimates, edge.Source, edge.Target) + GetEstimate(targetEstimates, edge.Target, edge.Source)) / 2
-                : edge.Source.Region.InsideBadRadioTransmittanceEstimate;
+            return IsAcrossTheBorder()
+                ? (GetEstimate(sourceEstimates, Source, Target) + GetEstimate(targetEstimates, Target, Source)) / 2
+                : Source.Region.InsideBadRadioTransmittanceEstimate;
+        }
+
+        /// <summary>
+        /// Получить проводной вес связи через границу участка.
+        /// </summary>
+        /// <returns>Значение проводного веса.</returns>
+        protected float GetWiredWeightAcrossTheBorder()
+        {
+            return 0;
+        }
+
+        /// <summary>
+        /// Получить проводной весь вдоль границы участка.
+        /// </summary>
+        /// <returns>Значение проводного веса.</returns>
+        protected float GetWiredWeightAlongTheBorder()
+        {
+            return 0;
+        }
+
+        /// <summary>
+        /// Получить проводной вес внутри участка.
+        /// </summary>
+        /// <returns>Значение проводного веса.</returns>
+        protected float GetWiredWeightInside()
+        {
+            return 0;
         }
 
         /// <summary>
