@@ -118,7 +118,7 @@ namespace TopologyModel
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine("Failed! {0}", ex.Message);
                 return false;
             }
         }
@@ -135,7 +135,7 @@ namespace TopologyModel
             {
                 var verticesMatrix = new TopologyVertex[Height, Width];
 
-                foreach (var region in Regions)     // Перебираем все имеющиеся регионы
+                foreach (var region in Regions)         // Перебираем все имеющиеся регионы
                 {
                     // Определяем начальные и конечные координаты участков в матрице
                     var startX = region.X - 1;          // В конфигурационном файле координаты начинаются с 1

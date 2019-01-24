@@ -30,6 +30,8 @@ namespace TopologyModel.TopologyGraphs
 		/// <param name="regionY">Координата вершины внутри участка по оси Y в матрице и в графе.</param>
 		public TopologyVertex(Region region, uint regionX, uint regionY)
 		{
+            if (Region == null) throw new ArgumentNullException(nameof(region));
+
 			Region = region;
 			RegionX = regionX;
 			RegionY = regionY;
@@ -56,7 +58,7 @@ namespace TopologyModel.TopologyGraphs
         {
             var otherVertex = other as TopologyVertex;
 
-            if (otherVertex == null) return 0;  // Если поступил какой-то другой объект, то считаем, что они равны
+            if (otherVertex == null) throw new ArgumentException("Incorrect type or null of: ", nameof(other));
 
             // Для сравнения используются идентификаторы участков
             return (int)Region.Id - (int)otherVertex.Region.Id;
