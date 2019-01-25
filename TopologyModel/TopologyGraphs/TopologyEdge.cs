@@ -91,6 +91,28 @@ namespace TopologyModel.TopologyGraphs
         }
 
         /// <summary>
+        /// Сравнить две грани. Используется базовый метод.
+        /// </summary>
+        /// <param name="obj">Объект другой грани.</param>
+        /// <returns>Результат сравнения граней.</returns>
+        public override bool Equals(object obj) => base.Equals(obj);
+
+        /// <summary>
+        /// Получить хеш-код объекта грани. Используется базовый метод.
+        /// </summary>
+        /// <returns>Хэш-код объекта грани.</returns>
+        public override int GetHashCode() => base.GetHashCode();
+
+        /// <summary>
+        /// Получить строковое представление грани.
+        /// </summary>
+        /// <returns>Строка с весами грани через запятую, округлёнными до одного знака после запятой.</returns>
+        public override string ToString()
+        {
+            return $"{WiredWeight:0.0}; {WirelessWeight:0.0}";
+        }
+
+        /// <summary>
         /// Получить беспроводной вес грани. Если беспроводная связь внутри участка, то берётся 
         /// соответствующая оценка, а между участками - среднее от значений границ смежных участков.
         /// </summary>
@@ -131,12 +153,14 @@ namespace TopologyModel.TopologyGraphs
         }
 
         /// <summary>
-        /// Получить проводной вес внутри участка.
+        /// Получить проводной вес внутри участка путём сложения экспертных оценок.
         /// </summary>
         /// <returns>Значение проводного веса.</returns>
-        protected static float GetWiredWeightInside()
+        protected float GetWiredWeightInside()
         {
-            return 0;
+            return 0.4f * Source.Region.InsideUnavailabilityEstimate + 
+                   0.3f * Source.Region.InsideLaboriousnessEstimate + 
+                   0.3f * Source.Region.InsideAggressivenessEstimate;
         }
 
         /// <summary>
