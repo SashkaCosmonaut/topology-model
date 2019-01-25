@@ -3,6 +3,7 @@ using QuickGraph.Graphviz.Dot;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using TopologyModel.Enumerations;
 using TopologyModel.TopologyGraphs;
 
@@ -263,6 +264,15 @@ namespace TopologyModel
                 var graphviz = new GraphvizAlgorithm<TopologyVertex, TopologyEdge>(Graph);
 
                 graphviz.GraphFormat.RankDirection = GraphvizRankDirection.LR;
+                graphviz.GraphFormat.Label = Graph.Vertices                         // Добавляем общую метку графу с информацией об участках
+                    .Where(q => q.RegionX == 0 && q.RegionY == 0)                   // Перебираем угловую вершину каждого участка
+                    .Select(q => q.Region.GetInfo()
+                        .Replace('\"', '\'')                                        // Заменяем кавычки для Graphviz
+                        .Replace(",", ", ")
+                        .Replace("\'Inside",         "\r\n\'Inside")                // Добавляем переносы строк для красоты
+                        .Replace("\'AlongTheWalls",  "\r\n\'AlongTheWalls")
+                        .Replace("\'AcrossTheWalls", "\r\n\'AcrossTheWalls"))
+                    .Aggregate("", (current, next) => current + "\r\n\r\n" + next); 
 
                 graphviz.FormatVertex += (sender, args) =>
                 {
@@ -270,6 +280,11 @@ namespace TopologyModel
                     args.VertexFormatter.Comment = args.Vertex.ToString();                                      
                     args.VertexFormatter.Group = $"{args.Vertex.Region.Id}_{args.Vertex.RegionY}";              // Группируем участки на графе
                     args.VertexFormatter.StrokeColor = args.Vertex.IsInside() ? Color.Black : Color.Yellow;     // Граничные вершины окрашиваем в жёлтый цвет
+
+                    // Добавить наименование участка к его угловому узлу (заменить в файле на xlabel и добавить forcelabels=true)
+                    args.VertexFormatter.ToolTip = (args.Vertex.RegionX == 0 && args.Vertex.RegionY == 0)
+                        ? args.Vertex.Region.Name
+                        : "";
                 };
 
                 // Грани форматируем стандартно с двумя весами каждой грани

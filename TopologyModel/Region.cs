@@ -1,4 +1,6 @@
-﻿namespace TopologyModel
+﻿using Newtonsoft.Json;
+
+namespace TopologyModel
 {
 	/// <summary>
 	/// Класс участка объекта предприятия.
@@ -104,5 +106,39 @@
 		/// перечень имеющихся на участке ТУУ
 		/// </summary>
 		public MeasurementAndControlPoint[] MCPs { get; set; }
+
+        /// <summary>
+        /// Получить информацию об основных свойствах участка.
+        /// </summary>
+        /// <returns>Строка с JSON-объектом свойств участка.</returns>
+        public string GetInfo()
+        {
+            return JsonConvert.SerializeObject(new
+            {
+                Name,
+                Equipment = new {
+                    HasLan,
+                    HasWiFi,
+                    HasPower,
+                    Mobile = MobileInternetSignalEstimate,
+                },
+                Inside = new {
+                    Aggressiveness  = InsideAggressivenessEstimate,       
+                    Unavailability  = InsideUnavailabilityEstimate,
+                    Laboriousness   = InsideLaboriousnessEstimate,
+                    Radio           = InsideBadRadioTransmittanceEstimate,
+                },
+                AlongTheWalls = new {
+                    Aggressiveness  = WallsAggressivenessEstimate,
+                    Unavailability  = WallsUnavailabilityEstimate,
+                    Laboriousness   = WallsLaboriousnessEstimate,
+                    Radio           = InsideBadRadioTransmittanceEstimate,
+                },
+                AcrossTheWalls = new {
+                    Radio = WallsBadRadioTransmittanceEstimate,
+                    Wired = WallsBadWiredTransmittanceEstimate
+                }
+            });
+        }
 	}
 }
