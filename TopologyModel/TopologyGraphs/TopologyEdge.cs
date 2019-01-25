@@ -48,13 +48,13 @@ namespace TopologyModel.TopologyGraphs
                 WirelessWeight = GetWirelessWeight();
 
                 if (IsAcrossTheBorder())
-                    WiredWeight = 0;
+                    WiredWeight = (GetWiredWeightAcrossTheBorder(Source, Target) + GetWiredWeightAcrossTheBorder(Target, Source)) / 2;
 
                 else if (IsAlongTheBorder())
-                    WiredWeight = 0;
+                    WiredWeight = GetWiredWeightAlongTheBorder();
 
                 else
-                    WiredWeight = 0;
+                    WiredWeight = GetWiredWeightInside();
             }
             catch (Exception ex)
             {
@@ -132,19 +132,27 @@ namespace TopologyModel.TopologyGraphs
         }
 
         /// <summary>
-        /// Получить проводной вес связи через границу участка.
+        /// Рассчитать проводной вес грани через границу исходного участка в целевой путём сложения трудоемкости проведения кабелей,
+        /// а также учёта недоступности, трудоемкости стены и агрессивности среды на участке.
         /// </summary>
-        /// <returns>Значение проводного веса.</returns>
-        protected float GetWiredWeightAcrossTheBorder()
+        /// <param name="source">Исходный участок.</param>
+        /// <param name="target">Целевой участок.</param>
+        /// <returns>Дробное значение веса грани.</returns>
+        protected static float GetWiredWeightAcrossTheBorder(TopologyVertex source, TopologyVertex target)
         {
-            return 0;
+            var sourceReg = source.Region;
+
+            return 1.0f  * GetEstimate(sourceReg.WallsBadWiredTransmittanceEstimate, source, target) +
+                   0.5f  * GetEstimate(sourceReg.WallsUnavailabilityEstimate, source, target) +
+                   0.25f * GetEstimate(sourceReg.WallsLaboriousnessEstimate, source, target) +
+                   0.25f * GetEstimate(sourceReg.WallsAggressivenessEstimate, source, target);
         }
 
         /// <summary>
         /// Получить проводной весь вдоль границы участка.
         /// </summary>
         /// <returns>Значение проводного веса.</returns>
-        protected float GetWiredWeightAlongTheBorder()
+        protected static float GetWiredWeightAlongTheBorder()
         {
             return 0;
         }
@@ -153,7 +161,7 @@ namespace TopologyModel.TopologyGraphs
         /// Получить проводной вес внутри участка.
         /// </summary>
         /// <returns>Значение проводного веса.</returns>
-        protected float GetWiredWeightInside()
+        protected static float GetWiredWeightInside()
         {
             return 0;
         }
