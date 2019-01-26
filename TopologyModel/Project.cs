@@ -151,9 +151,10 @@ namespace TopologyModel
                     var endY = startY + region.Height;
 
                     for (var i = startY; i < endY; i++)         // Наполняем матрицу идентификаторами участков по координатам
-                        for (var j = startX; j < endX; j++)     // Создаём вершину, привязанную к учаску и задаём её координаты внутри самого участка
-                                                                // +1 из-за того, что в конфигурационном файле координаты начинаются с 1
-                            verticesMatrix[i, j] = new TopologyVertex(region, j - region.X + 1, i - region.Y + 1);
+                        for (var j = startX; j < endX; j++)     
+                            // Создаём вершину, привязанную к учаску и задаём её координаты внутри самого участка
+                            // +1 из-за того, что в конфигурационном файле координаты начинаются с 1
+                            verticesMatrix[i, j] = new TopologyVertex(region, j - region.X + 1, i - region.Y + 1, GetMCZsInVertex(j + 1, i + 1));  
                 }
 
                 Console.WriteLine("Done! Result matix: ");
@@ -174,6 +175,20 @@ namespace TopologyModel
                 Console.WriteLine("Failed! {0}", ex.Message);
                 return new TopologyVertex[,] { };
             }
+        }
+
+        /// <summary>
+        /// Получить массив всех мест учёта и управления в текущем узле графа по его координатам.
+        /// </summary>
+        /// <param name="x">Координата Х узла графа.</param>
+        /// <param name="y">Координата У узла графа.</param>
+        /// <returns>Массив мест учёта и управления распологающийся в указанных координатах или null, если там такого нет.</returns>
+        protected MeasurementAndControlZone[] GetMCZsInVertex(uint x, uint y)
+        {
+            if (MCZs == null || !MCZs.Any()) return null;
+
+            // Если координата узла находится в координатах ТУУ, то эта ТУУ в данном узле
+            return MCZs.Where(q => x >= q.X && y >= q.Y && x <= q.X + q.Width - 1 && y <= q.Y + q.Height - 1).ToArray();
         }
 
         /// <summary>
@@ -286,14 +301,13 @@ namespace TopologyModel
                     // В вершине указываем id участка и координаты внутри участка
                     args.VertexFormatter.Comment = args.Vertex.ToString();                                      
                     args.VertexFormatter.Group = $"{args.Vertex.Region.Id}_{args.Vertex.RegionY}";              // Группируем участки на графе
-                    args.VertexFormatter.StrokeColor = args.Vertex.IsInside() ? Color.Black : Color.Yellow;     // Граничные вершины окрашиваем в жёлтый цвет
 
                     // Добавить наименование участка к его угловому узлу (заменить в файле на xlabel и добавить forcelabels=true)
                     args.VertexFormatter.ToolTip = (args.Vertex.RegionX == 0 && args.Vertex.RegionY == 0)
                         ? args.Vertex.Region.Name
                         : "";
 
-                    args.VertexFormatter.Style = GraphvizVertexStyle.Filled;
+                    SetVertexColor(args);
                 };
 
                 // Грани форматируем стандартно с двумя весами каждой грани
@@ -304,8 +318,8 @@ namespace TopologyModel
                     if (args.Edge.IsAcrossTheBorder())                          // Грани через участки окрашиваем в красный цвет
                         args.EdgeFormatter.StrokeColor = Color.Red;
 
-                    if (args.Edge.IsAlongTheBorder())                           // Грани вдоль границ участков окрашиваем в жёлтый цвет
-                        args.EdgeFormatter.StrokeColor = Color.Yellow;
+                    if (args.Edge.IsAlongTheBorder())                           // Грани вдоль границ участков окрашиваем в оранжевый цвет
+                        args.EdgeFormatter.StrokeColor = Color.Orange;
                 };
 
                 graphviz.Generate(new FileDotEngine(), GraphDotFilename);       // Генерируем файл с укзанным именем
@@ -319,6 +333,24 @@ namespace TopologyModel
                 Console.WriteLine("Failed! {0}", ex.Message);
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Задать цвет фона вершины.
+        /// </summary>
+        /// <param name="args">Аргументы форматирования вершины.</param>
+        protected void SetVertexColor(FormatVertexEventArgs<TopologyVertex> args)
+        {
+            args.VertexFormatter.Style = GraphvizVertexStyle.Filled;
+
+            if (args.Vertex.MCZs != null && args.Vertex.MCZs.Any()) // Вершины с ТУУ окрашиваем в зелёный цвет
+                args.VertexFormatter.FillColor = Color.LightGreen;
+
+            else if (!args.Vertex.IsInside())                       // Граничные вершины окрашиваем в жёлтый цвет
+                args.VertexFormatter.FillColor = Color.Yellow;
+
+            else
+                args.VertexFormatter.FillColor = Color.WhiteSmoke;  // Все остальные вершины - почти белые
         }
     }
 }

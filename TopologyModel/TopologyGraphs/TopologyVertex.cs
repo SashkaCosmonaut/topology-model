@@ -13,6 +13,11 @@ namespace TopologyModel.TopologyGraphs
 		/// </summary>
 		public TopologyRegion Region { get; set; }
 
+        /// <summary>
+        /// Ссылки на места учёта и управления, которые находятся на данной вершине.
+        /// </summary>
+        public MeasurementAndControlZone[] MCZs { get; set; }
+
 		/// <summary>
 		/// Координата вершины внутри участка по оси Х в матрице и в графе.
 		/// </summary>
@@ -23,18 +28,21 @@ namespace TopologyModel.TopologyGraphs
 		/// </summary>
 		public uint RegionY { get; set; }
 
-		/// <summary>
-		/// Создать вершину графа, которая находится на определённом участке предприятия.
-		/// </summary>
-		/// <param name="region">Ссылка на участкок предприятия, на котором находтся данная вершина.</param>
-		/// <param name="regionX">Координата вершины внутри участка по оси Х в матрице и в графе.</param>
-		/// <param name="regionY">Координата вершины внутри участка по оси Y в матрице и в графе.</param>
-		public TopologyVertex(TopologyRegion region, uint regionX, uint regionY)
+        /// <summary>
+        /// Создать вершину графа, которая находится на определённом участке предприятия.
+        /// </summary>
+        /// <param name="region">Ссылка на участкок предприятия, на котором находтся данная вершина.</param>
+        /// <param name="regionX">Координата вершины внутри участка по оси Х в матрице и в графе.</param>
+        /// <param name="regionY">Координата вершины внутри участка по оси Y в матрице и в графе.</param>
+        /// <param name="mczs">Ссылки на места учёта и управления, которые находятся на данной вершине.</param>
+        public TopologyVertex(TopologyRegion region, uint regionX, uint regionY, MeasurementAndControlZone[] mczs = null)
 		{
             Region = region ?? throw new ArgumentNullException(nameof(region));
 
 			RegionX = regionX;
 			RegionY = regionY;
+
+            MCZs = mczs;
 		}
 
 		/// <summary>
