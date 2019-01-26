@@ -3,17 +3,26 @@
     /// <summary>
     /// Класс некоторого абстрактного участка предприятия.
     /// </summary>
-    public class AbstractRegion
+    public abstract class AbstractRegion
     {
+        /// <summary>
+        /// Поле с наименованием участка.
+        /// </summary>
+        private string _name;
+
         /// <summary>
         /// Уникальный идентификатор участка.
         /// </summary>
-        public uint Id { get; set; }
+        public uint Id { get; protected set; }
 
         /// <summary>
-		/// Наименование участка.
+		/// Свойство наименования участка.
 		/// </summary>
-		public string Name { get; set; }
+		public string Name
+        {
+            get { return Id + ". " + _name; }
+            set { _name = value; }
+        }
 
 		/// <summary>
 		/// Координата Х левого верхнего угла участка на территории предприятия.
@@ -34,5 +43,14 @@
 		/// Высота участка по схеме в метрах.
 		/// </summary>
 		public uint Height { get; set; }
+
+        /// <summary>
+        /// Получить строковую интерпретацию участка.
+        /// </summary>
+        /// <returns>Строка с описанием свойств объекта участка.</returns>
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

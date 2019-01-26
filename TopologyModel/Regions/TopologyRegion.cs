@@ -7,10 +7,15 @@ namespace TopologyModel.Regions
 	/// </summary>
 	public class TopologyRegion : AbstractRegion
 	{
-		/// <summary>
-		/// наличие на данном участке проводного подключения к локальной сети предприятия 
-		/// </summary>
-		public bool HasLan { get; set; }
+        /// <summary>
+        /// Глобальный автоприращиваемый идентификатор.
+        /// </summary>
+        private static uint GlobalId = 0;
+
+        /// <summary>
+        /// наличие на данном участке проводного подключения к локальной сети предприятия 
+        /// </summary>
+        public bool HasLan { get; set; }
 
 		/// <summary>
 		/// экспертная оценка недоступности (слабости сигнала) на данном участке беспроводного подключения к локальной сети объекта предприятия
@@ -77,6 +82,14 @@ namespace TopologyModel.Regions
 		/// перечень имеющихся на участке ТУУ
 		/// </summary>
 		public MeasurementAndControlZone[] MCZs { get; set; }
+
+        /// <summary>
+        /// Создать и проинициализировать участок по умолчанию.
+        /// </summary>
+        public TopologyRegion()
+        {
+            Id = ++GlobalId;
+        }
 
         /// <summary>
         /// Получить информацию об основных свойствах участка.
