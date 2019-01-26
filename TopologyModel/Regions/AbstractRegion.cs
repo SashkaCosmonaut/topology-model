@@ -52,5 +52,11 @@
         {
             return Name;
         }
+
+        /// <summary>
+        /// Получить информацию в текстовом виде о свойствах участка.
+        /// </summary>
+        /// <returns>Строка с информацией об участке.</returns>
+        public abstract string GetInfo();
     }
 }

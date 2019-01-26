@@ -90,7 +90,7 @@ namespace TopologyModel.Regions
         /// Получить информацию об основных свойствах участка.
         /// </summary>
         /// <returns>Строка с JSON-объектом свойств участка.</returns>
-        public string GetInfo()
+        public override string GetInfo()
         {
             return JsonConvert.SerializeObject(new
             {

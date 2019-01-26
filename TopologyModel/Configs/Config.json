@@ -268,8 +268,8 @@
 	"MCZs": [
 		{
 			"Priority": 2,
-			"AllMeasurements": [ 4, 5, 7 ],
-			"AllСontrols": null,
+			"Measurements": [ 4, 5, 7 ],
+			"Сontrols": null,
 			"IsDeviceReplacementAvailable": true,
 			"Id": 1,
 			"Name": "Зона замера температуры и влажности",
@@ -280,8 +280,8 @@
 		},
 		{
 			"Priority": 2,
-			"AllMeasurements": [ 4, 5, 7 ],
-			"AllСontrols": null,
+			"Measurements": [ 4, 5, 7 ],
+			"Сontrols": null,
 			"IsDeviceReplacementAvailable": true,
 			"Id": 2,
 			"Name": "Зона замера температуры и влажности",
@@ -292,8 +292,8 @@
 		},
 		{
 			"Priority": 2,
-			"AllMeasurements": [ 8 ],
-			"AllСontrols": [ 0 ],
+			"Measurements": [ 8 ],
+			"Сontrols": [ 0 ],
 			"IsDeviceReplacementAvailable": true,
 			"Id": 3,
 			"Name": "Замеры параметра станка и удалённое отключение",
@@ -304,8 +304,8 @@
 		},
 		{
 			"Priority": 2,
-			"AllMeasurements": [ 8 ],
-			"AllСontrols": [ 0 ],
+			"Measurements": [ 8 ],
+			"Сontrols": [ 0 ],
 			"IsDeviceReplacementAvailable": true,
 			"Id": 4,
 			"Name": "Замеры параметра станка и удалённое отключение",
@@ -316,8 +316,8 @@
 		},
 		{
 			"Priority": 2,
-			"AllMeasurements": [ 8 ],
-			"AllСontrols": [ 0 ],
+			"Measurements": [ 8 ],
+			"Сontrols": [ 0 ],
 			"IsDeviceReplacementAvailable": true,
 			"Id": 5,
 			"Name": "Замеры параметра станка и удалённое отключение",
@@ -328,8 +328,8 @@
 		},
 		{
 			"Priority": 1,
-			"AllMeasurements": [ 0, 0 ],
-			"AllСontrols": null,
+			"Measurements": [ 0, 0 ],
+			"Сontrols": null,
 			"IsDeviceReplacementAvailable": false,
 			"Id": 6,
 			"Name": "Потребление электроэнергии двумя арендаторами",
@@ -340,8 +340,8 @@
 		},
 		{
 			"Priority": 0,
-			"AllMeasurements": [ 1, 2 ],
-			"AllСontrols": null,
+			"Measurements": [ 1, 2 ],
+			"Сontrols": null,
 			"IsDeviceReplacementAvailable": true,
 			"Id": 7,
 			"Name": "Потребление ХВС и ГВС цехом",
@@ -352,8 +352,8 @@
 		},
 		{
 			"Priority": 1,
-			"AllMeasurements": [ 0 ],
-			"AllСontrols": null,
+			"Measurements": [ 0 ],
+			"Сontrols": null,
 			"IsDeviceReplacementAvailable": true,
 			"Id": 8,
 			"Name": "Потребление электроэнергии цехом",

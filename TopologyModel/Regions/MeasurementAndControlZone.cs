@@ -1,4 +1,5 @@
-﻿using TopologyModel.Enumerations;
+﻿using Newtonsoft.Json;
+using TopologyModel.Enumerations;
 
 namespace TopologyModel.Regions
 {
@@ -20,12 +21,12 @@ namespace TopologyModel.Regions
 		/// <summary>
 		/// множество всех измерений потребления энергоресурсов, доступных на данной ТУУ
 		/// </summary>
-		public Measurement[] AllMeasurements { get; set; }
+		public Measurement[] Measurements { get; set; }
 
 		/// <summary>
 		/// множество всех управляющих воздействий, доступных на данной ТУУ
 		/// </summary>
-		public Control[] AllСontrols { get; set; }
+		public Control[] Сontrols { get; set; }
 
 		/// <summary>
 		/// допустима ли замена уже имеющихся КУ на ТУУ на более новые
@@ -38,6 +39,22 @@ namespace TopologyModel.Regions
         public MeasurementAndControlZone()
         {
             Id = ++GlobalId;
+        }
+
+        /// <summary>
+        /// Получить информацию об основных свойствах участка.
+        /// </summary>
+        /// <returns>Строка с JSON-объектом свойств участка.</returns>
+        public override string GetInfo()
+        {
+            return JsonConvert.SerializeObject(new
+            {
+                Name,
+                Priority,
+                Measurements,
+                Сontrols,
+                IsDeviceReplacementAvailable
+            });
         }
     }
 }

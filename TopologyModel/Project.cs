@@ -286,15 +286,10 @@ namespace TopologyModel
 
                 graphviz.GraphFormat.RankDirection = GraphvizRankDirection.LR;
 
-                graphviz.GraphFormat.Label = Graph.Vertices                         // Добавляем общую метку графу с информацией об участках
-                    .Where(q => q.RegionX == 0 && q.RegionY == 0)                   // Перебираем угловую вершину каждого участка
-                    .Select(q => q.Region.GetInfo()
-                        .Replace('\"', '\'')                                        // Заменяем кавычки для Graphviz
-                        .Replace(",", ", ")
-                        .Replace("\'Inside",         "\r\n\'Inside")                // Добавляем переносы строк для красоты
-                        .Replace("\'AlongTheWalls",  "\r\n\'AlongTheWalls")
-                        .Replace("\'AcrossTheWalls", "\r\n\'AcrossTheWalls"))
-                    .Aggregate("", (current, next) => current + "\r\n\r\n" + next); 
+                // Добавляем общую метку графу с информацией об участках
+                graphviz.GraphFormat.Label = 
+                    Regions.Select(q => PrepareJSONForGraphviz(q.GetInfo())).Aggregate("", (current, next) => current + "\r\n\r\n" + next) +
+                    MCZs.Select(q => PrepareJSONForGraphviz(q.GetInfo())).Aggregate("", (current, next) => current + "\r\n\r\n" + next); 
 
                 graphviz.FormatVertex += (sender, args) =>
                 {
@@ -333,6 +328,19 @@ namespace TopologyModel
                 Console.WriteLine("Failed! {0}", ex.Message);
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Подготовить JSON-строку для помещения в Graphviz.
+        /// </summary>
+        /// <param name="JSONstring>Исходная строка.</param>
+        /// <returns>Обработанная строка.</returns>
+        protected string PrepareJSONForGraphviz(string JSONstring)
+        {
+            return JSONstring
+                .Replace('\"', '\'')            // Заменяем кавычки для Graphviz
+                .Replace("},'", "},\r\n'")      // Добавляем переносы строк для красоты
+                .Replace(",", ", ");            // ... и пробелы
         }
 
         /// <summary>
