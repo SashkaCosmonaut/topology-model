@@ -78,11 +78,6 @@ namespace TopologyModel.Regions
 		/// </summary>
 		public ushort[] WallsBadWiredTransmittanceEstimate { get; set; }
 
-		/// <summary>
-		/// перечень имеющихся на участке ТУУ
-		/// </summary>
-		public MeasurementAndControlZone[] MCZs { get; set; }
-
         /// <summary>
         /// Создать и проинициализировать участок по умолчанию.
         /// </summary>

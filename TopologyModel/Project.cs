@@ -80,6 +80,11 @@ namespace TopologyModel
         public TopologyRegion[] Regions { get; set; }
 
         /// <summary>
+        /// перечень имеющихся на предприятии ТУУ
+        /// </summary>
+        public MeasurementAndControlZone[] MCZs { get; set; }
+
+        /// <summary>
         /// База данных доступного инструментария.
         /// </summary>
         public Tools AvailableTools { get; set; }
@@ -265,6 +270,7 @@ namespace TopologyModel
                 var graphviz = new GraphvizAlgorithm<TopologyVertex, TopologyEdge>(Graph);
 
                 graphviz.GraphFormat.RankDirection = GraphvizRankDirection.LR;
+
                 graphviz.GraphFormat.Label = Graph.Vertices                         // Добавляем общую метку графу с информацией об участках
                     .Where(q => q.RegionX == 0 && q.RegionY == 0)                   // Перебираем угловую вершину каждого участка
                     .Select(q => q.Region.GetInfo()
@@ -286,6 +292,8 @@ namespace TopologyModel
                     args.VertexFormatter.ToolTip = (args.Vertex.RegionX == 0 && args.Vertex.RegionY == 0)
                         ? args.Vertex.Region.Name
                         : "";
+
+                    args.VertexFormatter.Style = GraphvizVertexStyle.Filled;
                 };
 
                 // Грани форматируем стандартно с двумя весами каждой грани
