@@ -7,14 +7,20 @@
 	{
 		ElectricityConsumption,
 
-		WaterConsumption,
+		ColdWaterConsumption,
 
-		GasConsumption,
+        HotWaterConsumption,
+
+        GasConsumption,
 
 		Temperature,
 
 		Humidity,
 		
-		Level
-	}
+		Level,
+
+        BatteryLevel,
+
+        LiquidLevel
+    }
 }
