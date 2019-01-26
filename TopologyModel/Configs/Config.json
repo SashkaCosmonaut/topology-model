@@ -15,7 +15,7 @@
 	},
 	"Regions": [
 		{
-			"Name": "1. Улица",
+			"Name": "1. Улица (территория предприятия на открытом воздухе)",
 			"Id": 1,
 			"X": 1, /* Координаты в данном файле начинаются с 1, а не с 0. */
 			"Y": 1,
@@ -103,7 +103,7 @@
 			"MCPs": null
 		},
 		{
-			"Name": "5. Иные помещения",
+			"Name": "5. Иные цеха",
 			"Id": 5,
 			"X": 9,
 			"Y": 2,
@@ -129,7 +129,7 @@
 			"Id": 6,
 			"X": 1,
 			"Y": 6,
-			"Width": 4,
+			"Width": 1,
 			"Height": 2,
 			"HasLan": false,
 			"HasWiFi": false,
@@ -142,13 +142,35 @@
 			"WallsAggressivenessEstimate": [ 2, 2, 2, 2 ],
 			"WallsUnavailabilityEstimate": [ 5, 5, 5, 5 ],
 			"WallsLaboriousnessEstimate": [ 2, 2, 2, 2 ],
-			"WallsBadRadioTransmittanceEstimate": [ 1, 1, 5, 5 ],
-			"WallsBadWiredTransmittanceEstimate": [ 1, 1, 2, 2 ],
+			"WallsBadRadioTransmittanceEstimate": [ 5, 1, 5, 5 ],
+			"WallsBadWiredTransmittanceEstimate": [ 2, 1, 2, 2 ],
 			"MCPs": null
 		},
 		{
 			"Name": "7. Проезд 2",
 			"Id": 7,
+			"X": 2,
+			"Y": 6,
+			"Width": 3,
+			"Height": 2,
+			"HasLan": false,
+			"HasWiFi": false,
+			"HasPower": true,
+			"MobileInternetSignalEstimate": 1,
+			"InsideAggressivenessEstimate": 3,
+			"InsideUnavailabilityEstimate": 10,
+			"InsideLaboriousnessEstimate": 10,
+			"InsideBadRadioTransmittanceEstimate": 1,
+			"WallsAggressivenessEstimate": [ 2, 2, 2, 2 ],
+			"WallsUnavailabilityEstimate": [ 5, 5, 5, 5 ],
+			"WallsLaboriousnessEstimate": [ 2, 2, 2, 2 ],
+			"WallsBadRadioTransmittanceEstimate": [ 1, 1, 5, 1 ],
+			"WallsBadWiredTransmittanceEstimate": [ 1, 1, 2, 1 ],
+			"MCPs": null
+		},
+		{
+			"Name": "8. Проезд 3",
+			"Id": 8,
 			"X": 5,
 			"Y": 6,
 			"Width": 5,
@@ -169,8 +191,8 @@
 			"MCPs": null
 		},
 		{
-			"Name": "8. Иные помещения",
-			"Id": 8,
+			"Name": "9. Арендаторы",
+			"Id": 9,
 			"X": 1,
 			"Y": 8,
 			"Width": 1,
@@ -191,8 +213,8 @@
 			"MCPs": null
 		},
 		{
-			"Name": "9. Щитовая",
-			"Id": 9,
+			"Name": "10. Щитовая",
+			"Id": 10,
 			"X": 2,
 			"Y": 8,
 			"Width": 2,
@@ -213,8 +235,8 @@
 			"MCPs": null
 		},
 		{
-			"Name": "10. Санузел",
-			"Id": 10,
+			"Name": "11. Санузел",
+			"Id": 11,
 			"X": 4,
 			"Y": 8,
 			"Width": 3,
@@ -235,8 +257,8 @@
 			"MCPs": null
 		},
 		{
-			"Name": "11. Админ. помещение",
-			"Id": 11,
+			"Name": "12. Админ. помещение",
+			"Id": 12,
 			"X": 7,
 			"Y": 8,
 			"Width": 3,
