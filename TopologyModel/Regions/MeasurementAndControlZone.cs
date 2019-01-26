@@ -1,21 +1,16 @@
 ﻿using TopologyModel.Enumerations;
 
-namespace TopologyModel
+namespace TopologyModel.Regions
 {
-	/// <summary>
-	/// Класс точки учёта и управления.
-	/// </summary>
-	public class MeasurementAndControlPoint
+    /// <summary>
+    /// Класс места учёта и управления (или только точки учёта и управления).
+    /// </summary>
+    public class MeasurementAndControlZone : AbstractRegion
 	{
-		/// <summary>
-		/// уникальный идентификатор ТУУ
-		/// </summary>
-		public uint Id { get; set; }
-
-		/// <summary>
-		/// экспертная оценка приоритета покрытия ТУУ сетью
-		/// </summary>
-		public uint Priority { get; set; }
+        /// <summary>
+        /// экспертная оценка приоритета покрытия ТУУ сетью
+        /// </summary>
+        public uint Priority { get; set; }
 
 		/// <summary>
 		/// множество всех измерений потребления энергоресурсов, доступных на данной ТУУ

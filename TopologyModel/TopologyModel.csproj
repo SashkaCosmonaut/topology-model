@@ -132,12 +132,13 @@
     <Compile Include="Devices\MeasurementAndControlDevice.cs" />
     <Compile Include="GA\TopologyChromosome .cs" />
     <Compile Include="GA\TopologyFitness.cs" />
-    <Compile Include="MeasurementAndControlPoint.cs" />
+    <Compile Include="Regions\MeasurementAndControlZone.cs" />
     <Compile Include="Enumerations\InternetConnection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Enumerations\Protocol.cs" />
+    <Compile Include="Regions\AbstractRegion.cs" />
     <Compile Include="Regions\TopologyRegion.cs" />
     <Compile Include="Enumerations\Topology.cs" />
     <Compile Include="Devices\TransceiverDevice.cs" />

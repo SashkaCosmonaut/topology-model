@@ -34,7 +34,7 @@
 			"WallsLaboriousnessEstimate": [ 2, 2, 2, 2 ],
 			"WallsBadRadioTransmittanceEstimate": [ 5, 5, 5, 5 ],
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 2, 2 ],
-			"MCPs": null
+			"MSZs": null
 		},
 		{
 			"Name": "2. Иные помещения",
@@ -56,7 +56,7 @@
 			"WallsLaboriousnessEstimate": [ 2, 2, 2, 2 ],
 			"WallsBadRadioTransmittanceEstimate": [ 5, 5, 5, 5 ],
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 2, 2 ],
-			"MCPs": null
+			"MSZs": null
 		},
 		{
 			"Name": "3. Склад",
@@ -78,7 +78,7 @@
 			"WallsLaboriousnessEstimate": [ 1, 1, 1, 1 ],
 			"WallsBadRadioTransmittanceEstimate": [ 5, 5, 1, 5 ],
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 1, 2 ],
-			"MCPs": null
+			"MSZs": null
 		},
 		{
 			"Name": "4. Цех",
@@ -100,7 +100,7 @@
 			"WallsLaboriousnessEstimate": [ 5, 5, 5, 5 ],
 			"WallsBadRadioTransmittanceEstimate": [ 8, 8, 8, 8 ],
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 2, 2 ],
-			"MCPs": null
+			"MSZs": null
 		},
 		{
 			"Name": "5. Иные цеха",
@@ -122,7 +122,7 @@
 			"WallsLaboriousnessEstimate": [ 2, 2, 2, 2 ],
 			"WallsBadRadioTransmittanceEstimate": [ 5, 5, 5, 5 ],
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 2, 2 ],
-			"MCPs": null
+			"MSZs": null
 		},
 		{
 			"Name": "6. Проезд 1",
@@ -144,7 +144,7 @@
 			"WallsLaboriousnessEstimate": [ 2, 2, 2, 2 ],
 			"WallsBadRadioTransmittanceEstimate": [ 5, 1, 5, 5 ],
 			"WallsBadWiredTransmittanceEstimate": [ 2, 1, 2, 2 ],
-			"MCPs": null
+			"MSZs": null
 		},
 		{
 			"Name": "7. Проезд 2",
@@ -166,7 +166,7 @@
 			"WallsLaboriousnessEstimate": [ 2, 2, 2, 2 ],
 			"WallsBadRadioTransmittanceEstimate": [ 1, 1, 5, 1 ],
 			"WallsBadWiredTransmittanceEstimate": [ 1, 1, 2, 1 ],
-			"MCPs": null
+			"MSZs": null
 		},
 		{
 			"Name": "8. Проезд 3",
@@ -188,7 +188,7 @@
 			"WallsLaboriousnessEstimate": [ 2, 2, 2, 2 ],
 			"WallsBadRadioTransmittanceEstimate": [ 5, 5, 5, 1 ],
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 2, 1 ],
-			"MCPs": null
+			"MSZs": null
 		},
 		{
 			"Name": "9. Арендаторы",
@@ -210,7 +210,7 @@
 			"WallsLaboriousnessEstimate": [ 2, 2, 2, 2 ],
 			"WallsBadRadioTransmittanceEstimate": [ 5, 5, 5, 5 ],
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 2, 2 ],
-			"MCPs": null
+			"MSZs": null
 		},
 		{
 			"Name": "10. Щитовая",
@@ -232,7 +232,7 @@
 			"WallsLaboriousnessEstimate": [ 1, 1, 1, 1 ],
 			"WallsBadRadioTransmittanceEstimate": [ 5, 5, 5, 5 ],
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 2, 2 ],
-			"MCPs": null
+			"MSZs": null
 		},
 		{
 			"Name": "11. Санузел",
@@ -254,7 +254,7 @@
 			"WallsLaboriousnessEstimate": [ 2, 2, 2, 2 ],
 			"WallsBadRadioTransmittanceEstimate": [ 5, 5, 5, 5 ],
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 2, 2 ],
-			"MCPs": null
+			"MSZs": null
 		},
 		{
 			"Name": "12. Админ. помещение",
@@ -276,7 +276,7 @@
 			"WallsLaboriousnessEstimate": [ 1, 1, 1, 1 ],
 			"WallsBadRadioTransmittanceEstimate": [ 5, 5, 5, 5 ],
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 2, 2 ],
-			"MCPs": null
+			"MSZs": null
 		}
 	],
 	"AvailableTools": {

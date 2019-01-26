@@ -5,37 +5,8 @@ namespace TopologyModel.Regions
 	/// <summary>
 	/// Класс участка объекта предприятия.
 	/// </summary>
-	public class TopologyRegion
+	public class TopologyRegion : AbstractRegion
 	{
-		/// <summary>
-		/// Наименование участка предприятия.
-		/// </summary>
-		public string Name { get; set; }
-
-		/// уникальный идентификатор участка
-		/// </summary>
-		public uint Id { get; set; }
-
-		/// <summary>
-		/// Координата Х левого верхнего угла участка на территории предприятия.
-		/// </summary>
-		public uint X { get; set; }
-
-		/// <summary>
-		/// Координата Y левого верхнего угла участка на территории предприятия.
-		/// </summary>
-		public uint Y { get; set; }
-
-		/// <summary>
-		/// Ширина участка по схеме в метрах.
-		/// </summary>
-		public uint Width { get; set; }
-
-		/// <summary>
-		/// Высота участка по схеме в метрах.
-		/// </summary>
-		public uint Height { get; set; }
-
 		/// <summary>
 		/// наличие на данном участке проводного подключения к локальной сети предприятия 
 		/// </summary>
@@ -105,7 +76,7 @@ namespace TopologyModel.Regions
 		/// <summary>
 		/// перечень имеющихся на участке ТУУ
 		/// </summary>
-		public MeasurementAndControlPoint[] MCPs { get; set; }
+		public MeasurementAndControlZone[] MCZs { get; set; }
 
         /// <summary>
         /// Получить информацию об основных свойствах участка.
