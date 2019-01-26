@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using TopologyModel.Enumerations;
+using TopologyModel.Regions;
 using TopologyModel.TopologyGraphs;
 
 namespace TopologyModel
@@ -76,7 +77,7 @@ namespace TopologyModel
         /// <summary>
         /// Массив всех участков предприятия.
         /// </summary>
-        public Region[] Regions { get; set; }
+        public TopologyRegion[] Regions { get; set; }
 
         /// <summary>
         /// База данных доступного инструментария.

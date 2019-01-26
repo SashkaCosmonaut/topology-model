@@ -1,4 +1,5 @@
 ﻿using System;
+using TopologyModel.Regions;
 
 namespace TopologyModel.TopologyGraphs
 {
@@ -10,7 +11,7 @@ namespace TopologyModel.TopologyGraphs
 		/// <summary>
 		/// Ссылка на участок, на котором располагается данная вершина.
 		/// </summary>
-		public Region Region { get; set; }
+		public TopologyRegion Region { get; set; }
 
 		/// <summary>
 		/// Координата вершины внутри участка по оси Х в матрице и в графе.
@@ -28,7 +29,7 @@ namespace TopologyModel.TopologyGraphs
 		/// <param name="region">Ссылка на участкок предприятия, на котором находтся данная вершина.</param>
 		/// <param name="regionX">Координата вершины внутри участка по оси Х в матрице и в графе.</param>
 		/// <param name="regionY">Координата вершины внутри участка по оси Y в матрице и в графе.</param>
-		public TopologyVertex(Region region, uint regionX, uint regionY)
+		public TopologyVertex(TopologyRegion region, uint regionX, uint regionY)
 		{
             Region = region ?? throw new ArgumentNullException(nameof(region));
 

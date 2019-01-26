@@ -1,11 +1,11 @@
 ﻿using Newtonsoft.Json;
 
-namespace TopologyModel
+namespace TopologyModel.Regions
 {
 	/// <summary>
 	/// Класс участка объекта предприятия.
 	/// </summary>
-	public class Region
+	public class TopologyRegion
 	{
 		/// <summary>
 		/// Наименование участка предприятия.
