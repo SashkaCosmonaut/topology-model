@@ -8,19 +8,11 @@
 	"IsInternetAvailable": false,
 	"LocalServerMonthlyPayment": 999999.0,
 	"RemoteServerMonthlyPayment": 2000.0,
-	"MobileInternetMonthlyPayment": { "_3G": 300.0 },
+	"WeightCoefficients": { "InsideAggressivenessEstimate": 0.5 },
 	"GraphDotFilename": "graph.dot",
-	"WeightCoefficients": {
-		"InsideAggressivenessEstimate": 0.5
-	},
+	"MobileInternetMonthlyPayment": { "_3G": 300.0 },
 	"Regions": [
 		{
-			"Name": "1. Улица (территория предприятия на открытом воздухе)",
-			"Id": 1,
-			"X": 1, /* Координаты в данном файле начинаются с 1, а не с 0. */
-			"Y": 1,
-			"Width": 9,
-			"Height": 1,
 			"HasLan": false,
 			"HasWiFi": false,
 			"HasPower": false,
@@ -34,15 +26,15 @@
 			"WallsLaboriousnessEstimate": [ 2, 2, 2, 2 ],
 			"WallsBadRadioTransmittanceEstimate": [ 5, 5, 5, 5 ],
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 2, 2 ],
-			"MSZs": null
+			"MCZs": null,
+			"Id": 1,
+			"Name": "Улица (территория предприятия на открытом воздухе)",
+			"X": 1,
+			"Y": 1,
+			"Width": 9,
+			"Height": 1
 		},
 		{
-			"Name": "2. Иные помещения",
-			"Id": 2,
-			"X": 1,
-			"Y": 2,
-			"Width": 1,
-			"Height": 4,
 			"HasLan": false,
 			"HasWiFi": false,
 			"HasPower": false,
@@ -56,15 +48,15 @@
 			"WallsLaboriousnessEstimate": [ 2, 2, 2, 2 ],
 			"WallsBadRadioTransmittanceEstimate": [ 5, 5, 5, 5 ],
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 2, 2 ],
-			"MSZs": null
+			"MCZs": null,
+			"Id": 2,
+			"Name": "Иные помещения",
+			"X": 1,
+			"Y": 2,
+			"Width": 1,
+			"Height": 4
 		},
 		{
-			"Name": "3. Склад",
-			"Id": 3,
-			"X": 2,
-			"Y": 2,
-			"Width": 3,
-			"Height": 4,
 			"HasLan": false,
 			"HasWiFi": false,
 			"HasPower": false,
@@ -78,15 +70,40 @@
 			"WallsLaboriousnessEstimate": [ 1, 1, 1, 1 ],
 			"WallsBadRadioTransmittanceEstimate": [ 5, 5, 1, 5 ],
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 1, 2 ],
-			"MSZs": null
+			"MCZs": [
+				{
+					"Priority": 2,
+					"AllMeasurements": [ 4, 5, 7 ],
+					"AllСontrols": null,
+					"IsDeviceReplacementAvailable": true,
+					"Id": 1,
+					"Name": "Зона замера температуры и влажности",
+					"X": 2,
+					"Y": 2,
+					"Width": 2,
+					"Height": 2
+				},
+				{
+					"Priority": 2,
+					"AllMeasurements": [ 4, 5, 7 ],
+					"AllСontrols": null,
+					"IsDeviceReplacementAvailable": true,
+					"Id": 2,
+					"Name": "Зона замера температуры и влажности",
+					"X": 3,
+					"Y": 4,
+					"Width": 2,
+					"Height": 2
+				}
+			],
+			"Id": 3,
+			"Name": "Склад",
+			"X": 2,
+			"Y": 2,
+			"Width": 3,
+			"Height": 4
 		},
 		{
-			"Name": "4. Цех",
-			"Id": 4,
-			"X": 5,
-			"Y": 2,
-			"Width": 4,
-			"Height": 4,
 			"HasLan": false,
 			"HasWiFi": false,
 			"HasPower": true,
@@ -100,15 +117,52 @@
 			"WallsLaboriousnessEstimate": [ 5, 5, 5, 5 ],
 			"WallsBadRadioTransmittanceEstimate": [ 8, 8, 8, 8 ],
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 2, 2 ],
-			"MSZs": null
+			"MCZs": [
+				{
+					"Priority": 2,
+					"AllMeasurements": [ 8 ],
+					"AllСontrols": [ 0 ],
+					"IsDeviceReplacementAvailable": true,
+					"Id": 3,
+					"Name": "Замеры параметра станка и удалённое отключение",
+					"X": 6,
+					"Y": 2,
+					"Width": 1,
+					"Height": 1
+				},
+				{
+					"Priority": 2,
+					"AllMeasurements": [ 8 ],
+					"AllСontrols": [ 0 ],
+					"IsDeviceReplacementAvailable": true,
+					"Id": 4,
+					"Name": "Замеры параметра станка и удалённое отключение",
+					"X": 8,
+					"Y": 3,
+					"Width": 1,
+					"Height": 1
+				},
+				{
+					"Priority": 2,
+					"AllMeasurements": [ 8 ],
+					"AllСontrols": [ 0 ],
+					"IsDeviceReplacementAvailable": true,
+					"Id": 5,
+					"Name": "Замеры параметра станка и удалённое отключение",
+					"X": 7,
+					"Y": 5,
+					"Width": 1,
+					"Height": 1
+				}
+			],
+			"Id": 4,
+			"Name": "Цех",
+			"X": 5,
+			"Y": 2,
+			"Width": 4,
+			"Height": 4
 		},
 		{
-			"Name": "5. Иные цеха",
-			"Id": 5,
-			"X": 9,
-			"Y": 2,
-			"Width": 1,
-			"Height": 4,
 			"HasLan": false,
 			"HasWiFi": false,
 			"HasPower": false,
@@ -122,15 +176,15 @@
 			"WallsLaboriousnessEstimate": [ 2, 2, 2, 2 ],
 			"WallsBadRadioTransmittanceEstimate": [ 5, 5, 5, 5 ],
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 2, 2 ],
-			"MSZs": null
+			"MCZs": null,
+			"Id": 5,
+			"Name": "Иные цеха",
+			"X": 9,
+			"Y": 2,
+			"Width": 1,
+			"Height": 4
 		},
 		{
-			"Name": "6. Проезд 1",
-			"Id": 6,
-			"X": 1,
-			"Y": 6,
-			"Width": 1,
-			"Height": 2,
 			"HasLan": false,
 			"HasWiFi": false,
 			"HasPower": true,
@@ -144,15 +198,15 @@
 			"WallsLaboriousnessEstimate": [ 2, 2, 2, 2 ],
 			"WallsBadRadioTransmittanceEstimate": [ 5, 1, 5, 5 ],
 			"WallsBadWiredTransmittanceEstimate": [ 2, 1, 2, 2 ],
-			"MSZs": null
+			"MCZs": null,
+			"Id": 6,
+			"Name": "Проезд 1",
+			"X": 1,
+			"Y": 6,
+			"Width": 1,
+			"Height": 2
 		},
 		{
-			"Name": "7. Проезд 2",
-			"Id": 7,
-			"X": 2,
-			"Y": 6,
-			"Width": 3,
-			"Height": 2,
 			"HasLan": false,
 			"HasWiFi": false,
 			"HasPower": true,
@@ -166,15 +220,15 @@
 			"WallsLaboriousnessEstimate": [ 2, 2, 2, 2 ],
 			"WallsBadRadioTransmittanceEstimate": [ 1, 1, 5, 1 ],
 			"WallsBadWiredTransmittanceEstimate": [ 1, 1, 2, 1 ],
-			"MSZs": null
+			"MCZs": null,
+			"Id": 7,
+			"Name": "Проезд 2",
+			"X": 2,
+			"Y": 6,
+			"Width": 3,
+			"Height": 2
 		},
 		{
-			"Name": "8. Проезд 3",
-			"Id": 8,
-			"X": 5,
-			"Y": 6,
-			"Width": 5,
-			"Height": 2,
 			"HasLan": false,
 			"HasWiFi": false,
 			"HasPower": true,
@@ -188,15 +242,15 @@
 			"WallsLaboriousnessEstimate": [ 2, 2, 2, 2 ],
 			"WallsBadRadioTransmittanceEstimate": [ 5, 5, 5, 1 ],
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 2, 1 ],
-			"MSZs": null
+			"MCZs": null,
+			"Id": 8,
+			"Name": "Проезд 3",
+			"X": 5,
+			"Y": 6,
+			"Width": 5,
+			"Height": 2
 		},
 		{
-			"Name": "9. Арендаторы",
-			"Id": 9,
-			"X": 1,
-			"Y": 8,
-			"Width": 1,
-			"Height": 2,
 			"HasLan": false,
 			"HasWiFi": false,
 			"HasPower": false,
@@ -210,15 +264,28 @@
 			"WallsLaboriousnessEstimate": [ 2, 2, 2, 2 ],
 			"WallsBadRadioTransmittanceEstimate": [ 5, 5, 5, 5 ],
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 2, 2 ],
-			"MSZs": null
+			"MCZs": [
+				{
+					"Priority": 1,
+					"AllMeasurements": [ 0, 0 ],
+					"AllСontrols": null,
+					"IsDeviceReplacementAvailable": false,
+					"Id": 6,
+					"Name": "Потребление электроэнергии двумя арендаторами",
+					"X": 1,
+					"Y": 9,
+					"Width": 1,
+					"Height": 1
+				}
+			],
+			"Id": 9,
+			"Name": "Арендаторы",
+			"X": 1,
+			"Y": 8,
+			"Width": 1,
+			"Height": 2
 		},
 		{
-			"Name": "10. Щитовая",
-			"Id": 10,
-			"X": 2,
-			"Y": 8,
-			"Width": 2,
-			"Height": 2,
 			"HasLan": false,
 			"HasWiFi": false,
 			"HasPower": true,
@@ -232,15 +299,28 @@
 			"WallsLaboriousnessEstimate": [ 1, 1, 1, 1 ],
 			"WallsBadRadioTransmittanceEstimate": [ 5, 5, 5, 5 ],
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 2, 2 ],
-			"MSZs": null
+			"MCZs": [
+				{
+					"Priority": 0,
+					"AllMeasurements": [ 1, 2 ],
+					"AllСontrols": null,
+					"IsDeviceReplacementAvailable": true,
+					"Id": 7,
+					"Name": "Потребление ХВС и ГВС цехом",
+					"X": 3,
+					"Y": 9,
+					"Width": 1,
+					"Height": 1
+				}
+			],
+			"Id": 10,
+			"Name": "Щитовая",
+			"X": 2,
+			"Y": 8,
+			"Width": 2,
+			"Height": 2
 		},
 		{
-			"Name": "11. Санузел",
-			"Id": 11,
-			"X": 4,
-			"Y": 8,
-			"Width": 3,
-			"Height": 2,
 			"HasLan": false,
 			"HasWiFi": false,
 			"HasPower": false,
@@ -254,15 +334,28 @@
 			"WallsLaboriousnessEstimate": [ 2, 2, 2, 2 ],
 			"WallsBadRadioTransmittanceEstimate": [ 5, 5, 5, 5 ],
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 2, 2 ],
-			"MSZs": null
-		},
-		{
-			"Name": "12. Админ. помещение",
-			"Id": 12,
-			"X": 7,
+			"MCZs": [
+				{
+					"Priority": 1,
+					"AllMeasurements": [ 0 ],
+					"AllСontrols": null,
+					"IsDeviceReplacementAvailable": true,
+					"Id": 8,
+					"Name": "Потребление электроэнергии цехом",
+					"X": 5,
+					"Y": 9,
+					"Width": 1,
+					"Height": 1
+				}
+			],
+			"Id": 11,
+			"Name": "Санузел",
+			"X": 4,
 			"Y": 8,
 			"Width": 3,
-			"Height": 2,
+			"Height": 2
+		},
+		{
 			"HasLan": true,
 			"HasWiFi": false,
 			"HasPower": true,
@@ -276,7 +369,13 @@
 			"WallsLaboriousnessEstimate": [ 1, 1, 1, 1 ],
 			"WallsBadRadioTransmittanceEstimate": [ 5, 5, 5, 5 ],
 			"WallsBadWiredTransmittanceEstimate": [ 2, 2, 2, 2 ],
-			"MSZs": null
+			"MCZs": null,
+			"Id": 12,
+			"Name": "Админ. помещение",
+			"X": 7,
+			"Y": 8,
+			"Width": 3,
+			"Height": 2
 		}
 	],
 	"AvailableTools": {
