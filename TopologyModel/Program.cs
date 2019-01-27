@@ -35,6 +35,39 @@ namespace TopologyModel
                         {
                             InstallationPrice = 500,
                             IsPowerRequired = false,
+                            PurchasePrice = 1500,
+                            Name = "Электроический счётчик полностью механический",
+                            InstallationTime = new TimeSpan(1,0,0),
+                            SendingProtocols = new Protocol[]
+                            {
+                                Protocol.Analog
+                            },
+                            Measurements = new Measurement[]
+                            {
+                                Measurement.ElectricityConsumption
+                            }
+                        },
+                        new MeasurementAndControlDevice
+                        {
+                            InstallationPrice = 500,
+                            IsPowerRequired = false,
+                            PurchasePrice = 1500,
+                            Name = "Электроический счётчик механический с импульсами",
+                            InstallationTime = new TimeSpan(1,0,0),
+                            SendingProtocols = new Protocol[]
+                            {
+                                Protocol.Analog,
+                                Protocol.Impulse,
+                            },
+                            Measurements = new Measurement[]
+                            {
+                                Measurement.ElectricityConsumption
+                            }
+                        },
+                        new MeasurementAndControlDevice
+                        {
+                            InstallationPrice = 500,
+                            IsPowerRequired = false,
                             PurchasePrice = 3500,
                             Name = "Электроический счётчик с RS-485 и импульсом",
                             InstallationTime = new TimeSpan(1,0,0),
@@ -47,6 +80,128 @@ namespace TopologyModel
                             Measurements = new Measurement[]
                             {
                                 Measurement.ElectricityConsumption
+                            }
+                        },
+                        new MeasurementAndControlDevice
+                        {
+                            InstallationPrice = 500,
+                            IsPowerRequired = false,
+                            PurchasePrice = 5000,
+                            Name = "Электроический счётчик с выходом в Интернет",
+                            InstallationTime = new TimeSpan(1,0,0),
+                            SendingProtocols = new Protocol[]
+                            {
+                                Protocol.ToDAD_1
+                            },
+                            Measurements = new Measurement[]
+                            {
+                                Measurement.ElectricityConsumption
+                            }
+                        },
+
+
+                        new MeasurementAndControlDevice
+                        {
+                            InstallationPrice = 500,
+                            IsPowerRequired = false,
+                            PurchasePrice = 1500,
+                            Name = "Счётчик холодной воды полностью механический",
+                            InstallationTime = new TimeSpan(1,0,0),
+                            SendingProtocols = new Protocol[]
+                            {
+                                Protocol.Analog
+                            },
+                            Measurements = new Measurement[]
+                            {
+                                Measurement.ColdWaterConsumption
+                            }
+                        },
+                        new MeasurementAndControlDevice
+                        {
+                            InstallationPrice = 500,
+                            IsPowerRequired = false,
+                            PurchasePrice = 1500,
+                            Name = "Счётчик холодной воды  механический с импульсами",
+                            InstallationTime = new TimeSpan(1,0,0),
+                            SendingProtocols = new Protocol[]
+                            {
+                                Protocol.Analog,
+                                Protocol.Impulse,
+                            },
+                            Measurements = new Measurement[]
+                            {
+                                Measurement.ColdWaterConsumption
+                            }
+                        },
+                        new MeasurementAndControlDevice
+                        {
+                            InstallationPrice = 500,
+                            IsPowerRequired = true,
+                            PurchasePrice = 3500,
+                            Name = "Счётчик холодной воды с RS-485 и импульсом",
+                            InstallationTime = new TimeSpan(1,0,0),
+                            SendingProtocols = new Protocol[]
+                            {
+                                Protocol.Analog,
+                                Protocol.Impulse,
+                                Protocol.RS485
+                            },
+                            Measurements = new Measurement[]
+                            {
+                                Measurement.ColdWaterConsumption
+                            }
+                        },
+                        new MeasurementAndControlDevice
+                        {
+                            InstallationPrice = 500,
+                            IsPowerRequired = false,
+                            PurchasePrice = 5000,
+                            Name = "Счётчик холодной воды с выходом в Интернет",
+                            InstallationTime = new TimeSpan(1,0,0),
+                            SendingProtocols = new Protocol[]
+                            {
+                                Protocol.ToDAD_1
+                            },
+                            Measurements = new Measurement[]
+                            {
+                                Measurement.ColdWaterConsumption
+                            }
+                        },
+
+
+                        new MeasurementAndControlDevice
+                        {
+                            InstallationPrice = 100,
+                            IsPowerRequired = false,
+                            PurchasePrice = 3000,
+                            Name = "Проводной датчик температуры и влажности",
+                            InstallationTime = new TimeSpan(1,0,0),
+                            SendingProtocols = new Protocol[]
+                            {
+                                Protocol.RS485
+                            },
+                            Measurements = new Measurement[]
+                            {
+                                Measurement.Temperature,
+                                Measurement.Humidity
+                            }
+                        },
+
+                        new MeasurementAndControlDevice
+                        {
+                            InstallationPrice = 100,
+                            IsPowerRequired = false,
+                            PurchasePrice = 5000,
+                            Name = "Беспроводной датчик температуры и влажности",
+                            InstallationTime = new TimeSpan(1,0,0),
+                            SendingProtocols = new Protocol[]
+                            {
+                                Protocol.GHz24
+                            },
+                            Measurements = new Measurement[]
+                            {
+                                Measurement.Temperature,
+                                Measurement.Humidity
                             }
                         }
                     },
