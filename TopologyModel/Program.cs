@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.IO;
+using TopologyModel.Enumerations;
+using TopologyModel.Tools;
 
 namespace TopologyModel
 {
@@ -24,6 +26,45 @@ namespace TopologyModel
 				if (project == null) return;
 
 				if (!project.InitializeGraph()) return;
+
+                var tools = new ToolSet
+                {
+                    MCDs = new MeasurementAndControlDevice[]
+                    {
+                        new MeasurementAndControlDevice
+                        {
+                            InstallationPrice = 500,
+                            IsPowerRequired = false,
+                            PurchasePrice = 3500,
+                            Name = "Электроический счётчик с RS-485 и импульсом",
+                            InstallationTime = new TimeSpan(1,0,0),
+                            SendingProtocols = new Protocol[]
+                            {
+                                Protocol.Analog,
+                                Protocol.Impulse,
+                                Protocol.RS485
+                            },
+                            Measurements = new Measurement[]
+                            {
+                                Measurement.ElectricityConsumption
+                            }
+                        }
+                    },
+                    DADs = new DataAcquisitionDevice[]
+                    {
+
+                    },
+                    DCs = new DataChannel[]
+                    {
+
+                    },
+                    TDs = new TransceiverDevice[]
+                    {
+
+                    }
+                };
+
+                var toolsJSON = JsonConvert.SerializeObject(tools);
 			}
 			catch (Exception ex)
 			{
