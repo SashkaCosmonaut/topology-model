@@ -8,11 +8,6 @@ namespace TopologyModel.Regions
 	public class TopologyRegion : AbstractRegion
 	{
         /// <summary>
-        /// Глобальный автоприращиваемый идентификатор.
-        /// </summary>
-        private static uint GlobalId = 0;
-
-        /// <summary>
         /// наличие на данном участке проводного подключения к локальной сети предприятия 
         /// </summary>
         public bool HasLan { get; set; }
@@ -77,14 +72,6 @@ namespace TopologyModel.Regions
 		/// Трудоемкость проведения связи (кабелей) на соседние участки через стены: сверху, справа, снизу, слева
 		/// </summary>
 		public ushort[] WallsBadWiredTransmittanceEstimate { get; set; }
-
-        /// <summary>
-        /// Создать и проинициализировать участок по умолчанию.
-        /// </summary>
-        public TopologyRegion()
-        {
-            Id = ++GlobalId;
-        }
 
         /// <summary>
         /// Получить информацию об основных свойствах участка.

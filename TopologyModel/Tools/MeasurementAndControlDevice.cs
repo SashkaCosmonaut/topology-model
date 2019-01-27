@@ -5,7 +5,7 @@ namespace TopologyModel.Tools
 	/// <summary>
 	/// Класс конечного устройства.
 	/// </summary>
-	public class MeasurementAndControlDevice : Device
+	public class MeasurementAndControlDevice : AbstractDevice
 	{
 		/// <summary>
 		/// множество всех измерений потребления энергоресурсов, выдаваемых данным КУ

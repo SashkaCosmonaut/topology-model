@@ -6,7 +6,7 @@ namespace TopologyModel.Tools
 	/// <summary>
 	/// Класс УСПД.
 	/// </summary>
-	public class DataAcquisitionDevice : Device	
+	public class DataAcquisitionDevice : AbstractDevice	
 	{
 		/// <summary>
 		/// множество доступных стандартов приёма данных и максимальное количество подключаемых устройств 

@@ -125,9 +125,10 @@
   <ItemGroup>
     <Compile Include="CalculationResult.cs" />
     <Compile Include="Enumerations\Control.cs" />
+    <Compile Include="Tools\AbstractTool.cs" />
     <Compile Include="Tools\DataAcquisitionDevice.cs" />
     <Compile Include="Tools\DataChannel.cs" />
-    <Compile Include="Tools\Device.cs" />
+    <Compile Include="Tools\AbstractDevice.cs" />
     <Compile Include="Enumerations\Measurement.cs" />
     <Compile Include="Tools\MeasurementAndControlDevice.cs" />
     <Compile Include="GA\TopologyChromosome .cs" />

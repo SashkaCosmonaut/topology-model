@@ -6,7 +6,7 @@ namespace TopologyModel.Tools
 	/// <summary>
 	/// Класс передатчика для КПД.
 	/// </summary>
-	public class TransceiverDevice : Device
+	public class TransceiverDevice : AbstractDevice
 	{
 		/// <summary>
 		/// множество стандартов приёма данных от КУ или КПД и количество подключаемых устройств

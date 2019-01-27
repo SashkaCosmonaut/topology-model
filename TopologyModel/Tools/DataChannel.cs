@@ -5,18 +5,8 @@ namespace TopologyModel.Tools
 	/// <summary>
 	/// Класс канала передачи данных.
 	/// </summary>
-	public class DataChannel
+	public class DataChannel : AbstractTool
 	{
-        /// <summary>
-        /// Глобальный автоприращиваемый идентификатор.
-        /// </summary>
-        private static uint GlobalId = 0;
-
-        /// <summary>
-        /// идентификатор канала передачи данных 
-        /// </summary>
-        public uint Id { get; }
-
 		/// <summary>
 		/// является ли канал передачи данных беспроводным 
 		/// </summary>
@@ -26,16 +16,6 @@ namespace TopologyModel.Tools
 		/// стандарт передачи данных, используемый в данном КПД
 		/// </summary>
 		public Protocol Protocol { get; set; }
-
-		/// <summary>
-		/// стоимость на приобретение и монтажные работы по проведению одного метра кабеля КПД 
-		/// </summary>
-		public double InstallationPricePerMeter { get; set; }
-
-		/// <summary>
-		/// стоимость на приобретение и монтажные работы по проведению одного метра кабеля КПД 
-		/// </summary>
-		public double InstallationTimePerMeter { get; set; }
 
 		/// <summary>
 		/// топология, допустимая для использования в данном КПД
@@ -51,13 +31,5 @@ namespace TopologyModel.Tools
 		/// максимально допустимое количество устройств, которые могут передавать данные через данный КПД
 		/// </summary>
 		public uint MaxDevicesConnected { get; set; }
-
-        /// <summary>
-        /// Создать канал передачи данных по умолчанию.
-        /// </summary>
-        public DataChannel()
-        {
-            Id = ++GlobalId;
-        }
 	}
 }

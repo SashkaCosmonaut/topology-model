@@ -6,9 +6,9 @@
     public abstract class AbstractRegion
     {
         /// <summary>
-        /// Поле с наименованием участка.
+        /// Глобальный автоприращиваемый идентификатор.
         /// </summary>
-        private string _name;
+        private static uint GlobalId = 0;
 
         /// <summary>
         /// Уникальный идентификатор участка.
@@ -16,13 +16,9 @@
         public uint Id { get; protected set; }
 
         /// <summary>
-		/// Свойство наименования участка.
+		/// Наименование участка.
 		/// </summary>
-		public string Name
-        {
-            get { return Id + ". " + _name; }
-            set { _name = value; }
-        }
+		public string Name { get; set; }
 
 		/// <summary>
 		/// Координата Х левого верхнего угла участка на территории предприятия.
@@ -50,7 +46,7 @@
         /// <returns>Строка с описанием свойств объекта участка.</returns>
         public override string ToString()
         {
-            return Name;
+            return Id + ". " + Name;
         }
 
         /// <summary>
@@ -58,5 +54,13 @@
         /// </summary>
         /// <returns>Строка с информацией об участке.</returns>
         public abstract string GetInfo();
+
+        /// <summary>
+        /// Создать и проинициализировать некоторый участок по умолчанию.
+        /// </summary>
+        public AbstractRegion()
+        {
+            Id = ++GlobalId;
+        }
     }
 }
