@@ -7,10 +7,15 @@ namespace TopologyModel.Tools
 	/// </summary>
 	public class DataChannel
 	{
-		/// <summary>
-		/// идентификатор канала передачи данных 
-		/// </summary>
-		public uint Id { get; set; }
+        /// <summary>
+        /// Глобальный автоприращиваемый идентификатор.
+        /// </summary>
+        private static uint GlobalId = 0;
+
+        /// <summary>
+        /// идентификатор канала передачи данных 
+        /// </summary>
+        public uint Id { get; }
 
 		/// <summary>
 		/// является ли канал передачи данных беспроводным 
@@ -46,5 +51,13 @@ namespace TopologyModel.Tools
 		/// максимально допустимое количество устройств, которые могут передавать данные через данный КПД
 		/// </summary>
 		public uint MaxDevicesConnected { get; set; }
+
+        /// <summary>
+        /// Создать канал передачи данных по умолчанию.
+        /// </summary>
+        public DataChannel()
+        {
+            Id = ++GlobalId;
+        }
 	}
 }
