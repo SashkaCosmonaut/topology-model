@@ -125,11 +125,11 @@
   <ItemGroup>
     <Compile Include="CalculationResult.cs" />
     <Compile Include="Enumerations\Control.cs" />
-    <Compile Include="Devices\DataAcquisitionDevice.cs" />
-    <Compile Include="DataChannel.cs" />
-    <Compile Include="Devices\Device.cs" />
+    <Compile Include="Tools\DataAcquisitionDevice.cs" />
+    <Compile Include="Tools\DataChannel.cs" />
+    <Compile Include="Tools\Device.cs" />
     <Compile Include="Enumerations\Measurement.cs" />
-    <Compile Include="Devices\MeasurementAndControlDevice.cs" />
+    <Compile Include="Tools\MeasurementAndControlDevice.cs" />
     <Compile Include="GA\TopologyChromosome .cs" />
     <Compile Include="GA\TopologyFitness.cs" />
     <Compile Include="Regions\MeasurementAndControlZone.cs" />
@@ -141,8 +141,8 @@
     <Compile Include="Regions\AbstractRegion.cs" />
     <Compile Include="Regions\TopologyRegion.cs" />
     <Compile Include="Enumerations\Topology.cs" />
-    <Compile Include="Devices\TransceiverDevice.cs" />
-    <Compile Include="Tools.cs" />
+    <Compile Include="Tools\TransceiverDevice.cs" />
+    <Compile Include="Tools\ToolSet.cs" />
     <Compile Include="TopologyGraphs\TopologyEdge.cs" />
     <Compile Include="TopologyGraphs\TopologyGraph.cs" />
     <Compile Include="TopologyGraphs\TopologyVertex.cs" />

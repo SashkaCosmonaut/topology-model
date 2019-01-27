@@ -1,6 +1,6 @@
 ﻿using TopologyModel.Enumerations;
 
-namespace TopologyModel.Devices
+namespace TopologyModel.Tools
 {
 	/// <summary>
 	/// Класс конечного устройства.

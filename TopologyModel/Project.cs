@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using TopologyModel.Enumerations;
 using TopologyModel.Regions;
+using TopologyModel.Tools;
 using TopologyModel.TopologyGraphs;
 
 namespace TopologyModel
@@ -87,7 +88,7 @@ namespace TopologyModel
         /// <summary>
         /// База данных доступного инструментария.
         /// </summary>
-        public Tools AvailableTools { get; set; }
+        public ToolSet AvailableTools { get; set; }
 
         /// <summary>
         /// Граф всего предприятия.

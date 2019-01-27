@@ -1,6 +1,6 @@
 ﻿using TopologyModel.Enumerations;
 
-namespace TopologyModel
+namespace TopologyModel.Tools
 {
 	/// <summary>
 	/// Класс канала передачи данных.
