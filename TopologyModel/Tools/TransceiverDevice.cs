@@ -11,6 +11,6 @@ namespace TopologyModel.Tools
 		/// <summary>
 		/// множество стандартов приёма данных от КУ или КПД и количество подключаемых устройств
 		/// </summary>
-		public Dictionary<Protocol, int> ReceivingProtocols { get; set; } = new Dictionary<Protocol, int> { };
+		public Dictionary<Protocol, int> ReceivingProtocols { get; set; }
 	}
 }

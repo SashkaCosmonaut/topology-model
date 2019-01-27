@@ -10,11 +10,11 @@ namespace TopologyModel.Tools
 		/// <summary>
 		/// множество всех измерений потребления энергоресурсов, выдаваемых данным КУ
 		/// </summary>
-		public Measurement[] Measurements { get; set; } = new Measurement[] { };
+		public Measurement[] Measurements { get; set; }
 
 		/// <summary>
 		/// множество всех управляющих воздействий, позволяющих осуществлять данным КУ
 		/// </summary>
-		public Control[] Сontrols { get; set; } = new Control[] { };
+		public Control[] Сontrols { get; set; }
 	}
 }

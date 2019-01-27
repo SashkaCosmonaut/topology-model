@@ -11,11 +11,11 @@ namespace TopologyModel.Tools
 		/// <summary>
 		/// множество доступных стандартов приёма данных и максимальное количество подключаемых устройств 
 		/// </summary>
-		public Dictionary<Protocol, int> ReceivingProtocols { get; set; } = new Dictionary<Protocol, int> { };
+		public Dictionary<Protocol, int> ReceivingProtocols { get; set; }
 
 		/// <summary>
 		/// множество доступных способов передачи данных на сервер
 		/// </summary>
-		public InternetConnection[] ServerSendingProtocols { get; set; } = new InternetConnection[] { };
+		public InternetConnection[] ServerSendingProtocols { get; set; }
 	}
 }

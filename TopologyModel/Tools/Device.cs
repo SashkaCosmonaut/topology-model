@@ -18,10 +18,15 @@ namespace TopologyModel.Tools
         /// </summary>
         public uint Id { get; }
 
+        /// <summary>
+        /// Наименование устройства.
+        /// </summary>
+        public string Name { get; set; }
+
 		/// <summary>
 		/// множество стандартов отправки данных, по которым данное устройство отправляет данные
 		/// </summary>
-		public Protocol[] SendingProtocols { get; set; } = new Protocol[] { };
+		public Protocol[] SendingProtocols { get; set; }
 
 
 		/// <summary>
