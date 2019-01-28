@@ -1,72 +1,42 @@
 ﻿using GeneticSharp.Domain.Chromosomes;
 using GeneticSharp.Domain.Randomizations;
+using TopologyModel.TopologyGraphs;
 
 namespace TopologyModel.GA
 {
-	/// <summary>
-	/// Класс хромосомы топологии.
-	/// </summary>
-	public class TopologyChromosome : ChromosomeBase
-	{
-		public TopologyChromosome() : base (3)
-		{
-			ReplaceGene(0, GenerateGene(0));
-			ReplaceGene(1, GenerateGene(1));
-			ReplaceGene(2, GenerateGene(2));
-		}
+    /// <summary>
+    /// Класс хромосомы топологии.
+    /// </summary>
+    public class TopologyChromosome : ChromosomeBase
+    {
+        /// <summary>
+        /// Количество генов в участке хромосомы.
+        /// </summary>
+        public const ushort GENES_FOR_SECTION = 12;
 
-		// These properties represents your phenotype.
-		public int X
-		{
-			get {
-				return (int)GetGene(0).Value;
-			}
-		}
+        /// <summary>
+        /// Декодировать из хромосомы прелагаемую топологию сети (фенотип), состоящую из секций для каждого
+        /// места учёта и управления, соединенного с УСПД через два или менее приемопередатчика.
+        /// </summary>
+        public TopologySection[] Topology
+        {
+            get {
+                return null;
+            }
+        }
 
-		public int Y
-		{
-			get {
-				return (int)GetGene(1).Value;
-			}
-		}
+        /// <summary>
+        /// Сформировать хромосому на основании параметров проекта. Длина хромосомы - 
+        /// количество мест учёта и управления, умноженное на количество генов в одной секции хромосомы.
+        /// </summary>
+        /// <param name="project">Проект по генерации топологии сети.</param>
+        public TopologyChromosome(Project project) : base(project.MCZs.Length * GENES_FOR_SECTION)
+        {
+            
+        }
 
-		public int Z
-		{
-			get {
-				return (int)GetGene(2).Value;
-			}
-		}
+        public override IChromosome CreateNew() => throw new System.NotImplementedException();
 
-		public override Gene GenerateGene(int geneIndex)
-		{
-			int value;
-
-			if (geneIndex == 0)
-			{
-				value = RandomizationProvider.Current.GetInt(0, 101);
-			}
-			else if (geneIndex == 1)
-			{
-				value = RandomizationProvider.Current.GetInt(0, 101);
-			}
-			else
-			{
-				value = RandomizationProvider.Current.GetInt(1, 101);
-			}
-
-			return new Gene(value);
-		}
-
-		public override IChromosome CreateNew()
-		{
-			return new TopologyChromosome();
-		}
-
-		public override IChromosome Clone()
-		{
-			var clone = base.Clone() as TopologyChromosome;
-
-			return clone;
-		}
-	}
+        public override Gene GenerateGene(int geneIndex) => throw new System.NotImplementedException();
+    }
 }

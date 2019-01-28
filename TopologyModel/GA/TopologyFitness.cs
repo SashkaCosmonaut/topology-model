@@ -8,20 +8,14 @@ namespace TopologyModel.GA
 	/// </summary>
 	public class TopologyFitness : IFitness
 	{
-		/// <summary>
-		/// Рассчитать приспособленность хромосомы.
-		/// </summary>
-		/// <param name="chromosome"></param>
-		/// <returns></returns>
+        /// <summary>
+        /// Оценить приспособленность хромосомы топологии.
+        /// </summary>
+        /// <param name="chromosome">Оцениваемая хромосома с топологией.</param>
+        /// <returns>Результат оценки.</returns>
 		public double Evaluate(IChromosome chromosome)
 		{
-			double n = 9;
-
-			var ch = chromosome as TopologyChromosome;
-
-			if (ch == null) return 0;
-
-			return (ch.X + ch.Y) / ch.Z;
+            return 0;
 		}
 	}
 }
