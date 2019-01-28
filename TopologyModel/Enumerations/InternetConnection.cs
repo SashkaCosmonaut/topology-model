@@ -17,6 +17,8 @@
 
 		WiFi,
 
-		Ethernet
+		Ethernet,
+
+        Manual
 	}
 }
