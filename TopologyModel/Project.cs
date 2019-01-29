@@ -1,8 +1,5 @@
-﻿using QuickGraph.Graphviz;
-using QuickGraph.Graphviz.Dot;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using TopologyModel.Enumerations;
 using TopologyModel.Regions;
@@ -117,20 +114,13 @@ namespace TopologyModel
 
                 Graph = new TopologyGraph(verticesMatrix, WeightCoefficients);
 
-                var graphLabel = 
-                    Regions.Select(q => PrepareJSONForGraphviz(q.GetInfo())).Aggregate("", (current, next) => current + "\r\n\r\n" + next) +
-                    MCZs.Select(q => PrepareJSONForGraphviz(q.GetInfo())).Aggregate("", (current, next) => current + "\r\n\r\n" + next);
-
-                if (Graph.CreateDotFile(GraphDotFilename, graphLabel))
-                    Console.WriteLine("Check the graph dot-file in {0}", GraphDotFilename);
-
                 Console.WriteLine("Done!");
 
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Failed! {0}", ex.Message);
+                Console.WriteLine("InitializeGraph failed! {0}", ex.Message);
                 return false;
             }
         }
@@ -177,7 +167,7 @@ namespace TopologyModel
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Failed! {0}", ex.Message);
+                Console.WriteLine("CreateVerticesMatrix failed! {0}", ex.Message);
                 return new TopologyVertex[,] { };
             }
         }
@@ -194,19 +184,6 @@ namespace TopologyModel
 
             // Если координата узла находится в координатах ТУУ, то эта ТУУ в данном узле
             return MCZs.Where(q => x >= q.X && y >= q.Y && x <= q.X + q.Width - 1 && y <= q.Y + q.Height - 1).ToArray();
-        }
-
-        /// <summary>
-        /// Подготовить JSON-строку для помещения в Graphviz.
-        /// </summary>
-        /// <param name="JSONstring>Исходная строка.</param>
-        /// <returns>Обработанная строка.</returns>
-        protected string PrepareJSONForGraphviz(string JSONstring)
-        {
-            return JSONstring
-                .Replace('\"', '\'')            // Заменяем кавычки для Graphviz
-                .Replace("},'", "},\r\n'")      // Добавляем переносы строк для красоты
-                .Replace(",", ", ");            // ... и пробелы
         }
     }
 }
