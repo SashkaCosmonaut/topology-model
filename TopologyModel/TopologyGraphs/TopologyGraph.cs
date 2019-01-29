@@ -15,6 +15,11 @@ namespace TopologyModel.TopologyGraphs
 	public class TopologyGraph : UndirectedGraph<TopologyVertex, TopologyEdge>
 	{
         /// <summary>
+        /// Упорядоченный массив вершин графа.
+        /// </summary>
+        public TopologyVertex[] VerticesArray { get; }
+
+        /// <summary>
         /// Инициализировать граф всего предприятия на основе матрицы участков предприятия, перебирая каждый её элемент, 
         /// создавая на его основе вершину и генерируя связи в соответствии с имеющимися вершинами.
         /// </summary>
@@ -33,6 +38,8 @@ namespace TopologyModel.TopologyGraphs
                 for (var i = 0; i < height; i++)
                     for (var j = 0; j < width; j++)
                         AddEdges(j, i, verticesMatrix, weightCoefficients);
+
+                VerticesArray = Vertices.ToArray();
 
                 Console.WriteLine("Done!");
             }
