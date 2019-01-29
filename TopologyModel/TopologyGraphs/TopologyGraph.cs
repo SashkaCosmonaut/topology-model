@@ -45,7 +45,7 @@ namespace TopologyModel.TopologyGraphs
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Failed! {0}", ex.Message);
+                Console.WriteLine("TopologyGraph failed! {0}", ex.Message);
             }
         }
 
@@ -99,7 +99,7 @@ namespace TopologyModel.TopologyGraphs
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Failed! {0}", ex.Message);
+                Console.WriteLine("AddEdges failed! {0}", ex.Message);
             }
         }
 
@@ -107,7 +107,7 @@ namespace TopologyModel.TopologyGraphs
         /// Создать dot-файл с текущим графом предприятия.
         /// </summary>
         /// <returns>True, если операция выполнена успешно.</returns>
-        public bool CreateDotFile(string filename, string graphLabel)
+        public bool GenerateDotFile(string filename, string graphLabel)
         {
             Console.Write("Create the graph dot-file... ");
 
@@ -155,7 +155,7 @@ namespace TopologyModel.TopologyGraphs
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Failed! {0}", ex.Message);
+                Console.WriteLine("GenerateDotFile failed! {0}", ex.Message);
                 return false;
             }
         }
@@ -166,16 +166,23 @@ namespace TopologyModel.TopologyGraphs
         /// <param name="args">Аргументы форматирования вершины.</param>
         protected void SetVertexColor(FormatVertexEventArgs<TopologyVertex> args)
         {
-            args.VertexFormatter.Style = GraphvizVertexStyle.Filled;
+            try
+            {
+                args.VertexFormatter.Style = GraphvizVertexStyle.Filled;
 
-            if (args.Vertex.MCZs != null && args.Vertex.MCZs.Any()) // Вершины с ТУУ окрашиваем в зелёный цвет
-                args.VertexFormatter.FillColor = Color.LightGreen;
+                if (args.Vertex.MCZs != null && args.Vertex.MCZs.Any()) // Вершины с ТУУ окрашиваем в зелёный цвет
+                    args.VertexFormatter.FillColor = Color.LightGreen;
 
-            else if (!args.Vertex.IsInside())                       // Граничные вершины окрашиваем в жёлтый цвет
-                args.VertexFormatter.FillColor = Color.Yellow;
+                else if (!args.Vertex.IsInside())                       // Граничные вершины окрашиваем в жёлтый цвет
+                    args.VertexFormatter.FillColor = Color.Yellow;
 
-            else
-                args.VertexFormatter.FillColor = Color.WhiteSmoke;  // Все остальные вершины - почти белые
+                else
+                    args.VertexFormatter.FillColor = Color.WhiteSmoke;  // Все остальные вершины - почти белые
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("SetVertexColor failed! {0}", ex.Message);
+            }
         }
     }
 }
