@@ -256,7 +256,7 @@
 	"MCZs": [
 		{
 			"Priority": 2,
-			"Measurements": [ 4, 5, 7 ],
+			"Measurements": [ 4, 5 ],
 			"Сontrols": null,
 			"IsDeviceReplacementAvailable": true,
 			"Name": "Зона замера температуры и влажности",
@@ -267,7 +267,7 @@
 		},
 		{
 			"Priority": 2,
-			"Measurements": [ 4, 5, 7 ],
+			"Measurements": [ 4, 5 ],
 			"Сontrols": null,
 			"IsDeviceReplacementAvailable": true,
 			"Name": "Зона замера температуры и влажности",
@@ -322,10 +322,10 @@
 		},
 		{
 			"Priority": 0,
-			"Measurements": [ 1, 2 ],
+			"Measurements": [ 1 ],
 			"Сontrols": null,
 			"IsDeviceReplacementAvailable": true,
-			"Name": "Потребление ХВС и ГВС цехом",
+			"Name": "Потребление ХВС цехом",
 			"X": 3,
 			"Y": 9,
 			"Width": 1,
