@@ -1,25 +1,28 @@
 ﻿using GeneticSharp.Domain.Chromosomes;
+using GeneticSharp.Domain.Randomizations;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TopologyModel.GA
 {
     /// <summary>
-    /// Класс хромосомы топологии.
+    /// Класс хромосомы топологии, состоящей из секций для каждого места учёта и управления.
     /// </summary>
     public class TopologyChromosome : ChromosomeBase
     {
         /// <summary>
-        /// Количество генов в участке хромосомы.
+        /// Количество генов для секции топологии в хромосоме.
         /// </summary>
         public const int GENES_FOR_SECTION = 12;
 
         /// <summary>
-        /// Словарь функций генерации каждого гена в хромосоме, где ключ - индекс гена, а значение - создающая его функция.
+        /// Словарь функций генерации каждого гена в хромосоме в зависимости от его расположения в секции, где ключ - 
+        /// индекс гена в секции, а значение - создающая его функция, возвращающая целочисленное значение гена.
         /// </summary>
-        protected static Dictionary<int, Func<Gene>> GeneGenerationFuncs = new Dictionary<int, Func<Gene>>
+        protected static Dictionary<int, Func<Project, int, int>> GeneValueGenerationFuncs = new Dictionary<int, Func<Project, int, int>>
         {
-
+            { 0, GenerateMCDevice }
         };
 
         /// <summary>
@@ -50,12 +53,23 @@ namespace TopologyModel.GA
         /// <param name="project">Проект по генерации топологии сети.</param>
         public TopologyChromosome(Project project) : base(project.MCZs.Length * GENES_FOR_SECTION)
         {
-            CurrentProject = project;
+            Console.Write("Initialize the initial chromosome... ");
 
-            _topology = new TopologySection[project.MCZs.Length];
+            try
+            {
+                CurrentProject = project;
 
-            for (var i = 0; i < Length; i++)
-                ReplaceGene(i, GenerateGene(i));
+                _topology = new TopologySection[project.MCZs.Length];
+
+                for (var i = 0; i < Length; i++)
+                    ReplaceGene(i, GenerateGene(i));
+
+                Console.WriteLine("Done!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("TopologyChromosome failed! {0}", ex.Message);
+            }
         }
 
         /// <summary>
@@ -65,12 +79,20 @@ namespace TopologyModel.GA
         /// <returns>Новый объект гена.</returns>
         public override Gene GenerateGene(int geneIndex)
         {
-            var geneInSecionIndex = GetGeneInSectionIndex(geneIndex);
+            try
+            {
+                var geneInSecionIndex = GetGeneInSectionIndex(geneIndex);
 
-            if (!GeneGenerationFuncs.ContainsKey(geneInSecionIndex))
-                return new Gene(0);
+                if (!GeneValueGenerationFuncs.ContainsKey(geneInSecionIndex))
+                    return new Gene(0);
 
-            return GeneGenerationFuncs[geneInSecionIndex].Invoke();
+                return new Gene(GeneValueGenerationFuncs[geneInSecionIndex].Invoke(CurrentProject, GetSectionIndex(geneIndex)));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("GenerateGene failed! {0}", ex.Message);
+                return new Gene();
+            }
         }
 
         /// <summary>
@@ -87,7 +109,7 @@ namespace TopologyModel.GA
         /// Получить индекс гена внутри секции.
         /// </summary>
         /// <param name="geneIndex">Индекс гена в хромосоме.</param>
-        /// <returns></returns>
+        /// <returns>Индекс гена внутри секции.</returns>
         protected int GetGeneInSectionIndex(int geneIndex)
         {
             return geneIndex % GENES_FOR_SECTION;
@@ -113,6 +135,33 @@ namespace TopologyModel.GA
             clone.CurrentProject = CurrentProject;
 
             return clone;
+        }
+
+        /// <summary>
+        /// Генерировать новый ген, представляющий случайное устройство учёта и управления.
+        /// Из всех доступных устройств, выбираются только те, которые подходят для данного места учёта и управления.
+        /// </summary>
+        /// <param name="project">Текущий проект сети.</param>
+        /// <param name="sectionIndex">Индекс секции, для которой генерируется ген.</param>
+        /// <returns>Значение гена.</returns>
+        protected static int GenerateMCDevice(Project project, int sectionIndex)
+        {
+            try
+            {
+                var suitableMCDs = project.AvailableTools.MCDs
+                    .Select((mcd, index) => new { MCD = mcd, Index = index })           // Запоминаем индекс устройства в массиве всех доступных устройств
+                    .Where(q => q.MCD.IsSuitableForMCZ(project.MCZs[sectionIndex]))     // Выбираем только те устройства, которые подходят для места
+                    .ToArray();
+
+                var randomIndex = RandomizationProvider.Current.GetInt(0, suitableMCDs.Count());    // Выбираем из массива выбранных устройств случайное
+
+                return suitableMCDs[randomIndex].Index;     // Геном является индекс в массиве весх доступных устройств
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("GenerateMCDevice failed! {0}", ex.Message);
+                return 0;
+            }
         }
     }
 }
