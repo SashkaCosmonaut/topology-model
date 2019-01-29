@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using TopologyModel.Enumerations;
+using TopologyModel.GA;
 using TopologyModel.Tools;
 
 namespace TopologyModel
@@ -27,6 +28,10 @@ namespace TopologyModel
 				if (project == null) return;
 
 				if (!project.InitializeGraph()) return;
+
+                var chromosome = new TopologyChromosome(project);
+
+                var topology = chromosome.Topology;
 			}
 			catch (Exception ex)
 			{

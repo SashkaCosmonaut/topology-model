@@ -1,6 +1,6 @@
 ﻿using GeneticSharp.Domain.Chromosomes;
-using GeneticSharp.Domain.Randomizations;
-using TopologyModel.TopologyGraphs;
+using System;
+using System.Collections.Generic;
 
 namespace TopologyModel.GA
 {
@@ -12,12 +12,25 @@ namespace TopologyModel.GA
         /// <summary>
         /// Количество генов в участке хромосомы.
         /// </summary>
-        public const ushort GENES_FOR_SECTION = 12;
+        public const int GENES_FOR_SECTION = 12;
+
+        /// <summary>
+        /// Словарь функций генерации каждого гена в хромосоме, где ключ - индекс гена, а значение - создающая его функция.
+        /// </summary>
+        protected static Dictionary<int, Func<Gene>> GeneGenerationFuncs = new Dictionary<int, Func<Gene>>
+        {
+
+        };
 
         /// <summary>
         /// Ссылка на текущий проект по генерации топологии сети.
         /// </summary>
         public Project CurrentProject { get; set; }
+
+        /// <summary>
+        /// Наполняемое по результатам работы алгоритма поле предлагаемой топологии.
+        /// </summary>
+        private TopologySection[] _topology;
 
         /// <summary>
         /// Декодировать из хромосомы прелагаемую топологию сети (фенотип), состоящую из секций для каждого
@@ -26,7 +39,7 @@ namespace TopologyModel.GA
         public TopologySection[] Topology
         {
             get {
-                return null;
+                return _topology;
             }
         }
 
@@ -37,8 +50,47 @@ namespace TopologyModel.GA
         /// <param name="project">Проект по генерации топологии сети.</param>
         public TopologyChromosome(Project project) : base(project.MCZs.Length * GENES_FOR_SECTION)
         {
-            for (var i = 0; i < GENES_FOR_SECTION; i++)
+            CurrentProject = project;
+
+            _topology = new TopologySection[project.MCZs.Length];
+
+            for (var i = 0; i < Length; i++)
                 ReplaceGene(i, GenerateGene(i));
+        }
+
+        /// <summary>
+        /// Генерировать новый ген для хромосомы.
+        /// </summary>
+        /// <param name="geneIndex">Индекс гена.</param>
+        /// <returns>Новый объект гена.</returns>
+        public override Gene GenerateGene(int geneIndex)
+        {
+            var geneInSecionIndex = GetGeneInSectionIndex(geneIndex);
+
+            if (!GeneGenerationFuncs.ContainsKey(geneInSecionIndex))
+                return new Gene(0);
+
+            return GeneGenerationFuncs[geneInSecionIndex].Invoke();
+        }
+
+        /// <summary>
+        /// Получить индекс секции, в которой находится ген по указанному индексу.
+        /// </summary>
+        /// <param name="geneIndex">Индекс гена в хромосоме.</param>
+        /// <returns>Индекс секции.</returns>
+        protected int GetSectionIndex(int geneIndex)
+        {
+            return geneIndex / GENES_FOR_SECTION;
+        }
+
+        /// <summary>
+        /// Получить индекс гена внутри секции.
+        /// </summary>
+        /// <param name="geneIndex">Индекс гена в хромосоме.</param>
+        /// <returns></returns>
+        protected int GetGeneInSectionIndex(int geneIndex)
+        {
+            return geneIndex % GENES_FOR_SECTION;
         }
 
         /// <summary>
@@ -61,17 +113,6 @@ namespace TopologyModel.GA
             clone.CurrentProject = CurrentProject;
 
             return clone;
-        }
-
-        /// <summary>
-        /// Генерировать новый ген для хромосомы.
-        /// </summary>
-        /// <param name="geneIndex">Индекс гена.</param>
-        /// <returns>Новый объект гена.</returns>
-        public override Gene GenerateGene(int geneIndex)
-        {
-            // Создать ген, опираясь от порядкового номера
-            return new Gene();
         }
     }
 }
