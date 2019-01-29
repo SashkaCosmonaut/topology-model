@@ -21,7 +21,7 @@ namespace TopologyModel.Regions
 		/// <summary>
 		/// множество всех управляющих воздействий, доступных на данной ТУУ
 		/// </summary>
-		public Control[] Сontrols { get; set; }
+		public Control[] Controls { get; set; }
 
 		/// <summary>
 		/// допустима ли замена уже имеющихся КУ на ТУУ на более новые
@@ -39,7 +39,7 @@ namespace TopologyModel.Regions
                 Name,
                 Priority,
                 Measurements,
-                Сontrols,
+                Controls,
                 IsDeviceReplacementAvailable
             });
         }

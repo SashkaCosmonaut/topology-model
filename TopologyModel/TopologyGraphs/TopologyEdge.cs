@@ -58,7 +58,7 @@ namespace TopologyModel.TopologyGraphs
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Edge weight calculation failed! {1}", ex.Message);
+                Console.WriteLine("CalculateWeights failed! {1}", ex.Message);
             }
         }
 
@@ -158,8 +158,8 @@ namespace TopologyModel.TopologyGraphs
         /// <returns>Значение проводного веса.</returns>
         protected float GetWiredWeightInside()
         {
-            return 0.4f * Source.Region.InsideUnavailabilityEstimate + 
-                   0.3f * Source.Region.InsideLaboriousnessEstimate + 
+            return 0.4f * Source.Region.InsideUnavailabilityEstimate +
+                   0.3f * Source.Region.InsideLaboriousnessEstimate +
                    0.3f * Source.Region.InsideAggressivenessEstimate;
         }
 
@@ -176,7 +176,7 @@ namespace TopologyModel.TopologyGraphs
                 throw new ArgumentNullException(nameof(estimates), "Empty estimates array!");
 
             return estimates.Length == 4                            // Если в массиве все четыре значения
-                ? estimates[GetBordeIndex(source, target)]   // Берём в зависимости от узла-источника и узла-цели
+                ? estimates[GetBorderIndex(source, target)]         // Берём в зависимости от узла-источника и узла-цели
                 : estimates[0];                                     // Иначе берём первое значение
         }
 
@@ -186,7 +186,7 @@ namespace TopologyModel.TopologyGraphs
         /// <param name="source">Исходный узел грани.</param>
         /// <param name="target">Целевой узел грани.</param>
         /// <returns>Направление грани: 0 - верх, 1 - вправо, 2 - вниз, 3 - влево.</returns>
-        protected static ushort GetBordeIndex(TopologyVertex source, TopologyVertex target)
+        protected static ushort GetBorderIndex(TopologyVertex source, TopologyVertex target)
         {
             ushort result = 5;
 
