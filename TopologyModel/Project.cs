@@ -93,7 +93,7 @@ namespace TopologyModel
         /// <summary>
         /// Граф всего предприятия.
         /// </summary>
-        public TopologyGraph Graph { get; set; } = new TopologyGraph();
+        public TopologyGraph Graph { get; set; }
 
         /// <summary>
         /// Имя dot-файла графа участков предприятия.
@@ -115,9 +115,13 @@ namespace TopologyModel
 
                 if (verticesMatrix.Length == 0) return false;
 
-                if (!InitializeRegionsGraph(verticesMatrix)) return false;
+                Graph = new TopologyGraph(verticesMatrix, WeightCoefficients);
 
-                if (CreateGraphDotFile())
+                var graphLabel = 
+                    Regions.Select(q => PrepareJSONForGraphviz(q.GetInfo())).Aggregate("", (current, next) => current + "\r\n\r\n" + next) +
+                    MCZs.Select(q => PrepareJSONForGraphviz(q.GetInfo())).Aggregate("", (current, next) => current + "\r\n\r\n" + next);
+
+                if (Graph.CreateDotFile(GraphDotFilename, graphLabel))
                     Console.WriteLine("Check the graph dot-file in {0}", GraphDotFilename);
 
                 Console.WriteLine("Done!");
@@ -193,145 +197,6 @@ namespace TopologyModel
         }
 
         /// <summary>
-        /// Инициализировать граф всего предприятия на основе матрицы участков предприятия, перебирая каждый её элемент, 
-        /// создавая на его основе вершину и генерируя связи в соответствии с имеющимися вершинами.
-        /// </summary>
-        /// <param name="verticesMatrix">Матрица с вершинами участков предприятия.</param>
-        /// <returns>Успешно ли инициализирован граф.</returns>
-        protected bool InitializeRegionsGraph(TopologyVertex[,] verticesMatrix)
-        {
-            Console.Write("Create regions graph... ");
-
-            try
-            {
-                for (var i = 0; i < Height; i++)                            // Проходимся по матрице
-                    for (var j = 0; j < Width; j++)
-                    {
-                        AddEdges(j, i, verticesMatrix);
-                    }
-
-                Console.WriteLine("Done!");
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Failed! {0}", ex.Message);
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Добавить грани для текущей вершины графа.
-        /// </summary>
-        /// <param name="x">Координата по Х текущей веершины.</param>
-        /// <param name="y">Координата по Y текущей веершины.</param>
-        /// <param name="verticesMatrix">Матрица всех вершин графа</param>
-        private void AddEdges(int x, int y, TopologyVertex[,] verticesMatrix)
-        {
-            try
-            {
-                // Обходим все соседние вершины в матрице вокруг текущей вершины матрицы, какие есть
-                for (var yShift = -1; yShift < 2; yShift++)
-                    for (var xShift = -1; xShift < 2; xShift++)
-                    {
-                        if (xShift == 0 && yShift == 0) continue;	// Пропускаем текущую вершину
-
-                        var neighborX = x + xShift;                 // Вычисляем позицию соседней вершины
-                        var neighborY = y + yShift;
-
-                        // Если нет соседней вершины с такими координатами соседней позиции, пропускаем её
-                        if (neighborX < 0 || neighborY < 0 || neighborX >= Width || neighborY >= Height) continue;
-
-                        var vertex = verticesMatrix[y, x];
-                        var neighborVertex = verticesMatrix[neighborY, neighborX];
-
-                        if (!Graph.ContainsVertex(vertex))          // Если текущей вершины графа ещё нет, то добавляем её
-                            Graph.AddVertex(vertex);
-
-                        if (!Graph.ContainsVertex(neighborVertex))  // Если соседней вершины графа ещё нет, то добавляем и её
-                            Graph.AddVertex(neighborVertex);
-
-                        // Если грань между вершинами уже есть, то пропускаем
-                        if (Graph.ContainsEdge(vertex, neighborVertex) || Graph.ContainsEdge(neighborVertex, vertex)) continue;
-
-                        var newEdge = new TopologyEdge(vertex, neighborVertex, WeightCoefficients);
-
-                        // Если соседняя вершина не диагональная, то гарантировано добавляем к ней грань
-                        if (neighborX == x || neighborY == y)
-                            Graph.AddEdge(newEdge);
-
-                        // Добавляем диагональную грань между вершинами, только если вершины ссылаются на один участок
-                        else if (neighborVertex.Region == vertex.Region)
-                            Graph.AddEdge(newEdge);
-                    }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Failed! {0}", ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// Создать dot-файл с текущим графом предприятия.
-        /// </summary>
-        /// <returns>True, если операция выполнена успешно.</returns>
-        protected bool CreateGraphDotFile()
-        {
-            Console.Write("Create the graph dot-file... ");
-
-            try
-            {
-                // Объект алгоритма Graphviz для используемого графа
-                var graphviz = new GraphvizAlgorithm<TopologyVertex, TopologyEdge>(Graph);
-
-                graphviz.GraphFormat.RankDirection = GraphvizRankDirection.LR;
-
-                // Добавляем общую метку графу с информацией об участках
-                graphviz.GraphFormat.Label = 
-                    Regions.Select(q => PrepareJSONForGraphviz(q.GetInfo())).Aggregate("", (current, next) => current + "\r\n\r\n" + next) +
-                    MCZs.Select(q => PrepareJSONForGraphviz(q.GetInfo())).Aggregate("", (current, next) => current + "\r\n\r\n" + next); 
-
-                graphviz.FormatVertex += (sender, args) =>
-                {
-                    // В вершине указываем id участка и координаты внутри участка
-                    args.VertexFormatter.Comment = args.Vertex.ToString();                                      
-                    args.VertexFormatter.Group = $"{args.Vertex.Region.Id}_{args.Vertex.RegionY}";              // Группируем участки на графе
-
-                    // Добавить наименование участка к его угловому узлу (заменить в файле на xlabel и добавить forcelabels=true)
-                    args.VertexFormatter.ToolTip = (args.Vertex.RegionX == 0 && args.Vertex.RegionY == 0)
-                        ? args.Vertex.Region.Name
-                        : "";
-
-                    SetVertexColor(args);
-                };
-
-                // Грани форматируем стандартно с двумя весами каждой грани
-                graphviz.FormatEdge += (sender, args) =>
-                {
-                    args.EdgeFormatter.Label.Value = args.Edge.ToString();      // Указываем метки граней
-
-                    if (args.Edge.IsAcrossTheBorder())                          // Грани через участки окрашиваем в красный цвет
-                        args.EdgeFormatter.StrokeColor = Color.Red;
-
-                    if (args.Edge.IsAlongTheBorder())                           // Грани вдоль границ участков окрашиваем в оранжевый цвет
-                        args.EdgeFormatter.StrokeColor = Color.Orange;
-                };
-
-                graphviz.Generate(new FileDotEngine(), GraphDotFilename);       // Генерируем файл с укзанным именем
-
-                Console.WriteLine("Done!");
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Failed! {0}", ex.Message);
-                return false;
-            }
-        }
-
-        /// <summary>
         /// Подготовить JSON-строку для помещения в Graphviz.
         /// </summary>
         /// <param name="JSONstring>Исходная строка.</param>
@@ -342,24 +207,6 @@ namespace TopologyModel
                 .Replace('\"', '\'')            // Заменяем кавычки для Graphviz
                 .Replace("},'", "},\r\n'")      // Добавляем переносы строк для красоты
                 .Replace(",", ", ");            // ... и пробелы
-        }
-
-        /// <summary>
-        /// Задать цвет фона вершины.
-        /// </summary>
-        /// <param name="args">Аргументы форматирования вершины.</param>
-        protected void SetVertexColor(FormatVertexEventArgs<TopologyVertex> args)
-        {
-            args.VertexFormatter.Style = GraphvizVertexStyle.Filled;
-
-            if (args.Vertex.MCZs != null && args.Vertex.MCZs.Any()) // Вершины с ТУУ окрашиваем в зелёный цвет
-                args.VertexFormatter.FillColor = Color.LightGreen;
-
-            else if (!args.Vertex.IsInside())                       // Граничные вершины окрашиваем в жёлтый цвет
-                args.VertexFormatter.FillColor = Color.Yellow;
-
-            else
-                args.VertexFormatter.FillColor = Color.WhiteSmoke;  // Все остальные вершины - почти белые
         }
     }
 }
