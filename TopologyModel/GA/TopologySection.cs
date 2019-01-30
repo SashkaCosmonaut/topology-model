@@ -1,4 +1,6 @@
-﻿namespace TopologyModel.GA
+﻿using System;
+
+namespace TopologyModel.GA
 {
     /// <summary>
     /// Класс части (секции), на которые разбита топология, 
@@ -9,21 +11,28 @@
         /// <summary>
         /// Параметры выбора и расположения устройства учёта и управления, а так же исходящего КПД.
         /// </summary>
-        public MeasurementAndControlPart MACPart { get; set; } = new MeasurementAndControlPart();
-
-        /// <summary>
-        /// Параметры выбора и расположения первого приемопередатчика, а так же исходящего КПД.
-        /// </summary>
-        public TransmissionPart FirstTransmissionPart { get; set; } = new TransmissionPart();
-
-        /// <summary>
-        /// Параметры выбора и расположения второго приемопередатчика, а так же исходящего КПД.
-        /// </summary>
-        public TransmissionPart SecondTransmissionPart { get; set; } = new TransmissionPart();
+        public MeasurementAndControlPart MACPart { get; } = new MeasurementAndControlPart();
 
         /// <summary>
         /// Параметры выбора и расположения УСПД, а так же входящего КПД.
         /// </summary>
-        public DataAcquisitionPart DADPart { get; set; } = new DataAcquisitionPart();
+        public DataAcquisitionPart DADPart { get; } = new DataAcquisitionPart();
+
+        /// <summary>
+        /// Декодировать текущую секцию из генотипа.
+        /// </summary>
+        /// <param name="sectionChromosomePart">Часть хромосомы декодируемой секции.</param>
+        public void Decode(Project project, int[] sectionGenes)
+        {
+            try
+            {
+                MACPart.Decode(project, sectionGenes[0], sectionGenes[1], sectionGenes[2]);
+                DADPart.Decode(project, sectionGenes[3], sectionGenes[4], sectionGenes[5]);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("TopologySection Decode failed! {0}", ex.Message);
+            }
+        }
     }
 }
