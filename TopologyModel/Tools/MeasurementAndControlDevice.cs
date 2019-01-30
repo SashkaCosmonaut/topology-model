@@ -42,7 +42,6 @@ namespace TopologyModel.Tools
                 else
                     measurementsResult = true;      // Если нет измерений на месте, то устройство автоматически подходит
 
-
                 // Аналогично с управляющими воздействиями
                 if (controlsResult)
                     foreach (var c in mcz.Controls.TakeWhile(q => controlsResult))

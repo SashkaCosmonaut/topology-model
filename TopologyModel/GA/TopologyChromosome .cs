@@ -22,7 +22,8 @@ namespace TopologyModel.GA
         /// </summary>
         protected static Dictionary<int, Func<Project, int, int>> GeneValueGenerationFuncs = new Dictionary<int, Func<Project, int, int>>
         {
-            { 0, GenerateMCDevice }
+            { 0, GenerateMCDeviceGene },
+            { 1, GenerateMCZoneGene }
         };
 
         /// <summary>
@@ -140,11 +141,12 @@ namespace TopologyModel.GA
         /// <summary>
         /// Генерировать новый ген, представляющий случайное устройство учёта и управления.
         /// Из всех доступных устройств, выбираются только те, которые подходят для данного места учёта и управления.
+        /// Ген является индексом в массиве всех доступных устройств.
         /// </summary>
         /// <param name="project">Текущий проект сети.</param>
         /// <param name="sectionIndex">Индекс секции, для которой генерируется ген.</param>
-        /// <returns>Значение гена.</returns>
-        protected static int GenerateMCDevice(Project project, int sectionIndex)
+        /// <returns>Значение случайного гена.</returns>
+        protected static int GenerateMCDeviceGene(Project project, int sectionIndex)
         {
             try
             {
@@ -155,11 +157,40 @@ namespace TopologyModel.GA
 
                 var randomIndex = RandomizationProvider.Current.GetInt(0, suitableMCDs.Count());    // Выбираем из массива выбранных устройств случайное
 
-                return suitableMCDs[randomIndex].Index;     // Геном является индекс в массиве весх доступных устройств
+                return suitableMCDs[randomIndex].Index;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("GenerateMCDevice failed! {0}", ex.Message);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Сгенерировать новый ген, представляющий случайную вершину графа, который находится на выбранном 
+        /// месте учёта и управления, для которой. Ген является индексом в массиве вершин графа, на которых
+        /// находится данное место учёта и управления.
+        /// </summary>
+        /// <param name="project">Текущий проект сети.</param>
+        /// <param name="sectionIndex">Индекс секции, для которой генерируется ген.</param>
+        /// <returns></returns>
+        protected static int GenerateMCZoneGene(Project project, int sectionIndex)
+        {
+            try
+            {
+                var currentMCZ = project.MCZs[sectionIndex];    // Текущее место учёта и управления
+
+                var mczVertices = project.Graph.VerticesArray
+                    .Select((vertex, index) => new { Vertex = vertex, Index = index })  // Запоминаем индекс в массиве каждого места
+                    .Where(q => q.Vertex.MCZs.Contains(currentMCZ)).ToArray();          // Берём те вершины графа, где располагается данное место
+
+                var randomIndex = RandomizationProvider.Current.GetInt(0, mczVertices.Count());
+
+                return mczVertices[randomIndex].Index;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("GenerateMCDVertexGene failed! {0}", ex.Message);
                 return 0;
             }
         }
