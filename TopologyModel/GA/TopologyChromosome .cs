@@ -23,8 +23,11 @@ namespace TopologyModel.GA
         protected static Dictionary<int, Func<TopologyChromosome, int, int>> GeneValueGenerationFuncs = new Dictionary<int, Func<TopologyChromosome, int, int>>
         {
             { 0, GenerateMCDeviceGene },
-            { 1, GenerateMCZoneGene },
-            { 2, GenerateMCChannelGene }
+            { 1, GenerateMCVertexGene },
+            { 2, GenerateMCChannelGene },
+            { 3, GenerateDADeviceGene },
+            { 4, GenerateDAVertexGene },
+            { 5, GenerateDAChannelGene }
         };
 
         /// <summary>
@@ -195,7 +198,7 @@ namespace TopologyModel.GA
         /// <param name="chromosome">Текущая хромосома.</param>
         /// <param name="sectionIndex">Индекс секции, для которой генерируется ген.</param>
         /// <returns>Целочисленное значение случайного гена, соответствующее индексу в массиве вершин графа.</returns>
-        protected static int GenerateMCZoneGene(TopologyChromosome chromosome, int sectionIndex)
+        protected static int GenerateMCVertexGene(TopologyChromosome chromosome, int sectionIndex)
         {
             try
             {
@@ -217,12 +220,12 @@ namespace TopologyModel.GA
         }
 
         /// <summary>
-        /// Сгенерировать новый ген, представляющий КПД для устройства учёта и управления, выбирается 
+        /// Сгенерировать новый ген, представляющий случайный КПД для устройства учёта и управления, выбирается 
         /// такой, чтобы подходил к устройству.
         /// </summary>
         /// <param name="chromosome">Текущая хромосома.</param>
         /// <param name="sectionIndex">Индекс секции, для которой генерируется ген.</param>
-        /// <returns>Целочисленное значение случайного гена, соответствующее индексу в доступных каналов передачи данных.</returns>
+        /// <returns>Целочисленное значение случайного гена, соответствующее индексу в массиве доступных каналов передачи данных.</returns>
         protected static int GenerateMCChannelGene(TopologyChromosome chromosome, int sectionIndex)
         {
             try
@@ -242,6 +245,63 @@ namespace TopologyModel.GA
             catch (Exception ex)
             {
                 Console.WriteLine("GenerateMCTransmission failed! {0}", ex.Message);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Сгенерировать новый ген, представляющий случайное устройство сбора и передачи данных.
+        /// </summary>
+        /// <param name="chromosome">Текущая хромосома.</param>
+        /// <param name="sectionIndex">Индекс секции, для которой генерируется ген.</param>
+        /// <returns>Целочисленное значение случайного гена, соответствующее индексу в массиве УСПД.</returns>
+        protected static int GenerateDADeviceGene(TopologyChromosome chromosome, int sectionIndex)
+        {
+            try
+            {
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("GenerateDADeviceGene failed! {0}", ex.Message);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Сгенерировать новый ген, представляющий случайную вершину графа, для расположения в ней УСПД.
+        /// </summary>
+        /// <param name="chromosome">Текущая хромосома.</param>
+        /// <param name="sectionIndex">Индекс секции, для которой генерируется ген.</param>
+        /// <returns>Целочисленное значение случайного гена, соответствующее индексу в массиве вершин графа.</returns>
+        protected static int GenerateDAVertexGene(TopologyChromosome chromosome, int sectionIndex)
+        {
+            try
+            {
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("GenerateDAVertexGene failed! {0}", ex.Message);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Сгенерировать новый ген, представляющий случайный КПД, совместимый с выбранным УСПД в секции.
+        /// </summary>
+        /// <param name="chromosome">Текущая хромосома.</param>
+        /// <param name="sectionIndex">Индекс секции, для которой генерируется ген.</param>
+        /// <returns>Целочисленное значение случайного гена, соответствующее индексу в массиве каналов передачи данных.</returns>
+        protected static int GenerateDAChannelGene(TopologyChromosome chromosome, int sectionIndex)
+        {
+            try
+            {
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("GenerateDAChannelGene failed! {0}", ex.Message);
                 return 0;
             }
         }
