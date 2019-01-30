@@ -278,7 +278,7 @@ namespace TopologyModel.GA
         {
             try
             {
-                return 0;
+                return RandomizationProvider.Current.GetInt(0, chromosome.CurrentProject.Graph.VerticesArray.Length);
             }
             catch (Exception ex)
             {
@@ -297,7 +297,17 @@ namespace TopologyModel.GA
         {
             try
             {
-                return 0;
+                // Декодируем УСПД из гена, которое выбрано в данной секции (оно идёт третьим хромосоме)
+                var device = chromosome.CurrentProject.AvailableTools.DADs[(int)chromosome.GetGene(sectionIndex * GENES_FOR_SECTION + 3).Value];
+
+                var availableChannels = chromosome.CurrentProject.AvailableTools.DCs
+                    .Select((channel, index) => new { Channel = channel, Index = index })
+                    .Where(q => device.ReceivingProtocols.Keys.Contains(q.Channel.Protocol))   // Выбираем те КПД, которые совместимы с данным УСПД
+                    .ToArray();
+
+                var randomIndex = RandomizationProvider.Current.GetInt(0, availableChannels.Count());
+
+                return availableChannels[randomIndex].Index;
             }
             catch (Exception ex)
             {
