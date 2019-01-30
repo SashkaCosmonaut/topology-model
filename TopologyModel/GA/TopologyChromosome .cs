@@ -20,7 +20,7 @@ namespace TopologyModel.GA
         /// Словарь функций генерации каждого гена в хромосоме в зависимости от его расположения в секции, где ключ - 
         /// индекс гена в секции, а значение - создающая его функция, возвращающая целочисленное значение гена.
         /// </summary>
-        protected static Dictionary<int, Func<Project, int, int>> GeneValueGenerationFuncs = new Dictionary<int, Func<Project, int, int>>
+        protected static Dictionary<int, Func<TopologyChromosome, int, int>> GeneValueGenerationFuncs = new Dictionary<int, Func<TopologyChromosome, int, int>>
         {
             { 0, GenerateMCDeviceGene },
             { 1, GenerateMCZoneGene },
@@ -108,7 +108,7 @@ namespace TopologyModel.GA
                 if (!GeneValueGenerationFuncs.ContainsKey(geneInSecionIndex))
                     return new Gene(0);
 
-                return new Gene(GeneValueGenerationFuncs[geneInSecionIndex].Invoke(CurrentProject, GetSectionIndex(geneIndex)));
+                return new Gene(GeneValueGenerationFuncs[geneInSecionIndex].Invoke(this, GetSectionIndex(geneIndex)));
             }
             catch (Exception ex)
             {
@@ -164,16 +164,16 @@ namespace TopologyModel.GA
         /// Из всех доступных устройств, выбираются только те, которые подходят для данного места учёта и управления.
         /// Ген является индексом в массиве всех доступных устройств.
         /// </summary>
-        /// <param name="project">Текущий проект сети.</param>
+        /// <param name="chromosome">Текущая хромосома.</param>
         /// <param name="sectionIndex">Индекс секции, для которой генерируется ген.</param>
         /// <returns>Целочисленное значение случайного гена, соответствующее индексу в массиве доступных устройств.</returns>
-        protected static int GenerateMCDeviceGene(Project project, int sectionIndex)
+        protected static int GenerateMCDeviceGene(TopologyChromosome chromosome, int sectionIndex)
         {
             try
             {
-                var suitableMCDs = project.AvailableTools.MCDs
-                    .Select((mcd, index) => new { MCD = mcd, Index = index })           // Запоминаем индекс устройства в массиве всех доступных устройств
-                    .Where(q => q.MCD.IsSuitableForMCZ(project.MCZs[sectionIndex]))     // Выбираем только те устройства, которые подходят для места
+                var suitableMCDs = chromosome.CurrentProject.AvailableTools.MCDs
+                    .Select((mcd, index) => new { MCD = mcd, Index = index })                           // Запоминаем индекс устройства в массиве всех доступных устройств
+                    .Where(q => q.MCD.IsSuitableForMCZ(chromosome.CurrentProject.MCZs[sectionIndex]))   // Выбираем только те устройства, которые подходят для места
                     .ToArray();
 
                 var randomIndex = RandomizationProvider.Current.GetInt(0, suitableMCDs.Count());    // Выбираем из массива выбранных устройств случайное
@@ -192,16 +192,16 @@ namespace TopologyModel.GA
         /// месте учёта и управления. Ген является индексом в массиве вершин графа, на которых
         /// находится данное место учёта и управления.
         /// </summary>
-        /// <param name="project">Текущий проект сети.</param>
+        /// <param name="chromosome">Текущая хромосома.</param>
         /// <param name="sectionIndex">Индекс секции, для которой генерируется ген.</param>
         /// <returns>Целочисленное значение случайного гена, соответствующее индексу в массиве вершин графа.</returns>
-        protected static int GenerateMCZoneGene(Project project, int sectionIndex)
+        protected static int GenerateMCZoneGene(TopologyChromosome chromosome, int sectionIndex)
         {
             try
             {
-                var currentMCZ = project.MCZs[sectionIndex];    // Текущее место учёта и управления
+                var currentMCZ = chromosome.CurrentProject.MCZs[sectionIndex];    // Текущее место учёта и управления
 
-                var mczVertices = project.Graph.VerticesArray
+                var mczVertices = chromosome.CurrentProject.Graph.VerticesArray
                     .Select((vertex, index) => new { Vertex = vertex, Index = index })  // Запоминаем индекс в массиве каждого места
                     .Where(q => q.Vertex.MCZs.Contains(currentMCZ)).ToArray();          // Берём те вершины графа, где располагается данное место
 
@@ -220,16 +220,17 @@ namespace TopologyModel.GA
         /// Сгенерировать новый ген, представляющий КПД для устройства учёта и управления, выбирается 
         /// такой, чтобы подходил к устройству.
         /// </summary>
-        /// <param name="project">Текущий проект сети.</param>
+        /// <param name="chromosome">Текущая хромосома.</param>
         /// <param name="sectionIndex">Индекс секции, для которой генерируется ген.</param>
         /// <returns>Целочисленное значение случайного гена, соответствующее индексу в доступных каналов передачи данных.</returns>
-        protected static int GenerateMCChannelGene(Project project, int sectionIndex)
+        protected static int GenerateMCChannelGene(TopologyChromosome chromosome, int sectionIndex)
         {
             try
             {
-                var device = project.AvailableTools.MCDs[sectionIndex];     // Берём устройство, которое выбрано в данной секции (оно идёт первым, sectionIndex + 0)
+                // Декодируем устройство из гена, которое выбрано в данной секции (оно идёт первым хромосоме)
+                var device = chromosome.CurrentProject.AvailableTools.MCDs[(int)chromosome.GetGene(sectionIndex * GENES_FOR_SECTION).Value];
 
-                var availableChannels = project.AvailableTools.DCs
+                var availableChannels = chromosome.CurrentProject.AvailableTools.DCs
                     .Select((channel, index) => new { Channel = channel, Index = index })
                     .Where(q => device.SendingProtocols.Contains(q.Channel.Protocol))   // Выбираем те КПД, которые совместимы с данным устройством
                     .ToArray();
