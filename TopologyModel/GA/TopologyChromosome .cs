@@ -23,7 +23,8 @@ namespace TopologyModel.GA
         protected static Dictionary<int, Func<Project, int, int>> GeneValueGenerationFuncs = new Dictionary<int, Func<Project, int, int>>
         {
             { 0, GenerateMCDeviceGene },
-            { 1, GenerateMCZoneGene }
+            { 1, GenerateMCZoneGene },
+            { 2, GenerateMCChannelGene }
         };
 
         /// <summary>
@@ -165,7 +166,7 @@ namespace TopologyModel.GA
         /// </summary>
         /// <param name="project">Текущий проект сети.</param>
         /// <param name="sectionIndex">Индекс секции, для которой генерируется ген.</param>
-        /// <returns>Значение случайного гена.</returns>
+        /// <returns>Целочисленное значение случайного гена, соответствующее индексу в массиве доступных устройств.</returns>
         protected static int GenerateMCDeviceGene(Project project, int sectionIndex)
         {
             try
@@ -188,12 +189,12 @@ namespace TopologyModel.GA
 
         /// <summary>
         /// Сгенерировать новый ген, представляющий случайную вершину графа, который находится на выбранном 
-        /// месте учёта и управления, для которой. Ген является индексом в массиве вершин графа, на которых
+        /// месте учёта и управления. Ген является индексом в массиве вершин графа, на которых
         /// находится данное место учёта и управления.
         /// </summary>
         /// <param name="project">Текущий проект сети.</param>
         /// <param name="sectionIndex">Индекс секции, для которой генерируется ген.</param>
-        /// <returns></returns>
+        /// <returns>Целочисленное значение случайного гена, соответствующее индексу в массиве вершин графа.</returns>
         protected static int GenerateMCZoneGene(Project project, int sectionIndex)
         {
             try
@@ -211,6 +212,35 @@ namespace TopologyModel.GA
             catch (Exception ex)
             {
                 Console.WriteLine("GenerateMCDVertexGene failed! {0}", ex.Message);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Сгенерировать новый ген, представляющий КПД для устройства учёта и управления, выбирается 
+        /// такой, чтобы подходил к устройству.
+        /// </summary>
+        /// <param name="project">Текущий проект сети.</param>
+        /// <param name="sectionIndex">Индекс секции, для которой генерируется ген.</param>
+        /// <returns>Целочисленное значение случайного гена, соответствующее индексу в доступных каналов передачи данных.</returns>
+        protected static int GenerateMCChannelGene(Project project, int sectionIndex)
+        {
+            try
+            {
+                var device = project.AvailableTools.MCDs[sectionIndex];     // Берём устройство, которое выбрано в данной секции (оно идёт первым, sectionIndex + 0)
+
+                var availableChannels = project.AvailableTools.DCs
+                    .Select((channel, index) => new { Channel = channel, Index = index })
+                    .Where(q => device.SendingProtocols.Contains(q.Channel.Protocol))   // Выбираем те КПД, которые совместимы с данным устройством
+                    .ToArray();
+
+                var randomIndex = RandomizationProvider.Current.GetInt(0, availableChannels.Count());
+
+                return availableChannels[randomIndex].Index;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("GenerateMCTransmission failed! {0}", ex.Message);
                 return 0;
             }
         }
