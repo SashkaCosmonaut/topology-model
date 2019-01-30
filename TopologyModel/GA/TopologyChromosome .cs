@@ -14,7 +14,7 @@ namespace TopologyModel.GA
         /// <summary>
         /// Количество генов для секции топологии в хромосоме.
         /// </summary>
-        public const int GENES_FOR_SECTION = 12;
+        public const int GENES_FOR_SECTION = 6;
 
         /// <summary>
         /// Словарь функций генерации каждого гена в хромосоме в зависимости от его расположения в секции, где ключ - 
@@ -43,8 +43,32 @@ namespace TopologyModel.GA
         public TopologySection[] Topology
         {
             get {
+                // Поочерёдно декодируем каждую секцию
+                for (var sectionIndex = 0; sectionIndex < Length / GENES_FOR_SECTION; sectionIndex++)
+                    _topology[sectionIndex] = DecodeSection(sectionIndex);
+
                 return _topology;
             }
+        }
+
+        /// <summary>
+        /// Раскодировать фенотип секции из генотипа.
+        /// </summary>
+        /// <param name="sectionIndex">Номер секции топологии графа.</param>
+        /// <returns>Раскодированный фенотип в виде секции топологии сети.</returns>
+        protected TopologySection DecodeSection(int sectionIndex)
+        {
+            var resultSection = _topology[sectionIndex] ?? new TopologySection();
+
+            var sectionGenes = GetGenes()
+                .Select((gene, index) => new { Value = (int)gene.Value, Index = index })
+                .Where(q => GetSectionIndex(q.Index) == sectionIndex)
+                .Select(q => q.Value)
+                .ToArray();
+
+            resultSection.Decode(CurrentProject, sectionGenes);
+
+            return resultSection;
         }
 
         /// <summary>
@@ -54,18 +78,14 @@ namespace TopologyModel.GA
         /// <param name="project">Проект по генерации топологии сети.</param>
         public TopologyChromosome(Project project) : base(project.MCZs.Length * GENES_FOR_SECTION)
         {
-            Console.Write("Initialize the initial chromosome... ");
-
             try
             {
                 CurrentProject = project;
 
                 _topology = new TopologySection[project.MCZs.Length];
 
-                for (var i = 0; i < Length; i++)
-                    ReplaceGene(i, GenerateGene(i));
-
-                Console.WriteLine("Done!");
+                for (var geneIndex = 0; geneIndex < Length; geneIndex++)
+                    ReplaceGene(geneIndex, GenerateGene(geneIndex));
             }
             catch (Exception ex)
             {
