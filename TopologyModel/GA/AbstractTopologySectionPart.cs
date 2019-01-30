@@ -12,7 +12,7 @@ namespace TopologyModel.GA
         /// <summary>
         /// Узел графа, в котором находится данная часть секции топологии.
         /// </summary>
-        public TopologyEdge Edge { get; set; }
+        public TopologyVertex Vertex { get; set; }
 
         /// <summary>
         /// Канал передачи данных, который используется для отправки или приема данных.
