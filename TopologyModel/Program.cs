@@ -27,11 +27,13 @@ namespace TopologyModel
 
                 if (!project.InitializeGraph()) return;
 
+                CreateDotFile(project); // Сгенерировать исходный граф без топологий
+
                 var chromosome = new TopologyChromosome(project);
 
                 var topology = chromosome.Topology;
 
-                CreateDotFile(project);
+                CreateDotFile(project, topology); // Сгенерировать результирующий граф с топологией
             }
             catch (Exception ex)
             {
@@ -69,7 +71,8 @@ namespace TopologyModel
         /// Создать dot-файл наосновании проекта и других параметров.
         /// </summary>
         /// <param name="project">Объект проекта.</param>
-        public static void CreateDotFile(Project project)
+        /// <param name="topology">Предлагаемая методом топология.</param>
+        public static void CreateDotFile(Project project, TopologySection[] topology = null)
         {
             try
             {
@@ -77,8 +80,12 @@ namespace TopologyModel
                     project.Regions.Select(q => PrepareJSONForGraphviz(q.GetInfo())).Aggregate("", (current, next) => current + "\r\n\r\n" + next) +
                     project.MCZs.Select(q => PrepareJSONForGraphviz(q.GetInfo())).Aggregate("", (current, next) => current + "\r\n\r\n" + next);
 
-                if (project.Graph.GenerateDotFile(project.GraphDotFilename, graphLabel))
-                    Console.WriteLine("Check the graph dot-file in {0}", project.GraphDotFilename);
+                var filename = topology == null         // Если генерируем файл с отображением топологии, то изменяем имя
+                    ? project.GraphDotFilename
+                    : GetFilenameWithTopology(project.GraphDotFilename);
+
+                if (project.Graph.GenerateDotFile(filename, graphLabel, topology))
+                    Console.WriteLine("Check the graph dot-file in {0}", filename);
             }
             catch (Exception ex)
             {
@@ -93,10 +100,36 @@ namespace TopologyModel
         /// <returns>Обработанная строка.</returns>
         public static string PrepareJSONForGraphviz(string JSONstring)
         {
-            return JSONstring
-                .Replace('\"', '\'')            // Заменяем кавычки для Graphviz
-                .Replace("},'", "},\r\n'")      // Добавляем переносы строк для красоты
-                .Replace(",", ", ");            // ... и пробелы
+            try
+            {
+                return JSONstring
+                    .Replace('\"', '\'')            // Заменяем кавычки для Graphviz
+                    .Replace("},'", "},\r\n'")      // Добавляем переносы строк для красоты
+                    .Replace(",", ", ");            // ... и пробелы
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("PrepareJSONForGraphviz failed! {0}", ex.Message);
+                return JSONstring;
+            }
+        }
+
+        /// <summary>
+        /// Сгенерировать изменённое имя файла для графа с топологией.
+        /// </summary>
+        /// <param name="sourceFilename">Исходное имя файла.</param>
+        /// <returns>Имя файла с суффиксом "-topology".</returns>
+        public static string GetFilenameWithTopology(string sourceFilename)
+        {
+            try
+            {
+                return sourceFilename.Insert(sourceFilename.IndexOf('.'), "-topology");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("GetFilenameWithTopology failed! {0}", ex.Message);
+                return sourceFilename;
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using TopologyModel.GA;
 
 namespace TopologyModel.TopologyGraphs
 {
@@ -106,10 +107,13 @@ namespace TopologyModel.TopologyGraphs
         /// <summary>
         /// Создать dot-файл с текущим графом предприятия.
         /// </summary>
+        /// <param name="filename">Имя dot-файла графа.</param>
+        /// <param name="graphLabel">Метка для всего графа.</param>
+        /// <param name="topology">Отображаемая по желанию предлагаемая методом топология.</param>
         /// <returns>True, если операция выполнена успешно.</returns>
-        public bool GenerateDotFile(string filename, string graphLabel)
+        public bool GenerateDotFile(string filename, string graphLabel, TopologySection[] topology = null)
         {
-            Console.Write("Create the graph dot-file... ");
+            Console.Write($"Create the graph {(topology == null ? "" : "with topology")} dot-file... ");
 
             try
             {
