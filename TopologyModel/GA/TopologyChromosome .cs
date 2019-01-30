@@ -259,7 +259,7 @@ namespace TopologyModel.GA
         {
             try
             {
-                return 0;
+                return RandomizationProvider.Current.GetInt(0, chromosome.CurrentProject.AvailableTools.DADs.Length);
             }
             catch (Exception ex)
             {
