@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GeneticSharp.Domain.Randomizations;
+using System;
 using System.Linq;
 using TopologyModel.Tools;
 
@@ -53,7 +54,7 @@ namespace TopologyModel.GA
                     .Select(q => q.Value)
                     .ToArray();
 
-                if (sectionGenes.Length < 6)
+                if (sectionGenes.Length < GeneValueGenerationFuncs.Length)
                     throw new Exception("Incorrect section size!");
 
                 // 0-й ген - тип КУ, 1-й ген - узел КУ, 2-й ген - тип УСПД, 3-й ген - узел УСПД, 4-й ген - КПД
@@ -99,9 +100,31 @@ namespace TopologyModel.GA
         /// <param name="chromosome">Текущая хромосома.</param>
         /// <param name="sectionIndex">Индекс секции, для которой генерируется ген.</param>
         /// <returns>Целочисленное значение случайного гена, соответствующее индексу в массиве доступных каналов передачи данных.</returns>
-        protected static int GenerateChannelGene(TopologyChromosome chromosome, int geneIndex)
+        protected static int GenerateChannelGene(TopologyChromosome chromosome, int sectionIndex)
         {
-            return 0;
+            try
+            {
+                // Декодируем КУ из гена, которое выбрано в данной секции (оно идёт первым в хромосоме)
+                var mcd = chromosome.CurrentProject.AvailableTools.MCDs[(int)chromosome.GetGene(sectionIndex * TopologyChromosome.GENES_FOR_SECTION).Value];
+
+                // Декодируем УСПД из гена, которое выбрано в данной секции (оно идёт третьим в хромосоме)
+                var dad = chromosome.CurrentProject.AvailableTools.DADs[(int)chromosome.GetGene(sectionIndex * TopologyChromosome.GENES_FOR_SECTION + 2).Value];
+
+                var availableChannels = chromosome.CurrentProject.AvailableTools.DCs
+                    .Select((channel, index) => new { Channel = channel, Index = index })
+                    .Where(q => mcd.SendingProtocols.Contains(q.Channel.Protocol) && 
+                                dad.ReceivingProtocols.Keys.Contains(q.Channel.Protocol))   // Выбираем те КПД, которые совместимы с данным КУ и УСПД
+                    .ToArray();
+
+                var randomIndex = RandomizationProvider.Current.GetInt(0, availableChannels.Count());
+
+                return availableChannels[randomIndex].Index;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("GenerateChannelGene failed! {0}", ex.Message);
+                return 0;
+            }
         }
 
         /// <summary>
