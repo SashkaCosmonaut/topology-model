@@ -137,6 +137,8 @@ namespace TopologyModel.TopologyGraphs
                         : "";
 
                     SetVertexColor(args);
+
+                    HighlightTopologyVertex(args, topology);
                 };
 
                 // Грани форматируем стандартно с двумя весами каждой грани
@@ -149,6 +151,8 @@ namespace TopologyModel.TopologyGraphs
 
                     if (args.Edge.IsAlongTheBorder())                           // Грани вдоль границ участков окрашиваем в оранжевый цвет
                         args.EdgeFormatter.StrokeColor = Color.Orange;
+
+                    HighlightTopologyEdge(args, topology);
                 };
 
                 graphviz.Generate(new FileDotEngine(), filename);       // Генерируем файл с укзанным именем
@@ -186,6 +190,40 @@ namespace TopologyModel.TopologyGraphs
             catch (Exception ex)
             {
                 Console.WriteLine("SetVertexColor failed! {0}", ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Выделить цветом на графе вершины топологии.
+        /// </summary>
+        /// <param name="args">Аргументы события отрисовки вершины.</param>
+        /// <param name="topology">Предлагаемая топология с вершинами графа.</param>
+        protected void HighlightTopologyVertex(FormatVertexEventArgs<TopologyVertex> args, TopologySection[] topology)
+        {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("HighlightTopologyVertex failed! {0}", ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Выделить цветом на графе связи топологии между вершинами графа. 
+        /// </summary>
+        /// <param name="args">Аргументы события отрисовки грани.</param>
+        /// <param name="topology">Предлагаемая топология со связями между вершинами графа.</param>
+        protected void HighlightTopologyEdge(FormatEdgeEventArgs<TopologyVertex, TopologyEdge> args, TopologySection[] topology)
+        {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("HighlightTopologyEdge failed! {0}", ex.Message);
             }
         }
     }
