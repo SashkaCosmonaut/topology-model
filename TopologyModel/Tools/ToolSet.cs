@@ -1,11 +1,9 @@
-﻿using TopologyModel.Tools;
-
-namespace TopologyModel.Tools
+﻿namespace TopologyModel.Tools
 {
-	/// <summary>
-	/// БД инструментов для использования в проекте.
-	/// </summary>
-	public class ToolSet
+    /// <summary>
+    /// БД инструментов для использования в проекте.
+    /// </summary>
+    public class ToolSet
 	{
         /// <summary>
         /// Массив доступных конечных устройств.
