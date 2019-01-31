@@ -11,7 +11,7 @@ namespace TopologyModel.GA
         /// <summary>
         /// Количество генов в секции топологии хромосомы.
         /// </summary>
-        public const int GENES_FOR_SECTION = 6;
+        public const int GENES_FOR_SECTION = 5;
 
         /// <summary>
         /// Ссылка на текущий проект с параметрами для генерации топологии сети.
