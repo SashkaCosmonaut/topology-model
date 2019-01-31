@@ -13,6 +13,8 @@ namespace TopologyModel
     /// </summary>
     public class Project
     {
+        #region ProjectProperties
+
         /// <summary>
         /// Высота учитываемого размера всей территории предприятия.
         /// </summary>
@@ -48,7 +50,6 @@ namespace TopologyModel
         /// </summary>
         public bool IsInternetAvailable { get; set; }
 
-
         /// <summary>
         /// Абонентская плата в месяц за использование и обслуживание локального сервера.
         /// </summary>
@@ -58,7 +59,6 @@ namespace TopologyModel
         /// Абонентская плата в месяц за использование и обслуживание предоставляемого удалённого сервера.
         /// </summary>
         public double RemoteServerMonthlyPayment { get; set; }
-
 
         /// <summary>
         /// Словарь весовых коэффициентов параметров проекта, где ключ - это наименование параметра, а значение - вес.
@@ -71,6 +71,12 @@ namespace TopologyModel
         /// </summary>
         public Dictionary<InternetConnection, double> MobileInternetMonthlyPayment { get; set; }
 
+        /// <summary>
+        /// Имя dot-файла графа участков предприятия.
+        /// </summary>
+        public string GraphDotFilename { get; set; } = "unnamed.dot";
+
+        #endregion
 
         /// <summary>
         /// Массив всех участков предприятия.
@@ -78,7 +84,7 @@ namespace TopologyModel
         public TopologyRegion[] Regions { get; set; }
 
         /// <summary>
-        /// перечень имеющихся на предприятии ТУУ
+        /// Перечень имеющихся на предприятии ТУУ
         /// </summary>
         public MeasurementAndControlZone[] MCZs { get; set; }
 
@@ -93,28 +99,20 @@ namespace TopologyModel
         public TopologyGraph Graph { get; set; }
 
         /// <summary>
-        /// Имя dot-файла графа участков предприятия.
-        /// </summary>
-        public string GraphDotFilename { get; set; } = "unnamed.dot";
-
-
-        /// <summary>
         /// Инициализировать граф всего предприятия.
         /// </summary>
         /// <returns>True, если операция выполнена успешно.</returns>
         public bool InitializeGraph()
         {
-            Console.WriteLine("Initialize the graph... ");
-
             try
             {
                 var verticesMatrix = CreateVerticesMatrix();
 
-                if (verticesMatrix.Length == 0) return false;
+                if (verticesMatrix == null || verticesMatrix.Length == 0) return false;
 
                 Graph = new TopologyGraph(verticesMatrix, WeightCoefficients);
 
-                Console.WriteLine("Done!");
+                Console.WriteLine("Initialize the graph... Done!");
 
                 return true;
             }
@@ -146,10 +144,10 @@ namespace TopologyModel
                     var endY = startY + region.Height;
 
                     for (var i = startY; i < endY; i++)         // Наполняем матрицу идентификаторами участков по координатам
-                        for (var j = startX; j < endX; j++)     
+                        for (var j = startX; j < endX; j++)
                             // Создаём вершину, привязанную к учаску и задаём её координаты внутри самого участка
                             // +1 из-за того, что в конфигурационном файле координаты начинаются с 1
-                            verticesMatrix[i, j] = new TopologyVertex(region, j - region.X + 1, i - region.Y + 1, GetMCZsInVertex(j + 1, i + 1));  
+                            verticesMatrix[i, j] = new TopologyVertex(region, j - region.X + 1, i - region.Y + 1, GetMCZsInVertex(j + 1, i + 1));
                 }
 
                 Console.WriteLine("Done! Result matix: ");
@@ -180,10 +178,18 @@ namespace TopologyModel
         /// <returns>Массив мест учёта и управления распологающийся в указанных координатах или null, если там такого нет.</returns>
         protected MeasurementAndControlZone[] GetMCZsInVertex(uint x, uint y)
         {
-            if (MCZs == null || !MCZs.Any()) return null;
+            try
+            {
+                if (MCZs == null || !MCZs.Any()) return null;
 
-            // Если координата узла находится в координатах ТУУ, то эта ТУУ в данном узле
-            return MCZs.Where(q => x >= q.X && y >= q.Y && x <= q.X + q.Width - 1 && y <= q.Y + q.Height - 1).ToArray();
+                // Если координата узла находится в координатах ТУУ, то эта ТУУ в данном узле
+                return MCZs.Where(q => x >= q.X && y >= q.Y && x <= q.X + q.Width - 1 && y <= q.Y + q.Height - 1).ToArray();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("GetMCZsInVertex failed! {0}", ex.Message);
+                return null;
+            }
         }
     }
 }
