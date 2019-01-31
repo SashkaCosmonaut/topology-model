@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GeneticSharp.Domain.Randomizations;
+using System;
+using System.Linq;
 using TopologyModel.Tools;
 
 namespace TopologyModel.GA
@@ -31,6 +33,73 @@ namespace TopologyModel.GA
             catch (Exception ex)
             {
                 Console.WriteLine("DataAcquisitionPart Decode failed! {0}", ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Сгенерировать новый ген, представляющий случайное устройство сбора и передачи данных.
+        /// </summary>
+        /// <param name="chromosome">Текущая хромосома.</param>
+        /// <param name="sectionIndex">Индекс секции, для которой генерируется ген.</param>
+        /// <returns>Целочисленное значение случайного гена, соответствующее индексу в массиве УСПД.</returns>
+        public static int GenerateDeviceGene(TopologyChromosome chromosome, int sectionIndex)
+        {
+            try
+            {
+                return RandomizationProvider.Current.GetInt(0, chromosome.CurrentProject.AvailableTools.DADs.Length);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("GenerateDADeviceGene failed! {0}", ex.Message);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Сгенерировать новый ген, представляющий случайную вершину графа, для расположения в ней УСПД.
+        /// </summary>
+        /// <param name="chromosome">Текущая хромосома.</param>
+        /// <param name="sectionIndex">Индекс секции, для которой генерируется ген.</param>
+        /// <returns>Целочисленное значение случайного гена, соответствующее индексу в массиве вершин графа.</returns>
+        public static int GenerateVertexGene(TopologyChromosome chromosome, int sectionIndex)
+        {
+            try
+            {
+                return RandomizationProvider.Current.GetInt(0, chromosome.CurrentProject.Graph.VerticesArray.Length);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("GenerateDAVertexGene failed! {0}", ex.Message);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Сгенерировать новый ген, представляющий случайный КПД, совместимый с выбранным УСПД в секции.
+        /// </summary>
+        /// <param name="chromosome">Текущая хромосома.</param>
+        /// <param name="sectionIndex">Индекс секции, для которой генерируется ген.</param>
+        /// <public>Целочисленное значение случайного гена, соответствующее индексу в массиве каналов передачи данных.</returns>
+        public static int GenerateChannelGene(TopologyChromosome chromosome, int sectionIndex)
+        {
+            try
+            {
+                // Декодируем УСПД из гена, которое выбрано в данной секции (оно идёт третьим хромосоме)
+                var device = chromosome.CurrentProject.AvailableTools.DADs[(int)chromosome.GetGene(sectionIndex * TopologyChromosome.GENES_FOR_SECTION + 3).Value];
+
+                var availableChannels = chromosome.CurrentProject.AvailableTools.DCs
+                    .Select((channel, index) => new { Channel = channel, Index = index })
+                    .Where(q => device.ReceivingProtocols.Keys.Contains(q.Channel.Protocol))   // Выбираем те КПД, которые совместимы с данным УСПД
+                    .ToArray();
+
+                var randomIndex = RandomizationProvider.Current.GetInt(0, availableChannels.Count());
+
+                return availableChannels[randomIndex].Index;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("GenerateDAChannelGene failed! {0}", ex.Message);
+                return 0;
             }
         }
     }
