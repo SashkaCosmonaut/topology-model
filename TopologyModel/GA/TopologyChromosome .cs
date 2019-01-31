@@ -74,26 +74,6 @@ namespace TopologyModel.GA
         }
 
         /// <summary>
-        /// Получить индекс секции, в которой находится ген по указанному индексу.
-        /// </summary>
-        /// <param name="geneIndex">Индекс гена в хромосоме.</param>
-        /// <returns>Индекс секции.</returns>
-        public static int GetSectionIndex(int geneIndex)
-        {
-            return geneIndex / GENES_FOR_SECTION;
-        }
-
-        /// <summary>
-        /// Получить индекс гена внутри секции.
-        /// </summary>
-        /// <param name="geneIndex">Индекс гена в хромосоме.</param>
-        /// <returns>Индекс гена внутри секции.</returns>
-        public static int GetGeneInSectionIndex(int geneIndex)
-        {
-            return geneIndex % GENES_FOR_SECTION;
-        }
-
-        /// <summary>
         /// Генерировать новый ген для хромосомы.
         /// </summary>
         /// <param name="geneIndex">Индекс гена.</param>

@@ -65,6 +65,7 @@ namespace TopologyModel.GA
         {
             try
             {
+                // Можно сортировать вершины по качеству и выбирать лучшую из случайных
                 return RandomizationProvider.Current.GetInt(0, chromosome.CurrentProject.Graph.VerticesArray.Length);
             }
             catch (Exception ex)

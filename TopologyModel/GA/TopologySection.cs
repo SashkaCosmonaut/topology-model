@@ -44,9 +44,12 @@ namespace TopologyModel.GA
             {
                 var sectionGenes = chromosome.GetGenes()       // Получаем гены только данной секции
                     .Select((gene, index) => new { Value = (int)gene.Value, Index = index })
-                    .Where(q => TopologyChromosome.GetSectionIndex(q.Index) == sectionIndex)
+                    .Where(q => GetSectionIndex(q.Index) == sectionIndex)
                     .Select(q => q.Value)
                     .ToArray();
+
+                if (sectionGenes.Length < 6)
+                    throw new Exception("Incorrect section size!");
 
                 MACPart.Decode(chromosome.CurrentProject, sectionGenes[0], sectionGenes[1], sectionGenes[2]);
                 DADPart.Decode(chromosome.CurrentProject, sectionGenes[3], sectionGenes[4], sectionGenes[5]);
@@ -67,19 +70,39 @@ namespace TopologyModel.GA
         {
             try
             {
-                var geneInSectionIndex = TopologyChromosome.GetGeneInSectionIndex(geneIndex);
+                var geneInSectionIndex = GetGeneInSectionIndex(geneIndex);
 
-                if (geneIndex < 0 || geneIndex > GeneValueGenerationFuncs.Length)
+                if (geneInSectionIndex > GeneValueGenerationFuncs.Length)
                     return 0;
 
                 // Вызываем соответствующую функцию для генерации гена
-                return GeneValueGenerationFuncs[geneInSectionIndex].Invoke(chromosome, TopologyChromosome.GetSectionIndex(geneIndex));
+                return GeneValueGenerationFuncs[geneInSectionIndex].Invoke(chromosome, GetSectionIndex(geneIndex));
             }
             catch (Exception ex)
             {
                 Console.WriteLine("EncodeGeneValue failed! {0}", ex.Message);
                 return 0;
             }
+        }
+
+        /// <summary>
+        /// Получить индекс секции, в которой находится ген по указанному индексу.
+        /// </summary>
+        /// <param name="geneIndex">Индекс гена в хромосоме.</param>
+        /// <returns>Индекс секции.</returns>
+        public static int GetSectionIndex(int geneIndex)
+        {
+            return geneIndex / TopologyChromosome.GENES_FOR_SECTION;
+        }
+
+        /// <summary>
+        /// Получить индекс гена внутри секции.
+        /// </summary>
+        /// <param name="geneIndex">Индекс гена в хромосоме.</param>
+        /// <returns>Индекс гена внутри секции.</returns>
+        public static int GetGeneInSectionIndex(int geneIndex)
+        {
+            return geneIndex % TopologyChromosome.GENES_FOR_SECTION;
         }
     }
 }
