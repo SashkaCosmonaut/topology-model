@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using TopologyModel.Tools;
 
 namespace TopologyModel.GA
 {
@@ -17,10 +18,9 @@ namespace TopologyModel.GA
         {
             MeasurementAndControlPart.GenerateDeviceGene,
             MeasurementAndControlPart.GenerateVertexGene,
-            MeasurementAndControlPart.GenerateChannelGene,
             DataAcquisitionPart.GenerateDeviceGene,
             DataAcquisitionPart.GenerateVertexGene,
-            DataAcquisitionPart.GenerateChannelGene
+            GenerateChannelGene,
         };
 
         /// <summary>
@@ -32,6 +32,11 @@ namespace TopologyModel.GA
         /// Параметры выбора и расположения УСПД, а так же входящего КПД.
         /// </summary>
         public DataAcquisitionPart DADPart { get; } = new DataAcquisitionPart();
+
+        /// <summary>
+        /// Канал передачи данных, который используется для передачи данных между КУ и УСПД.
+        /// </summary>
+        public DataChannel Channel { get; protected set; }
 
         /// <summary>
         /// Декодировать текущую секцию из генотипа.
@@ -51,8 +56,10 @@ namespace TopologyModel.GA
                 if (sectionGenes.Length < 6)
                     throw new Exception("Incorrect section size!");
 
-                MACPart.Decode(chromosome.CurrentProject, sectionGenes[0], sectionGenes[1], sectionGenes[2]);
-                DADPart.Decode(chromosome.CurrentProject, sectionGenes[3], sectionGenes[4], sectionGenes[5]);
+                // 0-й ген - тип КУ, 1-й ген - узел КУ, 2-й ген - тип УСПД, 3-й ген - узел УСПД, 4-й ген - КПД
+                MACPart.Decode(chromosome.CurrentProject, sectionGenes[0], sectionGenes[1]);
+                DADPart.Decode(chromosome.CurrentProject, sectionGenes[2], sectionGenes[3]);
+                Channel = chromosome.CurrentProject.AvailableTools.DCs[sectionGenes[4]];
             }
             catch (Exception ex)
             {
@@ -83,6 +90,18 @@ namespace TopologyModel.GA
                 Console.WriteLine("EncodeGeneValue failed! {0}", ex.Message);
                 return 0;
             }
+        }
+
+        /// <summary>
+        /// Сгенерировать новый ген, представляющий случайный КПД для связьи устройства учёта и управления и УСПД, 
+        /// выбирается такой, чтобы подходил к устройству и к КПД.
+        /// </summary>
+        /// <param name="chromosome">Текущая хромосома.</param>
+        /// <param name="sectionIndex">Индекс секции, для которой генерируется ген.</param>
+        /// <returns>Целочисленное значение случайного гена, соответствующее индексу в массиве доступных каналов передачи данных.</returns>
+        protected static int GenerateChannelGene(TopologyChromosome chromosome, int geneIndex)
+        {
+            return 0;
         }
 
         /// <summary>
