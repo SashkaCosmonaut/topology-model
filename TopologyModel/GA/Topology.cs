@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TopologyModel.Tools;
 using TopologyModel.TopologyGraphs;
 
 namespace TopologyModel.GA
@@ -14,8 +15,9 @@ namespace TopologyModel.GA
         public TopologySection[] Sections { get; set; }
 
         /// <summary>
-        /// Связи между элементами секций.
+        /// Словарь связей между элементами одной и более секций, где ключ - УСПД, 
+        /// из которого исходит связь, а значение - перечисление граней графа связи.
         /// </summary>
-        public IEnumerable<TopologyEdge> Pathes { get; set; }
+        public Dictionary<DataAcquisitionDevice, IEnumerable<TopologyEdge>> Pathes { get; set; }
     }
 }
