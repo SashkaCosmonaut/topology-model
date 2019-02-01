@@ -33,7 +33,7 @@ namespace TopologyModel.TopologyGraphs
             }
             catch (Exception ex)
             {
-                Console.WriteLine("TopologyEdge failed! {1}", ex.Message);
+                Console.WriteLine("TopologyEdge failed! {0}", ex.Message);
             }
         }
 
@@ -58,7 +58,7 @@ namespace TopologyModel.TopologyGraphs
             }
             catch (Exception ex)
             {
-                Console.WriteLine("CalculateWeights failed! {1}", ex.Message);
+                Console.WriteLine("CalculateWeights failed! {0}", ex.Message);
             }
         }
 
