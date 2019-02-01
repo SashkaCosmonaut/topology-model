@@ -81,7 +81,7 @@ namespace TopologyModel.GA
             {
                 var geneInSectionIndex = GetGeneInSectionIndex(geneIndex);
 
-                if (geneInSectionIndex > GeneValueGenerationFuncs.Length)
+                if (geneInSectionIndex >= GeneValueGenerationFuncs.Length)
                     return 0;
 
                 // Вызываем соответствующую функцию для генерации гена
