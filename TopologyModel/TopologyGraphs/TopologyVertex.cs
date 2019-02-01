@@ -29,6 +29,11 @@ namespace TopologyModel.TopologyGraphs
 		public uint RegionY { get; set; }
 
         /// <summary>
+        /// Вес вершины для расчёта трудоемкости проведения на ней работ.
+        /// </summary>
+        public float LaboriousnessWeight { get; }
+
+        /// <summary>
         /// Создать вершину графа, которая находится на определённом участке предприятия.
         /// </summary>
         /// <param name="region">Ссылка на участкок предприятия, на котором находтся данная вершина.</param>
