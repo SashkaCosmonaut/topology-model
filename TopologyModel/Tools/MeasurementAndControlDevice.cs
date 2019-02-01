@@ -63,10 +63,10 @@ namespace TopologyModel.Tools
         /// <summary>
         /// Рассчитать затраты на использование данного инструмента для формирования сети.
         /// </summary>
-        /// <param name="costType">Тип затрат, которые рассчитываются.</param>
+        /// <param name="project">Свойства проекта.</param>
         /// <param name="vertex">Вершина графа, в которой установлен инструмент.</param>
         /// <returns>Значение выбранных затрат на данный инструмент.</returns>
-        public override double GetCost(CostType costType, TopologyVertex vertex)
+        public override double GetCost(Project project, TopologyVertex vertex)
         {
             try
             {

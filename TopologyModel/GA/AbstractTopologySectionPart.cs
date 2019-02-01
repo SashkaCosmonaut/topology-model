@@ -41,9 +41,9 @@ namespace TopologyModel.GA
         /// <summary>
         /// Рассчитать затраты на использование инструмента в данной части секции для формирования сети.
         /// </summary>
-        /// <param name="costType">Тип затрат, которые рассчитываются.</param>
+        /// <param name="project">Свойства проекта.</param>
         /// <param name="vertex">Вершина графа, в которой установлен инструмент.</param>
         /// <returns>Значение выбранных затрат на данный инструмент.</returns>
-        public abstract double GetCost(CostType costType);
+        public abstract double GetCost(Project project);
     }
 }

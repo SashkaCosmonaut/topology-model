@@ -23,9 +23,9 @@ namespace TopologyModel.GA
         /// <summary>
         /// Рассчитать затраты на использование инструмента в данной части секции для формирования сети.
         /// </summary>
-        /// <param name="costType">Тип затрат, которые рассчитываются.</param>
+        /// <param name="project">Свойства проекта.</param>
         /// <param name="vertex">Вершина графа, в которой установлен инструмент.</param>
         /// <returns>Значение выбранных затрат на данный инструмент.</returns>
-        public override double GetCost(CostType costType) => throw new System.NotImplementedException();
+        public override double GetCost(Project project) => throw new System.NotImplementedException();
     }
 }
