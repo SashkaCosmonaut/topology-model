@@ -58,5 +58,23 @@ namespace TopologyModel.Tools
                 return false;
             }
         }
-	}
+
+        /// <summary>
+        /// Рассчитать затраты на использование данного инструмента для формирования сети.
+        /// </summary>
+        /// <param name="costType">Тип затрат, которые рассчитываются.</param>
+        /// <returns>Значение выбранных затрат на данный инструмент.</returns>
+        public override double GetCost(CostType costType)
+        {
+            try
+            {
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("MeasurementAndControlDevice GetCost failed! {0}", ex.Message);
+                return 0;
+            }
+        }
+    }
 }

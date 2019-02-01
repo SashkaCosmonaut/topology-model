@@ -1,4 +1,5 @@
 ﻿using System;
+using TopologyModel.Enumerations;
 
 namespace TopologyModel.Tools
 {
@@ -53,5 +54,12 @@ namespace TopologyModel.Tools
         {
             return Id + ". " + Name;
         }
+
+        /// <summary>
+        /// Рассчитать затраты на использование данного инструмента для формирования сети.
+        /// </summary>
+        /// <param name="costType">Тип затрат, которые рассчитываются.</param>
+        /// <returns>Значение выбранных затрат на данный инструмент.</returns>
+        public abstract double GetCost(CostType costType);
     }
 }
