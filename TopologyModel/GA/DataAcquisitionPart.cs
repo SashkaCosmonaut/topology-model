@@ -83,5 +83,28 @@ namespace TopologyModel.GA
                 return 0;
             }
         }
+
+        /// <summary>
+        /// Сравнить части с УСПД секции топологии. Они равны, если расположены в одной вершине и 
+        /// используется одинаковое УСПД.
+        /// </summary>
+        /// <param name="obj">Другая часть секции топологии.</param>
+        /// <returns>0, если части секции одинаковые, иное значение, если нет.</returns>
+        public override int CompareTo(object obj)
+        {
+            try
+            {
+                var other = obj as DataAcquisitionPart;
+
+                if (other == null) return -1;
+
+                return (Vertex == other.Vertex && DAD == other.DAD) ? 0 : 1;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("DataAcquisitionPart CompareTo failed! {0}", ex.Message);
+                return -1;
+            }
+        }
     }
 }
