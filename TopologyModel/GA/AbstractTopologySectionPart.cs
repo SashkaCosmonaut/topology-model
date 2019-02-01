@@ -4,8 +4,7 @@ using System;
 namespace TopologyModel.GA
 {
     /// <summary>
-    /// Класс абстрактной части секции топологии, содержащий параметры выбора КПД
-    /// и месторасположения данной части секции.
+    /// Класс абстрактной части секции топологии, содержащий вершину расположения части секции.
     /// </summary>
     public abstract class AbstractTopologySectionPart
     {
@@ -15,7 +14,7 @@ namespace TopologyModel.GA
         public TopologyVertex Vertex { get; protected set; }
 
         /// <summary>
-        /// Декодировать часть секции топологии, раскодировав вершину графа части секции и используемый канал передачи данных.
+        /// Декодировать вершину графа части секции.
         /// </summary>
         /// <param name="project">Текущий используемый проект.</param>
         /// <param name="vertexGene">Ген, характеризующий вершину графа части секции.</param>

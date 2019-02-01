@@ -60,6 +60,7 @@ namespace TopologyModel.GA
                 // 0-й ген - тип КУ, 1-й ген - узел КУ, 2-й ген - тип УСПД, 3-й ген - узел УСПД, 4-й ген - КПД
                 MACPart.Decode(chromosome.CurrentProject, sectionGenes[0], sectionGenes[1]);
                 DADPart.Decode(chromosome.CurrentProject, sectionGenes[2], sectionGenes[3]);
+
                 Channel = chromosome.CurrentProject.AvailableTools.DCs[sectionGenes[4]];
             }
             catch (Exception ex)

@@ -27,13 +27,13 @@ namespace TopologyModel
 
                 if (!project.InitializeGraph()) return;
 
-                CreateDotFile(project); // Сгенерировать исходный граф без топологий
+                CreateDotFile(project);             // Сгенерировать исходный граф без отрисовки топологии
 
                 var chromosome = new TopologyChromosome(project);
 
-                var topology = chromosome.Topology;
+                var topology = chromosome.Decode();
 
-                CreateDotFile(project, topology); // Сгенерировать результирующий граф с топологией
+                CreateDotFile(project, topology);   // Сгенерировать результирующий граф с топологией
             }
             catch (Exception ex)
             {
@@ -72,7 +72,7 @@ namespace TopologyModel
         /// </summary>
         /// <param name="project">Объект проекта.</param>
         /// <param name="topology">Предлагаемая методом топология.</param>
-        public static void CreateDotFile(Project project, TopologySection[] topology = null)
+        public static void CreateDotFile(Project project, Topology topology = null)
         {
             try
             {

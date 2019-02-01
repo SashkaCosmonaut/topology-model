@@ -19,39 +19,6 @@ namespace TopologyModel.GA
         public Project CurrentProject { get; set; }
 
         /// <summary>
-        /// Наполняемое по результатам работы алгоритма поле предлагаемой топологии - результат работы метода.
-        /// </summary>
-        private TopologySection[] _topology;
-
-        /// <summary>
-        /// Декодировать из генотипа хромосомы прелагаемую топологию сети (фенотип), состоящую из секций 
-        /// для каждого места учёта и управления, соединенного с УСПД - результат работы метода.
-        /// </summary>
-        public TopologySection[] Topology
-        {
-            get {
-                try
-                {
-                    // Поочерёдно декодируем каждую секцию
-                    for (var sectionIndex = 0; sectionIndex < Length / GENES_FOR_SECTION; sectionIndex++)
-                    {
-                        if (_topology[sectionIndex] == null)
-                            _topology[sectionIndex] = new TopologySection();
-
-                        _topology[sectionIndex].Decode(this, sectionIndex);
-                    }
-
-                    return _topology;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Topology failed! {0}", ex.Message);
-                    return _topology;
-                }
-            }
-        }
-
-        /// <summary>
         /// Сформировать хромосому на основании параметров проекта. Длина хромосомы - 
         /// количество мест учёта и управления, умноженное на количество генов в одной секции хромосомы.
         /// </summary>
@@ -61,8 +28,6 @@ namespace TopologyModel.GA
             try
             {
                 CurrentProject = project;
-
-                _topology = new TopologySection[project.MCZs.Length];
 
                 for (var geneIndex = 0; geneIndex < Length; geneIndex++)
                     ReplaceGene(geneIndex, GenerateGene(geneIndex));
@@ -111,6 +76,15 @@ namespace TopologyModel.GA
             clone.CurrentProject = CurrentProject;
 
             return clone;
+        }
+
+        /// <summary>
+        /// Декодировать текущее состояние генотипа хромосомы в фенотип - топологию.
+        /// </summary>
+        /// <returns>Результат работы метода, фенотип хромосомы.</returns>
+        public Topology Decode()
+        {
+            return new Topology(this);
         }
     }
 }

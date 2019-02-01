@@ -111,7 +111,7 @@ namespace TopologyModel.TopologyGraphs
         /// <param name="graphLabel">Метка для всего графа.</param>
         /// <param name="topology">Отображаемая по желанию предлагаемая методом топология.</param>
         /// <returns>True, если операция выполнена успешно.</returns>
-        public bool GenerateDotFile(string filename, string graphLabel, TopologySection[] topology = null)
+        public bool GenerateDotFile(string filename, string graphLabel, Topology topology = null)
         {
             Console.Write($"Create the graph {(topology == null ? "" : "with topology")} dot-file... ");
 
@@ -198,7 +198,7 @@ namespace TopologyModel.TopologyGraphs
         /// </summary>
         /// <param name="args">Аргументы события отрисовки вершины.</param>
         /// <param name="topology">Предлагаемая топология с вершинами графа.</param>
-        protected void HighlightTopologyVertex(FormatVertexEventArgs<TopologyVertex> args, TopologySection[] topology)
+        protected void HighlightTopologyVertex(FormatVertexEventArgs<TopologyVertex> args, Topology topology)
         {
             try
             {
@@ -215,7 +215,7 @@ namespace TopologyModel.TopologyGraphs
         /// </summary>
         /// <param name="args">Аргументы события отрисовки грани.</param>
         /// <param name="topology">Предлагаемая топология со связями между вершинами графа.</param>
-        protected void HighlightTopologyEdge(FormatEdgeEventArgs<TopologyVertex, TopologyEdge> args, TopologySection[] topology)
+        protected void HighlightTopologyEdge(FormatEdgeEventArgs<TopologyVertex, TopologyEdge> args, Topology topology)
         {
             try
             {
