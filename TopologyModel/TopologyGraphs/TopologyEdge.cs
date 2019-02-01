@@ -121,8 +121,8 @@ namespace TopologyModel.TopologyGraphs
         protected float GetWirelessWeight()
         {
             return IsAcrossTheBorder()
-                ? (GetEstimate(Source.Region.WallsBadRadioTransmittanceEstimate, Source, Target) +
-                   GetEstimate(Target.Region.WallsBadRadioTransmittanceEstimate, Target, Source)) / 2
+                ? (Source.Region.WallsBadRadioTransmittanceEstimate.GetEstimate(GetBorderIndex(Source, Target)) +
+                   Target.Region.WallsBadRadioTransmittanceEstimate.GetEstimate(GetBorderIndex(Target, Source))) / 2
                 : Source.Region.InsideBadRadioTransmittanceEstimate;
         }
 
@@ -135,7 +135,7 @@ namespace TopologyModel.TopologyGraphs
         /// <returns>Дробное значение веса грани.</returns>
         protected static float GetWiredWeightAcrossTheBorder(TopologyVertex source, TopologyVertex target)
         {
-            return GetEstimate(source.Region.WallsBadWiredTransmittanceEstimate, source, target) +
+            return source.Region.WallsBadWiredTransmittanceEstimate.GetEstimate(GetBorderIndex(source, target)) +
                    GetWiredWeightAlongTheBorder(source, target);
         }
 
@@ -147,9 +147,11 @@ namespace TopologyModel.TopologyGraphs
         /// <returns>Значение проводного веса.</returns>
         protected static float GetWiredWeightAlongTheBorder(TopologyVertex source, TopologyVertex target)
         {
-            return 0.4f * GetEstimate(source.Region.WallsUnavailabilityEstimate, source, target) +
-                   0.3f * GetEstimate(source.Region.WallsLaboriousnessEstimate, source, target) +
-                   0.3f * GetEstimate(source.Region.WallsAggressivenessEstimate, source, target);
+            var borderIndex = GetBorderIndex(source, target);
+
+            return 0.4f * source.Region.WallsUnavailabilityEstimate.GetEstimate(borderIndex) +
+                   0.3f * source.Region.WallsLaboriousnessEstimate.GetEstimate(borderIndex) +
+                   0.3f * source.Region.WallsAggressivenessEstimate.GetEstimate(borderIndex);
         }
 
         /// <summary>
@@ -161,23 +163,6 @@ namespace TopologyModel.TopologyGraphs
             return 0.4f * Source.Region.InsideUnavailabilityEstimate +
                    0.3f * Source.Region.InsideLaboriousnessEstimate +
                    0.3f * Source.Region.InsideAggressivenessEstimate;
-        }
-
-        /// <summary>
-        /// Получить экспертную оценку грани из массива оценок в зависимости от индекса границы и количества оценок в массиве.
-        /// </summary>
-        /// <param name="estimates">Массив экспертных оценок для границ участка.</param>
-        /// <param name="source">Исходный узел грани.</param>
-        /// <param name="target">Целевой узел грани.</param>
-        /// <returns>Значение оценки из массива.</returns>
-        protected static ushort GetEstimate(ushort[] estimates, TopologyVertex source, TopologyVertex target)
-        {
-            if (estimates == null || estimates.Length == 0)
-                throw new ArgumentNullException(nameof(estimates), "Empty estimates array!");
-
-            return estimates.Length == 4                            // Если в массиве все четыре значения
-                ? estimates[GetBorderIndex(source, target)]         // Берём в зависимости от узла-источника и узла-цели
-                : estimates[0];                                     // Иначе берём первое значение
         }
 
         /// <summary>

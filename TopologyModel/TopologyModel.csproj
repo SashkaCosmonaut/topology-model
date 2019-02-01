@@ -126,6 +126,7 @@
     <Compile Include="CalculationResult.cs" />
     <Compile Include="Enumerations\CostType.cs" />
     <Compile Include="Enumerations\Control.cs" />
+    <Compile Include="TopologyExtensionMethods.cs" />
     <Compile Include="GA\DataAcquisitionPart.cs" />
     <Compile Include="GA\MeasurementAndControlPart.cs" />
     <Compile Include="GA\Topology.cs" />
