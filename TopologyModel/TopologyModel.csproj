@@ -152,6 +152,7 @@
     <Compile Include="Tools\ToolSet.cs" />
     <Compile Include="TopologyGraphs\TopologyEdge.cs" />
     <Compile Include="TopologyGraphs\TopologyGraph.cs" />
+    <Compile Include="TopologyGraphs\TopologyPathfinder.cs" />
     <Compile Include="TopologyGraphs\TopologyVertex.cs" />
   </ItemGroup>
   <ItemGroup>
