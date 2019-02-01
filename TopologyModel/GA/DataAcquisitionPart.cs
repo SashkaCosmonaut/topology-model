@@ -1,6 +1,7 @@
 ﻿using GeneticSharp.Domain.Randomizations;
 using System;
 using System.Linq;
+using TopologyModel.Enumerations;
 using TopologyModel.Tools;
 
 namespace TopologyModel.GA
@@ -105,6 +106,17 @@ namespace TopologyModel.GA
                 Console.WriteLine("DataAcquisitionPart CompareTo failed! {0}", ex.Message);
                 return -1;
             }
+        }
+
+        /// <summary>
+        /// Рассчитать затраты на использование инструмента в данной части секции для формирования сети.
+        /// </summary>
+        /// <param name="costType">Тип затрат, которые рассчитываются.</param>
+        /// <param name="vertex">Вершина графа, в которой установлен инструмент.</param>
+        /// <returns>Значение выбранных затрат на данный инструмент.</returns>
+        public override double GetCost(CostType costType)
+        {
+            return DAD.GetCost(costType, Vertex);
         }
     }
 }

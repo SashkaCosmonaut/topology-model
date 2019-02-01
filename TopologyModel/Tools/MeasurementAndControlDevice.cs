@@ -2,6 +2,7 @@
 using System.Linq;
 using TopologyModel.Enumerations;
 using TopologyModel.Regions;
+using TopologyModel.TopologyGraphs;
 
 namespace TopologyModel.Tools
 {
@@ -63,12 +64,15 @@ namespace TopologyModel.Tools
         /// Рассчитать затраты на использование данного инструмента для формирования сети.
         /// </summary>
         /// <param name="costType">Тип затрат, которые рассчитываются.</param>
+        /// <param name="vertex">Вершина графа, в которой установлен инструмент.</param>
         /// <returns>Значение выбранных затрат на данный инструмент.</returns>
-        public override double GetCost(CostType costType)
+        public override double GetCost(CostType costType, TopologyVertex vertex)
         {
             try
             {
-                return 0;
+                var cost = 0.0;
+
+                return cost;
             }
             catch (Exception ex)
             {

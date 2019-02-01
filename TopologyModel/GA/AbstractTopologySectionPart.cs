@@ -1,5 +1,6 @@
 ﻿using TopologyModel.TopologyGraphs;
 using System;
+using TopologyModel.Enumerations;
 
 namespace TopologyModel.GA
 {
@@ -36,5 +37,13 @@ namespace TopologyModel.GA
                 Console.WriteLine("AbstractTopologySectionPart Decode failed! {0}", ex.Message);
             }
         }
+
+        /// <summary>
+        /// Рассчитать затраты на использование инструмента в данной части секции для формирования сети.
+        /// </summary>
+        /// <param name="costType">Тип затрат, которые рассчитываются.</param>
+        /// <param name="vertex">Вершина графа, в которой установлен инструмент.</param>
+        /// <returns>Значение выбранных затрат на данный инструмент.</returns>
+        public abstract double GetCost(CostType costType);
     }
 }
