@@ -1,5 +1,6 @@
 ﻿using GeneticSharp.Domain.Chromosomes;
 using GeneticSharp.Domain.Fitnesses;
+using System;
 
 namespace TopologyModel.GA
 {
@@ -15,7 +16,19 @@ namespace TopologyModel.GA
         /// <returns>Результат оценки.</returns>
 		public double Evaluate(IChromosome chromosome)
 		{
-            return 0;
+            try
+            {
+                var topologyChromosome = chromosome as TopologyChromosome;
+
+                if (topologyChromosome == null) return 0;
+
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Evaluate failed! {0}", ex.Message);
+                return 0;
+            }
 		}
 	}
 }
