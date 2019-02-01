@@ -18,7 +18,7 @@ namespace TopologyModel
         /// <summary>
         /// Цель минимизации в проекте (время или деньги).
         /// </summary>
-        public MinimizationGoal Goal { get; set; }
+        public CostType MinimizationGoal { get; set; }
 
         /// <summary>
         /// Высота учитываемого размера всей территории предприятия.
