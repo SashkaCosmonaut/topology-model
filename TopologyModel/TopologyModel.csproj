@@ -124,6 +124,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CalculationResult.cs" />
+    <Compile Include="Enumerations\MinimizationGoal.cs" />
     <Compile Include="Enumerations\Control.cs" />
     <Compile Include="GA\DataAcquisitionPart.cs" />
     <Compile Include="GA\MeasurementAndControlPart.cs" />

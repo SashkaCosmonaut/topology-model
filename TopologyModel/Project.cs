@@ -16,6 +16,11 @@ namespace TopologyModel
         #region ProjectProperties
 
         /// <summary>
+        /// Цель минимизации в проекте (время или деньги).
+        /// </summary>
+        public MinimizationGoal Goal { get; set; }
+
+        /// <summary>
         /// Высота учитываемого размера всей территории предприятия.
         /// </summary>
         public uint Height { get; set; }
