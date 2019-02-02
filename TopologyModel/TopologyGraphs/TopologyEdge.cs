@@ -200,17 +200,23 @@ namespace TopologyModel.TopologyGraphs
         /// <returns>Индекс границы: 0 - вверху, 1 - справа, 2 - снизу, 3 - слева, 5 - ошибка, грань внутри участка или идёт через границу участка.</returns>
         protected static ushort GetBoundaryBorderIndex(TopologyVertex source, TopologyVertex target)
         {
-            if (source.RegionX == target.RegionX && source.RegionX == 0)
-                return 3;
+            if (source.RegionX == target.RegionX)
+            {
+                if (source.RegionX == 0)
+                    return 3;
 
-            if (source.RegionX == target.RegionX && source.RegionX == source.Region.Width - 1)
-                return 1;
+                if (source.RegionX == source.Region.Width - 1)
+                    return 1;
+            }
 
-            if (source.RegionY == target.RegionY && source.RegionY == 0)
-                return 0;
+            if (source.RegionY == target.RegionY)
+            {
+                if (source.RegionY == 0)
+                    return 0;
 
-            if (source.RegionY == target.RegionY && source.RegionY == source.Region.Height - 1)
-                return 2;
+                if (source.RegionY == source.Region.Height - 1)
+                    return 2;
+            }
 
             return 5;
         }
