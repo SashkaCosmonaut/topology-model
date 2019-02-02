@@ -3,7 +3,7 @@
 	/// <summary>
 	/// Топологии каналов передачи данных.
 	/// </summary>
-	public enum Topology
+	public enum DataChannelTopology
 	{
 		Mesh,
 
