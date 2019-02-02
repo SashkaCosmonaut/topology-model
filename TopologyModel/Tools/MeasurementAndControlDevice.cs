@@ -6,20 +6,20 @@ using TopologyModel.TopologyGraphs;
 
 namespace TopologyModel.Tools
 {
-	/// <summary>
-	/// Класс конечного устройства.
-	/// </summary>
-	public class MeasurementAndControlDevice : AbstractDevice
-	{
-		/// <summary>
-		/// множество всех измерений потребления энергоресурсов, выдаваемых данным КУ
-		/// </summary>
-		public Measurement[] Measurements { get; set; }
+    /// <summary>
+    /// Класс конечного устройства.
+    /// </summary>
+    public class MeasurementAndControlDevice : AbstractDevice
+    {
+        /// <summary>
+        /// множество всех измерений потребления энергоресурсов, выдаваемых данным КУ
+        /// </summary>
+        public Measurement[] Measurements { get; set; }
 
-		/// <summary>
-		/// множество всех управляющих воздействий, позволяющих осуществлять данным КУ
-		/// </summary>
-		public Control[] Controls { get; set; }
+        /// <summary>
+        /// множество всех управляющих воздействий, позволяющих осуществлять данным КУ
+        /// </summary>
+        public Control[] Controls { get; set; }
 
         /// <summary>
         /// Проверить, подходит ли данное устройство для места учёта и управления - покрывает ли оно 
@@ -71,6 +71,22 @@ namespace TopologyModel.Tools
             try
             {
                 var cost = 0.0;
+
+                if (project.MinimizationGoal == CostType.Time)
+                {
+                    cost = InstallationTime.TotalHours;     // Для времени важно только время а установку оборудования
+                }
+                else
+                {
+                    // Умножаем стоимость установки на трудоемкость проведения работ (которая максимум может увеличить стоимость втрое)
+                    cost += PurchasePrice + InstallationPrice * vertex.LaboriousnessWeight / 10;
+
+                    // Если учитываем стоимость обслуживания, то добавляем стоимость замены батареек, 
+                    // если на участке нет питания или оно вообще не требуется и задано время работы от баратеек
+                    if (project.MinimizationGoal == CostType.InstantAndMaintenanceMoney &&
+                        !(IsPowerRequired && vertex.Region.HasPower) && BatteryTime.TotalMilliseconds > 0)
+                        cost += (new TimeSpan((int)project.UsageMonths * 30, 0, 0, 0).TotalHours / BatteryTime.TotalHours) * BatteryServicePrice;
+                }
 
                 return cost;
             }
