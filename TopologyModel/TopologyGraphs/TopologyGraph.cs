@@ -87,15 +87,13 @@ namespace TopologyModel.TopologyGraphs
                         // Если грань между вершинами уже есть, то пропускаем
                         if (ContainsEdge(vertex, neighborVertex) || ContainsEdge(neighborVertex, vertex)) continue;
 
-                        var newEdge = new TopologyEdge(vertex, neighborVertex, weightCoefficients);
-
                         // Если соседняя вершина не диагональная, то гарантировано добавляем к ней грань
                         if (neighborX == x || neighborY == y)
-                            AddEdge(newEdge);
+                            AddEdge(new TopologyEdge(vertex, neighborVertex, weightCoefficients));
 
                         // Добавляем диагональную грань между вершинами, только если вершины ссылаются на один участок
                         else if (neighborVertex.Region == vertex.Region)
-                            AddEdge(newEdge);
+                            AddEdge(new TopologyEdge(vertex, neighborVertex, weightCoefficients));
                     }
             }
             catch (Exception ex)
@@ -128,7 +126,7 @@ namespace TopologyModel.TopologyGraphs
                 graphviz.FormatVertex += (sender, args) =>
                 {
                     // В вершине указываем id участка и координаты внутри участка
-                    args.VertexFormatter.Comment = args.Vertex.ToString();
+                    args.VertexFormatter.Label = args.Vertex.ToString() + "\r\n" + args.Vertex.LaboriousnessWeight;
                     args.VertexFormatter.Group = $"{args.Vertex.Region.Id}_{args.Vertex.RegionY}";      // Группируем участки на графе
 
                     // Добавить наименование участка к его угловому узлу (заменить в файле на xlabel и добавить forcelabels=true)

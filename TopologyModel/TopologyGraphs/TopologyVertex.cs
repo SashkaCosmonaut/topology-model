@@ -1,4 +1,5 @@
 ﻿using System;
+using TopologyModel.Enumerations;
 using TopologyModel.Regions;
 
 namespace TopologyModel.TopologyGraphs
@@ -48,14 +49,37 @@ namespace TopologyModel.TopologyGraphs
 			RegionY = regionY;
 
             MCZs = mczs;
-		}
 
-		/// <summary>
-		/// Полчить строковое представление данной вершины.
-		/// </summary>
-		/// <returns>Строка, содержащая идентификатор участка данной вершины в графе или матрице,
-		/// а также её координаты по оси У и Х внутри участка, начинающиеся с 1, а не с 0.</returns>
-		public override string ToString()
+            LaboriousnessWeight = GetLaboriousnessWeight();
+        }
+
+        /// <summary>
+        /// Рассчитать вес трудоемкости проведения работ в вершине.
+        /// </summary>
+        /// <returns>Значение веса вершины.</returns>
+        protected float GetLaboriousnessWeight()
+        {
+            try
+            {
+                var location = GetLocation();
+
+                return Region.GetLaboriousnessEstimate(location) +
+                       Region.GetAggressivenessEstimate(location) +
+                       Region.GetUnavailabilityEstimate(location);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("GetLaboriousnessWeight failed! {0}", ex.Message);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Полчить строковое представление данной вершины.
+        /// </summary>
+        /// <returns>Строка, содержащая идентификатор участка данной вершины в графе или матрице,
+        /// а также её координаты по оси У и Х внутри участка, начинающиеся с 1, а не с 0.</returns>
+        public override string ToString()
 		{
 			return $"{Region.Id}.{RegionY + 1}.{RegionX + 1}";
 		}
@@ -78,51 +102,49 @@ namespace TopologyModel.TopologyGraphs
         }
 
         /// <summary>
-        /// Проверить, находится ли данная вершина внутри участка.
+        /// Получить месторасположение вершины внутри участка.
         /// </summary>
-        /// <returns>True, если она внутри участка.</returns>
-        public bool IsInside()
-        {
-            // Вершина находится внутри участка, сли у неё нет ни одной координаты на границе участка
-            return RegionX > 0 && RegionY > 0 && RegionX < Region.Width - 1 && RegionY < Region.Height - 1;
-        }
-
-        /// <summary>
-        /// Получить код месторасположения вершины внутри участка.
-        /// </summary>
-        /// <returns>0 - левый верхний угол, 1 - верхняя граница, 2 - правый верхний угол, 3 - правая граница,
-        /// 4 - правый нижний угол, 5 - нижняя граница, 6 - левый нижний угол, 7 - левая граница, 8 - внутри участка.</returns>
-        public ushort GetVertexLocationInRegion()
+        /// <returns>Значение из перечисления месторасположений.</returns>
+        public LocationInRegion GetLocation()
         {
             if (RegionY == 0)
             {
                 if (RegionX == 0)
-                    return 0;
+                    return LocationInRegion.LeftTopCorder;
 
                 if (RegionX == Region.Width - 1)
-                    return 2;
+                    return LocationInRegion.RightTopCorner;
 
-                return 1;
+                return LocationInRegion.TopBorder;
             }
 
             if (RegionY == Region.Height - 1)
             {
                 if (RegionX == 0)
-                    return 6;
+                    return LocationInRegion.LeftBottomCorner;
 
                 if (RegionX == Region.Width - 1)
-                    return 4;
+                    return LocationInRegion.RightBottomCorner;
 
-                return 5;
+                return LocationInRegion.BottomBorder;
             }
 
             if (RegionX == 0)
-                return 7;
+                return LocationInRegion.LeftBorder;
 
             if (RegionX == Region.Width - 1)
-                return 3;
+                return LocationInRegion.RightBorder;
 
-            return 8;
+            return LocationInRegion.Inside;
+        }
+
+        /// <summary>
+        /// Проверить, находится ли данная вершина внутри участка.
+        /// </summary>
+        /// <returns>True, если она внутри участка.</returns>
+        public bool IsInside()
+        {
+            return GetLocation() == LocationInRegion.Inside;
         }
     }
 }
