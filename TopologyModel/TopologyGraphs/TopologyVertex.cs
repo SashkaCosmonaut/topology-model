@@ -86,5 +86,43 @@ namespace TopologyModel.TopologyGraphs
             // Вершина находится внутри участка, сли у неё нет ни одной координаты на границе участка
             return RegionX > 0 && RegionY > 0 && RegionX < Region.Width - 1 && RegionY < Region.Height - 1;
         }
+
+        /// <summary>
+        /// Получить код месторасположения вершины внутри участка.
+        /// </summary>
+        /// <returns>0 - левый верхний угол, 1 - верхняя граница, 2 - правый верхний угол, 3 - правая граница,
+        /// 4 - правый нижний угол, 5 - нижняя граница, 6 - левый нижний угол, 7 - левая граница, 8 - внутри участка.</returns>
+        public ushort GetVertexLocationInRegion()
+        {
+            if (RegionY == 0)
+            {
+                if (RegionX == 0)
+                    return 0;
+
+                if (RegionX == Region.Width - 1)
+                    return 2;
+
+                return 1;
+            }
+
+            if (RegionY == Region.Height - 1)
+            {
+                if (RegionX == 0)
+                    return 6;
+
+                if (RegionX == Region.Width - 1)
+                    return 4;
+
+                return 5;
+            }
+
+            if (RegionX == 0)
+                return 7;
+
+            if (RegionX == Region.Width - 1)
+                return 3;
+
+            return 8;
+        }
     }
 }
