@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using QuickGraph;
+using TopologyModel.Enumerations;
 
 namespace TopologyModel.TopologyGraphs
 {
@@ -12,12 +13,12 @@ namespace TopologyModel.TopologyGraphs
         /// <summary>
         /// Вес грани для проводной связи, строящийся на основе пераметров смежных участков.
         /// </summary>
-        public float WiredWeight { get; protected set; }
+        public float WiredWeight { get; }
 
         /// <summary>
         /// Вес грани для беспроводной связи, строящийся на основе пераметров смежных участков.
         /// </summary>
-        public float WirelessWeight { get; protected set; }
+        public float WirelessWeight { get; }
 
         /// <summary>
         /// Создать новую грань графа.
@@ -29,7 +30,15 @@ namespace TopologyModel.TopologyGraphs
         {
             try
             {
-                CalculateWeights(weightCoefficients);
+                // Если связь между участками, берётся среднее от значений границ смежных участков
+                WirelessWeight = IsAcrossTheBorder()    
+                    ? (Source.Region.GetBadRadioTransmittanceEstimate(GetLocation(Source, Target)) +
+                       Target.Region.GetBadRadioTransmittanceEstimate(GetLocation(Target, Source))) / 2
+                    : Source.Region.GetBadRadioTransmittanceEstimate(LocationInRegion.Inside);          // Иначе берётся оценка внутри участка
+
+                WiredWeight = IsAcrossTheBorder()
+                    ? (GetWiredWeightAcrossTheBorder(Source, Target) + GetWiredWeightAcrossTheBorder(Target, Source)) / 2
+                    : GetWiredWeight(Source, Target);
             }
             catch (Exception ex)
             {
@@ -37,57 +46,32 @@ namespace TopologyModel.TopologyGraphs
             }
         }
 
+
         /// <summary>
-        /// Рассчитать веса данной грани.
+        /// Рассчитать проводной вес грани через границу исходного участка в целевой путём сложения трудоемкости проведения кабелей,
+        /// оценок недоступности, трудоемкости стены и агрессивности среды на участке.
         /// </summary>
-        /// <param name="weightCoefficients">Весовые коэффициенты для рассчётов весов граней.</param>
-        protected void CalculateWeights(Dictionary<string, float> weightCoefficients)
+        /// <param name="source">Исходный участок.</param>
+        /// <param name="target">Целевой участок.</param>
+        /// <returns>Дробное значение веса грани.</returns>
+        protected static float GetWiredWeightAcrossTheBorder(TopologyVertex source, TopologyVertex target)
         {
-            try
-            {
-                WirelessWeight = GetWirelessWeight();
-
-                if (IsAcrossTheBorder())
-                    WiredWeight = (GetWiredWeightAcrossTheBorder(Source, Target) + GetWiredWeightAcrossTheBorder(Target, Source)) / 2;
-
-                else if (IsAlongTheBorder())
-                    WiredWeight = GetWiredWeightAlongTheBorder(Source, Target);
-
-                else
-                    WiredWeight = GetWiredWeightInside();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("CalculateWeights failed! {0}", ex.Message);
-            }
+            return source.Region.GetBadWiredTransmittanceEstimate(GetLocation(source, target)) + GetWiredWeight(source, target);
         }
 
         /// <summary>
-        /// Проверить, проведена ли данная грань через границу между участками.
+        /// Получить проводной вес грани вдоль границы участка путём сложения экспертных оценок.
         /// </summary>
-        /// <returns>True, если она через границу между участками.</returns>
-        public bool IsAcrossTheBorder()
+        /// <param name="source">Исходный узел грани.</param>
+        /// <param name="target">Целевой узел грани.</param>
+        /// <returns>Значение проводного веса.</returns>
+        protected static float GetWiredWeight(TopologyVertex source, TopologyVertex target)
         {
-            return Source.Region != Target.Region;  // Грань проведена через границу, когда она ведёт на другой участок
-        }
+            var location = GetLocation(source, target);
 
-        /// <summary>
-        /// Проверить, проведена ли данная грань вдоль границы участка.
-        /// </summary>
-        /// <returns>True, если она вдоль границы участка.</returns>
-        public bool IsAlongTheBorder()
-        {
-            // Грань вдоль границы, когда её узлы в одном участке и они вдоль левой или правой границы или вдоль верхней или нижней границы
-            return !IsAcrossTheBorder() && GetBoundaryBorderIndex(Source, Target) < 5;
-        }
-
-        /// <summary>
-        /// Проверить, проведена ли данная грань внутри участка.
-        /// </summary>
-        /// <returns>True, если она внутри участка.</returns>
-        public bool IsInside()
-        {
-            return !IsAlongTheBorder() && !IsAcrossTheBorder(); // Грань находится внутри участка, если она не вдоль границы и не через границу
+            return 0.4f * source.Region.GetUnavailabilityEstimate(location) +
+                   0.3f * source.Region.GetLaboriousnessEstimate(location) +
+                   0.3f * source.Region.GetAggressivenessEstimate(location);
         }
 
         /// <summary>
@@ -113,135 +97,118 @@ namespace TopologyModel.TopologyGraphs
         }
 
         /// <summary>
-        /// Получить беспроводной вес грани. Если беспроводная связь внутри участка, то берётся 
-        /// соответствующая оценка, а между участками - среднее от значений границ смежных участков.
+        /// Проверить, проведена ли данная грань через границу между участками.
         /// </summary>
-        /// <param name="edge">Грань, вес которой рассчитывается.</param>
-        /// <returns>Значение беспроводного веса грани.</returns>
-        protected float GetWirelessWeight()
+        /// <returns>True, если она через границу между участками.</returns>
+        public bool IsAcrossTheBorder()
         {
-            return IsAcrossTheBorder()
-                ? (Source.Region.WallsBadRadioTransmittanceEstimate.GetEstimate(GetBorderIndex(Source, Target)) +
-                   Target.Region.WallsBadRadioTransmittanceEstimate.GetEstimate(GetBorderIndex(Target, Source))) / 2
-                : Source.Region.InsideBadRadioTransmittanceEstimate;
+            return IsAcrossTheBorder(Source, Target);
         }
 
         /// <summary>
-        /// Рассчитать проводной вес грани через границу исходного участка в целевой путём сложения трудоемкости проведения кабелей,
-        /// оценок недоступности, трудоемкости стены и агрессивности среды на участке.
+        /// Проверить, проведена ли данная грань вдоль границы участка.
         /// </summary>
-        /// <param name="source">Исходный участок.</param>
-        /// <param name="target">Целевой участок.</param>
-        /// <returns>Дробное значение веса грани.</returns>
-        protected static float GetWiredWeightAcrossTheBorder(TopologyVertex source, TopologyVertex target)
+        /// <returns>True, если она вдоль границы участка.</returns>
+        public bool IsAlongTheBorder()
         {
-            return source.Region.WallsBadWiredTransmittanceEstimate.GetEstimate(GetBorderIndex(source, target)) +
-                   GetWiredWeightAlongTheBorder(source, target);
+            return IsAlongTheBorder(Source, Target);
         }
 
         /// <summary>
-        /// Получить проводной вес грани вдоль границы участка путём сложения экспертных оценок.
+        /// Проверить, проведена ли данная грань внутри участка.
+        /// </summary>
+        /// <returns>True, если она внутри участка.</returns>
+        public bool IsInside()
+        {
+            return GetInRegionLocation(Source, Target) == LocationInRegion.Inside; // Грань находится внутри участка, если она не вдоль границы и не через границу
+        }
+
+        /// <summary>
+        /// Проверить, проведена ли грань через границу между участками.
         /// </summary>
         /// <param name="source">Исходный узел грани.</param>
         /// <param name="target">Целевой узел грани.</param>
-        /// <returns>Значение проводного веса.</returns>
-        protected static float GetWiredWeightAlongTheBorder(TopologyVertex source, TopologyVertex target)
+        /// <returns>True, если она через границу между участками.</returns>
+        public static bool IsAcrossTheBorder(TopologyVertex source, TopologyVertex target)
         {
-            var borderIndex = GetBorderIndex(source, target);
-
-            return 0.4f * source.Region.WallsUnavailabilityEstimate.GetEstimate(borderIndex) +
-                   0.3f * source.Region.WallsLaboriousnessEstimate.GetEstimate(borderIndex) +
-                   0.3f * source.Region.WallsAggressivenessEstimate.GetEstimate(borderIndex);
+            return source.Region != target.Region;  // Грань проведена через границу, когда она ведёт на другой участок
         }
 
         /// <summary>
-        /// Получить проводной вес внутри участка путём сложения экспертных оценок.
-        /// </summary>
-        /// <returns>Значение проводного веса.</returns>
-        protected float GetWiredWeightInside()
-        {
-            return 0.4f * Source.Region.InsideUnavailabilityEstimate +
-                   0.3f * Source.Region.InsideLaboriousnessEstimate +
-                   0.3f * Source.Region.InsideAggressivenessEstimate;
-        }
-
-        /// <summary>
-        /// Получить индекс границы, вдоль которой проложена грань, или через которую она проложена.
+        /// Проверить, проведена ли грань вдоль границы участка.
         /// </summary>
         /// <param name="source">Исходный узел грани.</param>
         /// <param name="target">Целевой узел грани.</param>
-        /// <returns>Направление грани: 0 - верх, 1 - вправо, 2 - вниз, 3 - влево.</returns>
-        protected static ushort GetBorderIndex(TopologyVertex source, TopologyVertex target)
+        /// <returns>True, если она вдоль границы участка.</returns>
+        public static bool IsAlongTheBorder(TopologyVertex source, TopologyVertex target)
         {
-            ushort result = 5;
-
-            if (!source.IsInside() && !target.IsInside())
-            {
-                // Если узлы на одном участке, получаем границу, вдоль которой проведена грань
-                if (source.Region == target.Region)
-                    result = GetBoundaryBorderIndex(source, target);
-
-                // Иначе получаем границу, через которую проведена грань
-                else
-                    result = GetCrossedBorderIndex(source, target);
-            }
-
-            if (result == 5)
-                throw new ArgumentException("Incorrect vertex coordinates in the number of border calculation (edge is inside)!");
-
-            return result;
+            return !IsAcrossTheBorder(source, target) && GetLocation(source, target) != LocationInRegion.Inside;    // Грань располагается вдоль границы, когда она не через границу и не внутри
         }
 
         /// <summary>
-        /// Получить индекс границы от 0 до 3 участка, вдоль которой проведена грань.
+        /// Получить месторасположение грани, вдоль или через какую границу она проходит или внутри.
         /// </summary>
         /// <param name="source">Исходный узел грани.</param>
         /// <param name="target">Целевой узел грани.</param>
-        /// <returns>Индекс границы: 0 - вверху, 1 - справа, 2 - снизу, 3 - слева, 5 - ошибка, грань внутри участка или идёт через границу участка.</returns>
-        protected static ushort GetBoundaryBorderIndex(TopologyVertex source, TopologyVertex target)
+        /// <returns>Значение из перечисления месторасположений.</returns>
+        public static LocationInRegion GetLocation(TopologyVertex source, TopologyVertex target)
+        {
+            if (IsAcrossTheBorder(source, target))
+                return GetCrossBorderLocation(source, target);
+
+            return GetInRegionLocation(source, target);
+        }
+
+        /// <summary>
+        /// Получить, через какую границу участка пересечена грань.
+        /// </summary>
+        /// <param name="source">Исходный узел грани.</param>
+        /// <param name="target">Целевой узел грани.</param>
+        /// <returns>Значение из перечисления месторасположений.</returns>
+        protected static LocationInRegion GetCrossBorderLocation(TopologyVertex source, TopologyVertex target)
+        {
+            if (source.Region.Y > target.Region.Y)
+                return LocationInRegion.TopBorder;
+
+            if (source.Region.Y < target.Region.Y)
+                return LocationInRegion.BottomBorder;
+
+            if (source.Region.X > target.Region.X)
+                return LocationInRegion.LeftBorder;
+
+            if (source.Region.X < target.Region.X)
+                return LocationInRegion.RightBorder;
+
+            return LocationInRegion.Inside;
+        }
+
+        /// <summary>
+        /// Получить месторасположение связи, вдоль какой границы она проведена.
+        /// </summary>
+        /// <param name="source">Исходный узел грани.</param>
+        /// <param name="target">Целевой узел грани.</param>
+        /// <returns>Значение из перечисления месторасположений.</returns>
+        protected static LocationInRegion GetInRegionLocation(TopologyVertex source, TopologyVertex target)
         {
             if (source.RegionX == target.RegionX)
             {
                 if (source.RegionX == 0)
-                    return 3;
+                    return LocationInRegion.LeftBorder;
 
                 if (source.RegionX == source.Region.Width - 1)
-                    return 1;
+                    return LocationInRegion.RightBorder;
             }
 
             if (source.RegionY == target.RegionY)
             {
                 if (source.RegionY == 0)
-                    return 0;
+                    return LocationInRegion.TopBorder;
 
                 if (source.RegionY == source.Region.Height - 1)
-                    return 2;
+                    return LocationInRegion.BottomBorder;
             }
 
-            return 5;
-        }
-
-        /// <summary>
-        /// Получить индекс границы от 0 до 3 на исходном участке, через которую проходит грань.
-        /// </summary>
-        /// <param name="source">Исходный узел грани.</param>
-        /// <param name="target">Целевой узел грани.</param>
-        /// <returns>Индекс границы: 0 - верх, 1 - вправо, 2 - вниз, 3 - влево, 5 - ошибка, исходная и целевая грани находятся на одном участке.</returns>
-        protected static ushort GetCrossedBorderIndex(TopologyVertex source, TopologyVertex target)
-        {
-            if (source.Region.Y > target.Region.Y)
-                return 0;
-
-            if (source.Region.Y < target.Region.Y)
-                return 2;
-
-            if (source.Region.X > target.Region.X)
-                return 3;
-
-            if (source.Region.X < target.Region.X)
-                return 1;
-
-            return 5;
+            return LocationInRegion.Inside;
         }
     }
 }
