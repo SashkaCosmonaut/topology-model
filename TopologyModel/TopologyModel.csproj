@@ -149,7 +149,7 @@
     <Compile Include="Enumerations\Protocol.cs" />
     <Compile Include="Regions\AbstractRegion.cs" />
     <Compile Include="Regions\TopologyRegion.cs" />
-    <Compile Include="Enumerations\Topology.cs" />
+    <Compile Include="Enumerations\DataChannelTopology.cs" />
     <Compile Include="Tools\TransceiverDevice.cs" />
     <Compile Include="Tools\ToolSet.cs" />
     <Compile Include="TopologyGraphs\TopologyEdge.cs" />
