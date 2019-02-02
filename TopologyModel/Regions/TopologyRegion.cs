@@ -1,12 +1,19 @@
 ﻿using Newtonsoft.Json;
+using System;
+using TopologyModel.Enumerations;
 
 namespace TopologyModel.Regions
 {
-	/// <summary>
-	/// Класс участка объекта предприятия.
-	/// </summary>
-	public class TopologyRegion : AbstractRegion
-	{
+    /// <summary>
+    /// Класс участка объекта предприятия.
+    /// </summary>
+    public class TopologyRegion : AbstractRegion
+    {
+        /// <summary>
+        /// Максимальное количество оценок в массивах оценок.
+        /// </summary>
+        public const ushort EstimatesArraysLength = 5;
+
         /// <summary>
         /// наличие на данном участке проводного подключения к локальной сети предприятия 
         /// </summary>
@@ -29,49 +36,29 @@ namespace TopologyModel.Regions
 
 
 		/// <summary>
-		/// Экспертная оценка агрессивности окружающей среды внутри самого участка
+		/// Экспертная оценка агрессивности окружающей среды на стенах участка и внутри участка: сверху, справа, снизу, слева, внутри
 		/// </summary>
-		public ushort InsideAggressivenessEstimate { get; set; }
+		public ushort[] Aggressiveness { get; set; }
 
 		/// <summary>
-		/// Экспертная оценка непригодности пространства внутри участка для монтажа оборудования
+		/// Экспертная оценка непригодности стен участка для монтажа оборудования и внутри: сверху, справа, снизу, слева, внутри
 		/// </summary>
-		public ushort InsideUnavailabilityEstimate { get; set; }
+		public ushort[] Unavailability { get; set; }
 
 		/// <summary>
-		/// Экспертная оценка от 1 до 10 трудоемкости проведения монтажных работ внутри участка
+		/// Экспертная оценка трудоемкости проведения монтажных работ на стенах участка и внутри участка: сверху, справа, снизу, слева, внутри
 		/// </summary>
-		public ushort InsideLaboriousnessEstimate { get; set; }
+		public ushort[] Laboriousness { get; set; }
 
-		/// <summary>
-		/// непроходимость радиоволн на самом участке (наличие металлоконструкций, электромагнитных помех, экранов)
-		/// </summary>
-		public ushort InsideBadRadioTransmittanceEstimate { get; set; }
+        /// <summary>
+        /// Экспертная оценка непроходимости радиоволн через стены участка и внутри участка: сверху, справа, снизу, слева, внутри
+        /// </summary>
+        public ushort[] BadRadioTransmittance { get; set; }
 
-		/// <summary>
-		/// Экспертная оценка агрессивности окружающей среды на стенах участка: сверху, справа, снизу, слева
-		/// </summary>
-		public ushort[] WallsAggressivenessEstimate { get; set; }
-
-		/// <summary>
-		/// Экспертная оценка непригодности стен участка для монтажа оборудования: сверху, справа, снизу, слева
-		/// </summary>
-		public ushort[] WallsUnavailabilityEstimate { get; set; }
-
-		/// <summary>
-		/// экспертная оценка трудоемкости проведения монтажных работ на стенах участка: сверху, справа, снизу, слева
-		/// </summary>
-		public ushort[] WallsLaboriousnessEstimate { get; set; }
-
-		/// <summary>
-		/// непроходимость радиоволн через стены участка: сверху, справа, снизу, слева
-		/// </summary>
-		public ushort[] WallsBadRadioTransmittanceEstimate { get; set; }
-
-		/// <summary>
-		/// Трудоемкость проведения связи (кабелей) на соседние участки через стены: сверху, справа, снизу, слева
-		/// </summary>
-		public ushort[] WallsBadWiredTransmittanceEstimate { get; set; }
+        /// <summary>
+        /// Экспертная оценка трудоемкости проведения связи (кабелей) внутри и на соседние участки через стены: сверху, справа, снизу, слева, внутри
+        /// </summary>
+        public ushort[] BadWiredTransmittance { get; set; }
 
         /// <summary>
         /// Получить информацию об основных свойствах участка.
@@ -88,23 +75,14 @@ namespace TopologyModel.Regions
                     HasPower,
                     Mobile = MobileInternetSignalEstimate,
                 },
-                Inside = new {
-                    Aggressiveness  = InsideAggressivenessEstimate,       
-                    Unavailability  = InsideUnavailabilityEstimate,
-                    Laboriousness   = InsideLaboriousnessEstimate,
-                    Radio           = InsideBadRadioTransmittanceEstimate,
-                },
-                AlongTheWalls = new {
-                    Aggressiveness  = WallsAggressivenessEstimate,
-                    Unavailability  = WallsUnavailabilityEstimate,
-                    Laboriousness   = WallsLaboriousnessEstimate,
-                    Radio           = InsideBadRadioTransmittanceEstimate,
-                },
-                AcrossTheWalls = new {
-                    Radio = WallsBadRadioTransmittanceEstimate,
-                    Wired = WallsBadWiredTransmittanceEstimate
+                Estimates = new {
+                    Aggressiveness,
+                    Unavailability,
+                    Laboriousness,
+                    BadRadioTransmittance,
+                    BadWiredTransmittance
                 }
             });
         }
-	}
+    }
 }
