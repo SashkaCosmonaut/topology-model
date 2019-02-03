@@ -20,7 +20,7 @@ namespace TopologyModel.GA
         /// Словарь связей между элементами одной и более секций, где ключ - УСПД, из которого исходит связь, а значение - также словарь, 
         /// в котором ключ - канал передачи, соединяющий УСПД и КУ, а значение - перечисление граней графа связи, в которых находятся КУ.
         /// </summary>
-        public Dictionary<DataAcquisitionDevice, Dictionary<DataChannel, IEnumerable<TopologyEdge>>> Pathes { get; }
+        public Dictionary<DataAcquisitionPart, Dictionary<DataChannel, IEnumerable<TopologyEdge>>> Pathes { get; }
 
         /// <summary>
         /// Создать новую топологию - декодировать фенотип хромосомы на базе её текущего генотипа.
@@ -31,7 +31,7 @@ namespace TopologyModel.GA
             try
             {
                 Sections = new TopologySection[chromosome.CurrentProject.MCZs.Length];
-                Pathes = new Dictionary<DataAcquisitionDevice, Dictionary<DataChannel, IEnumerable<TopologyEdge>>>();
+                Pathes = new Dictionary<DataAcquisitionPart, Dictionary<DataChannel, IEnumerable<TopologyEdge>>>();
 
                 DecodeSections(chromosome);
                 DecodePathes(chromosome);
@@ -84,7 +84,7 @@ namespace TopologyModel.GA
                         channelPathes.Add(channelGroup.Key, path);
                     }
 
-                    Pathes.Add(dadGroup.Key.DAD, channelPathes);
+                    Pathes.Add(dadGroup.Key, channelPathes);
                 }
             }
             catch (Exception ex)
