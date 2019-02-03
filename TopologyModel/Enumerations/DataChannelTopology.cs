@@ -9,8 +9,6 @@
 
 		Star,
 
-		Bus,
-
-		Mixed
+		Bus
 	}
 }
