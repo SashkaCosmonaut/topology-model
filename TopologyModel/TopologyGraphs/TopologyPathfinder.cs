@@ -18,7 +18,7 @@ namespace TopologyModel.TopologyGraphs
         /// <param name="targets">Вершины КУ, которые нужно соединить кратчайшим путём.</param>
         /// <param name="dataChannel">Канал передачи данных, по которому соеденяются КУ и УСПД.</param>
         /// <returns>Массив вершин пути в графе.</returns>
-        public static TopologyEdge[] SectionShortestPath(TopologyGraph graph, TopologyVertex source, IEnumerable<TopologyVertex> targets, DataChannel dataChannel)
+        public static IEnumerable<TopologyEdge> SectionShortestPath(TopologyGraph graph, TopologyVertex source, IEnumerable<TopologyVertex> targets, DataChannel dataChannel)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace TopologyModel.TopologyGraphs
         /// <param name="targets">Вершины КУ, которые нужно соединить кратчайшим путём.</param>
         /// <param name="dataChannel">Канал передачи данных, по которому соеденяются КУ и УСПД.</param>
         /// <returns>Массив вершин пути в графе.</returns>
-        private static TopologyEdge[] MeshShortestPath(TopologyGraph graph, TopologyVertex source, IEnumerable<TopologyVertex> targets, DataChannel dataChannel)
+        private static IEnumerable<TopologyEdge> MeshShortestPath(TopologyGraph graph, TopologyVertex source, IEnumerable<TopologyVertex> targets, DataChannel dataChannel)
         {
             return null;
         }
@@ -65,7 +65,7 @@ namespace TopologyModel.TopologyGraphs
         /// <param name="targets">Вершины КУ, которые нужно соединить кратчайшим путём.</param>
         /// <param name="dataChannel">Канал передачи данных, по которому соеденяются КУ и УСПД.</param>
         /// <returns>Массив вершин пути в графе.</returns>
-        private static TopologyEdge[] StarShortestPath(TopologyGraph graph, TopologyVertex source, IEnumerable<TopologyVertex> targets, DataChannel dataChannel)
+        private static IEnumerable<TopologyEdge> StarShortestPath(TopologyGraph graph, TopologyVertex source, IEnumerable<TopologyVertex> targets, DataChannel dataChannel)
         {
             return null;
         }
@@ -78,7 +78,7 @@ namespace TopologyModel.TopologyGraphs
         /// <param name="targets">Вершины КУ, которые нужно соединить кратчайшим путём.</param>
         /// <param name="dataChannel">Канал передачи данных, по которому соеденяются КУ и УСПД.</param>
         /// <returns>Массив вершин пути в графе.</returns>
-        private static TopologyEdge[] BusShortestPath(TopologyGraph graph, TopologyVertex source, IEnumerable<TopologyVertex> targets, DataChannel dataChannel)
+        private static IEnumerable<TopologyEdge> BusShortestPath(TopologyGraph graph, TopologyVertex source, IEnumerable<TopologyVertex> targets, DataChannel dataChannel)
         {
             return null;
         }
