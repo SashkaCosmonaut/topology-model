@@ -72,21 +72,19 @@ namespace TopologyModel.GA
         {
             try
             {
-                foreach (var dadGroup in Sections.GroupBy(q => q.DADPart))                         // Группируем секции по частям с УСПД и перебираем группы
+                foreach (var dadGroup in Sections.GroupBy(q => q.DADPart))          // Группируем секции по частям с УСПД и перебираем группы
                 {
-                    foreach (var channelGroup in dadGroup.GroupBy(q => q.Channel))                          // Группы секций группируем по каналам передачи данных, которые связывают КУ и УСПД 
+                    var channelPathes = new Dictionary<DataChannel, IEnumerable<TopologyEdge>>();
+
+                    foreach (var channelGroup in dadGroup.GroupBy(w => w.Channel))  // Группы секций группируем по каналам передачи данных, которые связывают КУ и УСПД 
                     {
-                        if (channelGroup.Count() > channelGroup.Key.MaxDevicesConnected)                    // Если в группе больше устройств, чам можно подключить по КПД
-                        {
-                         //   return Double.MaxValue;                                                         // С помощью данной хромосомы нельзя соединить устройства, прерываем поиск
-                        }
-                        
                         // Находим путь между УСПД и всеми счётчиками по каждому каналу передачи в группе секций
                         var path = TopologyPathfinder.SectionShortestPath(chromosome.CurrentProject.Graph, dadGroup.Key.Vertex, channelGroup.Select(q => q.MACPart.Vertex), channelGroup.Key);
 
-                        // Рассчитываем стоимость денег или времени пути
-                        // TODO: Надо учитывать режимы, по какому критерию считаются стоимости - по деньгам и по времени
+                        channelPathes.Add(channelGroup.Key, path);
                     }
+
+                    Pathes.Add(dadGroup.Key.DAD, channelPathes);
                 }
             }
             catch (Exception ex)
