@@ -9,12 +9,12 @@ using TopologyModel.GA;
 
 namespace TopologyModel.TopologyGraphs
 {
-	/// <summary>
-	/// Класс ненаправленного графа топологии сети, который содержит вершины, привязанные 
-	/// к участкам предприятия, и ненаправленные взвешенные (дробным числом) ребра.
-	/// </summary>
-	public class TopologyGraph : UndirectedGraph<TopologyVertex, TopologyEdge>
-	{
+    /// <summary>
+    /// Класс ненаправленного графа топологии сети, который содержит вершины, привязанные 
+    /// к участкам предприятия, и ненаправленные взвешенные (дробным числом) ребра.
+    /// </summary>
+    public class TopologyGraph : UndirectedGraph<TopologyVertex, TopologyEdge>
+    {
         /// <summary>
         /// Упорядоченный массив вершин графа.
         /// </summary>
@@ -123,6 +123,10 @@ namespace TopologyModel.TopologyGraphs
                 // Добавляем общую метку графу с информацией об участках
                 graphviz.GraphFormat.Label = graphLabel;
 
+                // Собираем вершины всех УСПД и КУ
+                var dadVertices = topology?.Sections?.Select(q => q.DADPart.Vertex) ?? new TopologyVertex[] { };
+                var mcdVertices = topology?.Sections?.Select(q => q.MACPart.Vertex) ?? new TopologyVertex[] { };
+
                 graphviz.FormatVertex += (sender, args) =>
                 {
                     // В вершине указываем id участка и координаты внутри участка
@@ -136,7 +140,7 @@ namespace TopologyModel.TopologyGraphs
 
                     SetVertexColor(args);
 
-                    HighlightTopologyVertex(args, topology);
+                    HighlightTopologyVertex(args, dadVertices, mcdVertices);
                 };
 
                 // Грани форматируем стандартно с двумя весами каждой грани
@@ -196,11 +200,27 @@ namespace TopologyModel.TopologyGraphs
         /// </summary>
         /// <param name="args">Аргументы события отрисовки вершины.</param>
         /// <param name="topology">Предлагаемая топология с вершинами графа.</param>
-        protected void HighlightTopologyVertex(FormatVertexEventArgs<TopologyVertex> args, Topology topology)
+        protected void HighlightTopologyVertex(FormatVertexEventArgs<TopologyVertex> args, IEnumerable<TopologyVertex> dadVertices, IEnumerable<TopologyVertex> mcdVertices)
         {
             try
             {
+                var dadFound = dadVertices.Contains(args.Vertex);
+                var mcdFound = mcdVertices.Contains(args.Vertex);
 
+                // Окрашиваем контуры вершинам в соответствии с устройствами на них
+                if (dadFound)
+                {
+                    args.VertexFormatter.Shape = mcdFound ? GraphvizVertexShape.Hexagon: GraphvizVertexShape.Box;   // Если в вершине и счётчик, и УСПД, то форма особенная
+                    args.VertexFormatter.StrokeColor = Color.Red;
+                    args.VertexFormatter.FontColor = Color.Red;
+                }
+
+                if (mcdFound)
+                {
+                    args.VertexFormatter.Shape = GraphvizVertexShape.Box;
+                    args.VertexFormatter.StrokeColor = Color.Blue;
+                    args.VertexFormatter.FontColor = Color.Blue;
+                }
             }
             catch (Exception ex)
             {
