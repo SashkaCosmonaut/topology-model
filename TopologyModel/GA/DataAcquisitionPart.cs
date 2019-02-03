@@ -1,5 +1,6 @@
 ﻿using GeneticSharp.Domain.Randomizations;
 using System;
+using System.Drawing;
 using System.Linq;
 using TopologyModel.Enumerations;
 using TopologyModel.Tools;
@@ -17,6 +18,11 @@ namespace TopologyModel.GA
         public DataAcquisitionDevice DAD { get; protected set; }
 
         /// <summary>
+        /// Случайный цвет для закраски данной части секции.
+        /// </summary>
+        public Color Color { get; set; }
+
+        /// <summary>
         /// Декодировать содержимое данной части секции.
         /// </summary>
         /// <param name="project">Текщуий используемый проект.</param>
@@ -29,6 +35,9 @@ namespace TopologyModel.GA
             try
             {
                 DAD = project.AvailableTools.DADs[dadGene];
+                Color = Color.FromArgb(RandomizationProvider.Current.GetInt(0, 255), 
+                                       RandomizationProvider.Current.GetInt(0, 255), 
+                                       RandomizationProvider.Current.GetInt(0, 255));
             }
             catch (Exception ex)
             {

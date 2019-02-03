@@ -123,10 +123,13 @@ namespace TopologyModel.TopologyGraphs
                 // Добавляем общую метку графу с информацией об участках
                 graphviz.GraphFormat.Label = graphLabel;
 
-                // Собираем вершины всех УСПД и КУ, а также все грани
+                // Собираем вершины всех УСПД и КУ, а также все грани, если топология не нулевая
                 var dadVertices = topology?.Sections.Select(q => q.DADPart.Vertex) ?? new TopologyVertex[] { };
                 var mcdVertices = topology?.Sections.Select(q => q.MACPart.Vertex) ?? new TopologyVertex[] { };
-                var edges = topology?.Pathes.Values.SelectMany(q => q.Values.SelectMany(w => w)) ?? new TopologyEdge[] { };
+
+                // Собираем грани путей как перечисление ключей и значений, где ключ - цвет пути, значение - грани пути, если топология не нулевая
+                var coloredEdges = topology?.Pathes.Select(q => new KeyValuePair<Color, IEnumerable<TopologyEdge>>(q.Key.Color, q.Value.Values.SelectMany(w => w))) 
+                    ?? new KeyValuePair<Color, IEnumerable<TopologyEdge>>[] { };
 
                 graphviz.FormatVertex += (sender, args) =>
                 {
@@ -155,7 +158,7 @@ namespace TopologyModel.TopologyGraphs
                     if (args.Edge.IsAlongTheBorder())                           // Грани вдоль границ участков окрашиваем в оранжевый цвет
                         args.EdgeFormatter.StrokeColor = Color.Orange;
 
-                    HighlightTopologyEdge(args, edges);
+                    HighlightTopologyEdge(args, coloredEdges);
                 };
 
                 graphviz.Generate(new FileDotEngine(), filename);       // Генерируем файл с укзанным именем
@@ -234,16 +237,15 @@ namespace TopologyModel.TopologyGraphs
         /// Выделить цветом на графе связи топологии между вершинами графа. 
         /// </summary>
         /// <param name="args">Аргументы события отрисовки грани.</param>
-        /// <param name="edges">Перечисление всех граней топологии.</param>
-        protected void HighlightTopologyEdge(FormatEdgeEventArgs<TopologyVertex, TopologyEdge> args, IEnumerable<TopologyEdge> edges)
+        /// <param name="coloredEdges">Сгруппированное по цветам перечисление всех граней топологии.</param>
+        protected void HighlightTopologyEdge(FormatEdgeEventArgs<TopologyVertex, TopologyEdge> args, IEnumerable<KeyValuePair<Color, IEnumerable<TopologyEdge>>> coloredEdges)
         {
             try
             {
-                if (edges.Contains(args.Edge))
+                foreach (var coloredEdge in coloredEdges.Where(q => q.Value.Contains(args.Edge)))
                 {
-                    args.EdgeFormatter.FontColor = Color.Blue;
-                    args.EdgeFormatter.StrokeColor = Color.Blue;
-                    args.EdgeFormatter.Style = GraphvizEdgeStyle.Bold;
+                    args.EdgeFormatter.FontColor = coloredEdge.Key;
+                    args.EdgeFormatter.StrokeColor = coloredEdge.Key;
                 }
             }
             catch (Exception ex)
