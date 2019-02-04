@@ -56,8 +56,9 @@ namespace TopologyModel.Tools
                     // Если учитываем стоимость обслуживания или всё подряд
                     if (project.MinimizationGoal == CostType.InstantAndMaintenanceMoney || project.MinimizationGoal == CostType.All)
                     {
-                        // Если на участке нет питания или оно вообще не требуется, то добавляем стоимость замены батареек за весь период эксплуатации
-                        if (!(IsPowerRequired && vertex.Region.HasPower) && BatteryTime.TotalHours > 0)
+                        // Если не используем местную рабочую силу и на участке нет питания или оно вообще не требуется, 
+                        // то добавляем стоимость замены батареек за весь период эксплуатации
+                        if (!project.UseLocalEmployee && !(IsPowerRequired && vertex.Region.HasPower) && BatteryTime.TotalHours > 0)
                             cost += (new TimeSpan((int)project.UsageMonths * 30, 0, 0, 0).TotalHours / BatteryTime.TotalHours) * BatteryServicePrice;
                     }
                 }
