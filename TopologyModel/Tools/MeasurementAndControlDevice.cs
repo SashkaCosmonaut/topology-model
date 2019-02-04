@@ -32,22 +32,13 @@ namespace TopologyModel.Tools
         {
             try
             {
-                // Вначале вобще выбираем, что необходимо ли измерять или управлять на месте
-                var measurementsResult = mcz.Measurements != null && mcz.Measurements.Any();
-                var controlsResult = mcz.Controls != null && mcz.Controls.Any();
+                var measurementsResult = mcz.Measurements != null && mcz.Measurements.Any()
+                    ? mcz.Measurements.All(m => Measurements.Contains(m))   // Устройство подхдит, если содержит все измерения места
+                    : true;                                                 // Если нет измерений на месте, то устройство автоматически подходит    
 
-                if (measurementsResult)
-                    foreach (var m in mcz.Measurements.TakeWhile(q => measurementsResult))
-                        measurementsResult &= Measurements.Contains(m);     // Если на месте есть измерение, которое не покрывается устройством, прерываем проверку
-                else
-                    measurementsResult = true;      // Если нет измерений на месте, то устройство автоматически подходит
-
-                // Аналогично с управляющими воздействиями
-                if (controlsResult)
-                    foreach (var c in mcz.Controls.TakeWhile(q => controlsResult))
-                        controlsResult &= Controls.Contains(c);
-                else
-                    controlsResult = true;
+                var controlsResult = mcz.Controls != null && mcz.Controls.Any()
+                    ? mcz.Controls.All(c => Controls.Contains(c))           // Устройство подхдит, если поддерживает все управляющие воздействия места
+                    : true;                                                 // Если воздействий на месте не требуется, то устройство автоматически подходит    
 
                 return measurementsResult && controlsResult;
             }
