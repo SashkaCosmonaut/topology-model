@@ -14,6 +14,16 @@ namespace TopologyModel.Regions
         /// </summary>
         public const ushort ESTIMATES_ARRAY_LENGTH = 5;
 
+        /// <summary>
+        /// Глобальный автоприращиваемый идентификатор участка.
+        /// </summary>
+        private static uint GlobalId = 0;
+
+        /// <summary>
+        /// Уникальный идентификатор участка.
+        /// </summary>
+        public uint Id { get; protected set; }
+
         #region EquipmentProperties
 
         /// <summary>
@@ -66,6 +76,23 @@ namespace TopologyModel.Regions
         public ushort[] BadWiredTransmittance { get; set; }
 
         #endregion
+
+        /// <summary>
+        /// Создать и проинициализировать участок по умолчанию.
+        /// </summary>
+        public FacilityRegion()
+        {
+            Id = ++GlobalId;
+        }
+
+        /// <summary>
+        /// Получить строковую интерпретацию участка.
+        /// </summary>
+        /// <returns>Строка с описанием свойств объекта участка.</returns>
+        public override string ToString()
+        {
+            return Id + ". " + Name;
+        }
 
         /// <summary>
         /// Получить информацию об основных свойствах участка.
