@@ -1,9 +1,9 @@
-﻿using System;
+﻿using QuickGraph;
+using System;
 using System.Collections.Generic;
-using QuickGraph;
 using TopologyModel.Enumerations;
 
-namespace TopologyModel.TopologyGraphs
+namespace TopologyModel.Graphs
 {
     /// <summary>
     /// Класс грани графа топологии.
@@ -31,7 +31,7 @@ namespace TopologyModel.TopologyGraphs
             try
             {
                 // Если связь между участками, берётся среднее от значений границ смежных участков
-                WirelessWeight = IsAcrossTheBorder()    
+                WirelessWeight = IsAcrossTheBorder()
                     ? (Source.Region.GetBadRadioTransmittanceEstimate(GetLocation(Source, Target)) +
                        Target.Region.GetBadRadioTransmittanceEstimate(GetLocation(Target, Source))) / 2
                     : Source.Region.GetBadRadioTransmittanceEstimate(LocationInRegion.Inside);          // Иначе берётся оценка внутри участка
@@ -45,7 +45,6 @@ namespace TopologyModel.TopologyGraphs
                 Console.WriteLine("TopologyEdge failed! {0}", ex.Message);
             }
         }
-
 
         /// <summary>
         /// Рассчитать проводной вес грани через границу исходного участка в целевой путём сложения трудоемкости проведения кабелей,
@@ -120,18 +119,7 @@ namespace TopologyModel.TopologyGraphs
         /// <returns>True, если она внутри участка.</returns>
         public bool IsInside()
         {
-            return GetInRegionLocation(Source, Target) == LocationInRegion.Inside; // Грань находится внутри участка, если она не вдоль границы и не через границу
-        }
-
-        /// <summary>
-        /// Проверить, проведена ли грань через границу между участками.
-        /// </summary>
-        /// <param name="source">Исходный узел грани.</param>
-        /// <param name="target">Целевой узел грани.</param>
-        /// <returns>True, если она через границу между участками.</returns>
-        public static bool IsAcrossTheBorder(TopologyVertex source, TopologyVertex target)
-        {
-            return source.Region != target.Region;  // Грань проведена через границу, когда она ведёт на другой участок
+            return !IsAcrossTheBorder(Source, Target) && GetInRegionLocation(Source, Target) == LocationInRegion.Inside;
         }
 
         /// <summary>
@@ -142,7 +130,7 @@ namespace TopologyModel.TopologyGraphs
         /// <returns>True, если она вдоль границы участка.</returns>
         public static bool IsAlongTheBorder(TopologyVertex source, TopologyVertex target)
         {
-            return !IsAcrossTheBorder(source, target) && GetLocation(source, target) != LocationInRegion.Inside;    // Грань располагается вдоль границы, когда она не через границу и не внутри
+            return !IsAcrossTheBorder(source, target) && GetLocation(source, target) != LocationInRegion.Inside;
         }
 
         /// <summary>
@@ -157,6 +145,17 @@ namespace TopologyModel.TopologyGraphs
                 return GetCrossBorderLocation(source, target);
 
             return GetInRegionLocation(source, target);
+        }
+
+        /// <summary>
+        /// Проверить, проведена ли грань через границу между участками.
+        /// </summary>
+        /// <param name="source">Исходный узел грани.</param>
+        /// <param name="target">Целевой узел грани.</param>
+        /// <returns>True, если она через границу между участками.</returns>
+        public static bool IsAcrossTheBorder(TopologyVertex source, TopologyVertex target)
+        {
+            return source.Region != target.Region;  // Грань проведена через границу, когда она ведёт на другой участок
         }
 
         /// <summary>
