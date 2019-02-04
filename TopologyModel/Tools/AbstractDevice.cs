@@ -1,33 +1,33 @@
 ﻿using System;
 using TopologyModel.Enumerations;
-using TopologyModel.TopologyGraphs;
+using TopologyModel.Graphs;
 
 namespace TopologyModel.Tools
 {
-	/// <summary>
-	/// Класс абстрактного устройства.
-	/// </summary>
-	public abstract class AbstractDevice : AbstractTool
-	{
-		/// <summary>
-		/// множество стандартов отправки данных, по которым данное устройство отправляет данные
-		/// </summary>
-		public Protocol[] SendingProtocols { get; set; }
+    /// <summary>
+    /// Класс абстрактного устройства.
+    /// </summary>
+    public abstract class AbstractDevice : AbstractTool
+    {
+        /// <summary>
+        /// Множество способов отправки данных, по которым данное устройство отправляет данные
+        /// </summary>
+        public DataChannelCommunication[] SendingCommunication { get; set; }
 
-		/// <summary>
-		/// требуется ли питание от электрической сети 220В для работы устройства
-		/// </summary>
-		public bool IsPowerRequired { get; set; }
+        /// <summary>
+        /// Требуется ли питание от электрической сети 220В для работы устройства
+        /// </summary>
+        public bool IsPowerRequired { get; set; }
 
-		/// <summary>
-		/// время в часах автономной работы от аккумуляторных батарей, если имеются
-		/// </summary>
-		public TimeSpan BatteryTime { get; set; }
+        /// <summary>
+        /// Время в часах автономной работы от аккумуляторных батарей, если имеются
+        /// </summary>
+        public TimeSpan BatteryTime { get; set; }
 
-		/// <summary>
-		/// стоимость сервисного обслуживания для замены аккумуляторной батареи 
-		/// </summary>
-		public double BatteryServicePrice { get; set; }
+        /// <summary>
+        /// Стоимость сервисного обслуживания для замены аккумуляторной батареи 
+        /// </summary>
+        public double BatteryServicePrice { get; set; }
 
         /// <summary>
         /// Рассчитать затраты на использование данного инструмента для формирования сети.
@@ -41,20 +41,25 @@ namespace TopologyModel.Tools
             {
                 var cost = 0.0;
 
-                if (project.MinimizationGoal == CostType.Time)
+                // TODO: добавить в свойства проекта час работы, чтобы можно было точнее считать затраты на всё вместе
+                if (project.MinimizationGoal == CostType.Time || project.MinimizationGoal == CostType.All)
                 {
-                    cost = InstallationTime.TotalHours;     // Для времени важно только время а установку оборудования
+                    // Для времени важно только время на установку оборудования, которое может возрасти втрое из-за трудоемкости
+                    cost += InstallationTime.TotalHours * vertex.LaboriousnessWeight / 10;
                 }
-                else
+                else if (project.MinimizationGoal != CostType.Time)
                 {
-                    // Умножаем стоимость установки на трудоемкость проведения работ (которая максимум может увеличить стоимость втрое)
-                    cost += PurchasePrice + InstallationPrice * vertex.LaboriousnessWeight / 10;
+                    // Если не используем мастную рабочую силу, то умножаем стоимость установки 
+                    // на трудоемкость проведения работ, которая может увеличить стоимость втрое
+                    cost += PurchasePrice + (project.UseLocalEmployee ? 0 : InstallationPrice * vertex.LaboriousnessWeight / 10);
 
-                    // Если учитываем стоимость обслуживания, то добавляем стоимость замены батареек, 
-                    // если на участке нет питания или оно вообще не требуется и задано время работы от баратеек
-                    if (project.MinimizationGoal == CostType.InstantAndMaintenanceMoney &&
-                        !(IsPowerRequired && vertex.Region.HasPower) && BatteryTime.TotalMilliseconds > 0)
-                        cost += (new TimeSpan((int)project.UsageMonths * 30, 0, 0, 0).TotalHours / BatteryTime.TotalHours) * BatteryServicePrice;
+                    // Если учитываем стоимость обслуживания или всё подряд
+                    if (project.MinimizationGoal == CostType.InstantAndMaintenanceMoney || project.MinimizationGoal == CostType.All)
+                    {
+                        // Если на участке нет питания или оно вообще не требуется, то добавляем стоимость замены батареек за весь период эксплуатации
+                        if (!(IsPowerRequired && vertex.Region.HasPower) && BatteryTime.TotalHours > 0)
+                            cost += (new TimeSpan((int)project.UsageMonths * 30, 0, 0, 0).TotalHours / BatteryTime.TotalHours) * BatteryServicePrice;
+                    }
                 }
 
                 return cost;
