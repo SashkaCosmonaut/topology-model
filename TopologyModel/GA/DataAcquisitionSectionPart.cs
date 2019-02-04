@@ -2,7 +2,6 @@
 using System;
 using System.Drawing;
 using System.Linq;
-using TopologyModel.Enumerations;
 using TopologyModel.Tools;
 
 namespace TopologyModel.GA
@@ -10,7 +9,7 @@ namespace TopologyModel.GA
     /// <summary>
     /// Класс той части секции топологии, в которой находится УСПД.
     /// </summary>
-    public class DataAcquisitionPart : AbstractTopologySectionPart
+    public class DataAcquisitionSectionPart : AbstractTopologySectionPart
     {
         /// <summary>
         /// УСПД, которое используется в данной секции топологии.
@@ -18,7 +17,7 @@ namespace TopologyModel.GA
         public DataAcquisitionDevice DAD { get; protected set; }
 
         /// <summary>
-        /// Случайный цвет для закраски данной части секции.
+        /// Случайный цвет для закраски КПД, исходящих из УСПД данной части.
         /// </summary>
         public Color Color { get; set; }
 
@@ -35,8 +34,8 @@ namespace TopologyModel.GA
             try
             {
                 DAD = project.AvailableTools.DADs[dadGene];
-                Color = Color.FromArgb(RandomizationProvider.Current.GetInt(0, 255), 
-                                       RandomizationProvider.Current.GetInt(0, 255), 
+                Color = Color.FromArgb(RandomizationProvider.Current.GetInt(0, 255),
+                                       RandomizationProvider.Current.GetInt(0, 255),
                                        RandomizationProvider.Current.GetInt(0, 255));
             }
             catch (Exception ex)
@@ -56,11 +55,11 @@ namespace TopologyModel.GA
             try
             {
                 // Декодируем КУ из гена, которое выбрано в данной секции (оно идёт первым в хромосоме)
-                var mcd = chromosome.CurrentProject.AvailableTools.MCDs[(int)chromosome.GetGene(sectionIndex * TopologyChromosome.GENES_FOR_SECTION).Value];
+                var mcd = chromosome.CurrentProject.AvailableTools.MCDs[(int)chromosome.GetGene(sectionIndex * TopologyChromosome.GENES_IN_SECTION).Value];
 
                 var availableDADs = chromosome.CurrentProject.AvailableTools.DADs
                     .Select((dad, index) => new { DAD = dad, Index = index })
-                    .Where(q => q.DAD.ReceivingProtocols.Keys.Any(w => mcd.SendingProtocols.Contains(w)))
+                    .Where(q => q.DAD.ReceivingCommunications.Keys.Any(w => mcd.SendingCommunications.Contains(w)))
                     .ToArray();
 
                 var randomIndex = RandomizationProvider.Current.GetInt(0, availableDADs.Count());
@@ -84,7 +83,7 @@ namespace TopologyModel.GA
         {
             try
             {
-                // Можно сортировать вершины по качеству и выбирать лучшую из случайных
+                // TODO: Можно сортировать вершины по качеству и выбирать лучшую из случайных
                 return RandomizationProvider.Current.GetInt(0, chromosome.CurrentProject.Graph.VerticesArray.Length);
             }
             catch (Exception ex)
@@ -104,17 +103,15 @@ namespace TopologyModel.GA
         {
             try
             {
-                var other = obj as DataAcquisitionPart;
-
-                if (other == null) return -1;
-
-                return (Vertex == other.Vertex && DAD == other.DAD) ? 0 : 1;
+                if (obj is DataAcquisitionSectionPart other)
+                    return (Vertex == other.Vertex && DAD == other.DAD) ? 0 : 1;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("DataAcquisitionPart CompareTo failed! {0}", ex.Message);
-                return -1;
             }
+
+            return -1;
         }
 
         /// <summary>

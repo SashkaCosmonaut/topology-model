@@ -1,6 +1,5 @@
-﻿using TopologyModel.TopologyGraphs;
-using System;
-using TopologyModel.Enumerations;
+﻿using System;
+using TopologyModel.Graphs;
 
 namespace TopologyModel.GA
 {
@@ -15,13 +14,6 @@ namespace TopologyModel.GA
         public TopologyVertex Vertex { get; protected set; }
 
         /// <summary>
-        /// Сравнить части секции топологии.
-        /// </summary>
-        /// <param name="obj">Другая часть секции топологии.</param>
-        /// <returns>0, если части секции одинаковые, иное значение, если нет.</returns>
-        public abstract int CompareTo(object obj);
-
-        /// <summary>
         /// Декодировать вершину графа части секции.
         /// </summary>
         /// <param name="project">Текущий используемый проект.</param>
@@ -34,15 +26,21 @@ namespace TopologyModel.GA
             }
             catch (Exception ex)
             {
-                Console.WriteLine("AbstractTopologySectionPart Decode failed! {0}", ex.Message);
+                Console.WriteLine("AbstractTopologySectionPart DecodeVertex failed! {0}", ex.Message);
             }
         }
+
+        /// <summary>
+        /// Сравнить части секции топологии.
+        /// </summary>
+        /// <param name="obj">Другая часть секции топологии.</param>
+        /// <returns>0, если части секции одинаковые, иное значение, если нет.</returns>
+        public abstract int CompareTo(object obj);
 
         /// <summary>
         /// Рассчитать затраты на использование инструмента в данной части секции для формирования сети.
         /// </summary>
         /// <param name="project">Свойства проекта.</param>
-        /// <param name="vertex">Вершина графа, в которой установлен инструмент.</param>
         /// <returns>Значение выбранных затрат на данный инструмент.</returns>
         public abstract double GetCost(Project project);
     }
