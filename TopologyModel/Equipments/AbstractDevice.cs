@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using TopologyModel.Enumerations;
 using TopologyModel.Graphs;
 
@@ -12,7 +13,7 @@ namespace TopologyModel.Equipments
         /// <summary>
         /// Множество способов отправки данных, по которым данное устройство отправляет данные
         /// </summary>
-        public DataChannelCommunication[] SendingCommunications { get; set; }
+        public List<DataChannelCommunication> SendingCommunications { get; set; }
 
         /// <summary>
         /// Требуется ли питание от электрической сети 220В для работы устройства
