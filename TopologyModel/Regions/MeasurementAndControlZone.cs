@@ -7,26 +7,28 @@ namespace TopologyModel.Regions
     /// Класс места учёта и управления (или только точки учёта и управления).
     /// </summary>
     public class MeasurementAndControlZone : AbstractRegion
-	{
+    {
         /// <summary>
-        /// экспертная оценка приоритета покрытия ТУУ сетью, от 0 и далее, 0 - наивысшая
+        /// Экспертная оценка приоритета покрытия ТУУ сетью, от 0 и далее, 0 - наивысшая
         /// </summary>
         public uint Priority { get; set; }
 
-		/// <summary>
-		/// множество всех измерений потребления энергоресурсов, доступных на данной ТУУ
-		/// </summary>
-		public Measurement[] Measurements { get; set; }
+        /// <summary>
+        /// Множество всех измерений потребления энергоресурсов, доступных на данной ТУУ
+        /// </summary>
+        public Measurement[] Measurements { get; set; }
 
-		/// <summary>
-		/// множество всех управляющих воздействий, доступных на данной ТУУ
-		/// </summary>
-		public Control[] Controls { get; set; }
+        /// <summary>
+        /// Множество всех управляющих воздействий, доступных на данной ТУУ
+        /// </summary>
+        public Control[] Controls { get; set; }
 
-		/// <summary>
-		/// допустима ли замена уже имеющихся КУ на ТУУ на более новые
-		/// </summary>
-		public bool IsDeviceReplacementAvailable { get; set; }
+        /// <summary>
+        /// Допустима ли замена уже имеющихся КУ на ТУУ на более новые
+        /// TODO: добавить поле с установленным уже оборудованием, тогда в ГА выбирается только оно, 
+        /// а в зависимости от этого флага в новом гене выбирается что-то новое или берётся постоянно только имеющееся оборудование
+        /// </summary>
+        public bool IsDeviceReplacementAvailable { get; set; }
 
         /// <summary>
         /// Получить информацию об основных свойствах участка.
