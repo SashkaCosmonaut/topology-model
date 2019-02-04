@@ -1,7 +1,6 @@
 ﻿using GeneticSharp.Domain.Randomizations;
 using System;
 using System.Linq;
-using TopologyModel.Enumerations;
 using TopologyModel.Tools;
 
 namespace TopologyModel.GA
@@ -76,7 +75,7 @@ namespace TopologyModel.GA
         {
             try
             {
-                var currentMCZ = chromosome.CurrentProject.MCZs[sectionIndex];    // Текущее место учёта и управления
+                var currentMCZ = chromosome.CurrentProject.MCZs[sectionIndex];          // Текущее место учёта и управления
 
                 var mczVertices = chromosome.CurrentProject.Graph.VerticesArray
                     .Select((vertex, index) => new { Vertex = vertex, Index = index })  // Запоминаем индекс в массиве каждого места
@@ -103,18 +102,17 @@ namespace TopologyModel.GA
         {
             try
             {
-                var other = obj as MeasurementAndControlPart;
-
-                if (other == null) return -1;
-
-                return (Vertex == other.Vertex && MCD == other.MCD) ? 0 : 1;
+                if (obj is MeasurementAndControlPart other)
+                    return (Vertex == other.Vertex && MCD == other.MCD) ? 0 : 1;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("MeasurementAndControlPart CompareTo failed! {0}", ex.Message);
-                return -1;
             }
+
+            return -1;
         }
+
 
         /// <summary>
         /// Рассчитать затраты на использование инструмента в данной части секции для формирования сети.
