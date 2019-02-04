@@ -1,14 +1,23 @@
 ﻿namespace TopologyModel.Enumerations
 {
-	/// <summary>
-	/// Управляющие воздействия.
-	/// </summary>
-	public enum Control
-	{
-		EquipmentOnOff,
+    /// <summary>
+    /// Перечисление существующих на предприятии управляющих воздействий.
+    /// </summary>
+    public enum Control
+    {
+        /// <summary>
+        /// Включение/отключение какого-либо оборудования.
+        /// </summary>
+        EquipmentOnOff,
 
-		LevelChanging,
+        /// <summary>
+        /// Изменение уровня какого-либо воздействия в оборудовании.
+        /// </summary>
+        LevelChanging,
 
-		LeverUpDown
-	}
+        /// <summary>
+        /// Переключение какого-либо реле.
+        /// </summary>
+        RelaySwitching
+    }
 }
