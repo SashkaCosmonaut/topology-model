@@ -33,25 +33,5 @@ namespace TopologyModel.Tools
         /// Максимально допустимое количество устройств, которые могут передавать данные через данный КПД
         /// </summary>
         public uint MaxDevicesConnected { get; set; }
-
-        /// <summary>
-        /// Рассчитать затраты на использование данного инструмента для формирования сети.
-        /// </summary>
-        /// <param name="project">Свойства проекта.</param>
-        /// <param name="vertex">Вершина графа, в которой установлен инструмент.</param>
-        /// <returns>Значение выбранных затрат на данный инструмент.</returns>
-        public override double GetCost(Project project, TopologyVertex vertex)
-        {
-            try
-            {
-                // TODO: реализовать
-                return 0;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("DataChannel GetCost failed! {0}", ex.Message);
-                return 0;
-            }
-        }
     }
 }

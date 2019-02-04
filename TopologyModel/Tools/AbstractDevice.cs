@@ -35,7 +35,7 @@ namespace TopologyModel.Tools
         /// <param name="project">Свойства проекта.</param>
         /// <param name="vertex">Вершина графа, в которой установлен инструмент.</param>
         /// <returns>Значение выбранных затрат на данный инструмент.</returns>
-        public override double GetCost(Project project, TopologyVertex vertex)
+        public double GetCost(Project project, TopologyVertex vertex)
         {
             try
             {
