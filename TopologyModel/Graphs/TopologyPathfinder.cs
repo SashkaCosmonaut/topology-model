@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using TopologyModel.Enumerations;
-using TopologyModel.Tools;
+using TopologyModel.Equipments;
 
 namespace TopologyModel.Graphs
 {
