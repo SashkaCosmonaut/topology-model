@@ -12,7 +12,7 @@ namespace TopologyModel.Tools
         /// <summary>
         /// Множество способов отправки данных, по которым данное устройство отправляет данные
         /// </summary>
-        public DataChannelCommunication[] SendingCommunication { get; set; }
+        public DataChannelCommunication[] SendingCommunications { get; set; }
 
         /// <summary>
         /// Требуется ли питание от электрической сети 220В для работы устройства
