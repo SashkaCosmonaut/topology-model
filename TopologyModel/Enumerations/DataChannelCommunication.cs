@@ -31,6 +31,8 @@
 
         Electr_DAD_1,
 
-        Water_DAD_1
+        Water_DAD_1,
+
+        None
     }
 }
