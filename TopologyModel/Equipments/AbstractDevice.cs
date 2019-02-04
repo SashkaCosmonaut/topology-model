@@ -2,12 +2,12 @@
 using TopologyModel.Enumerations;
 using TopologyModel.Graphs;
 
-namespace TopologyModel.Tools
+namespace TopologyModel.Equipments
 {
     /// <summary>
     /// Класс абстрактного устройства.
     /// </summary>
-    public abstract class AbstractDevice : AbstractTool
+    public abstract class AbstractDevice : AbstractEquipment
     {
         /// <summary>
         /// Множество способов отправки данных, по которым данное устройство отправляет данные

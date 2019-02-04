@@ -1,11 +1,11 @@
 ﻿using TopologyModel.Enumerations;
 
-namespace TopologyModel.Tools
+namespace TopologyModel.Equipments
 {
     /// <summary>
     /// Класс канала передачи данных.
     /// </summary>
-    public class DataChannel : AbstractTool
+    public class DataChannel : AbstractEquipment
     {
         /// <summary>
         /// Является ли канал передачи данных беспроводным 

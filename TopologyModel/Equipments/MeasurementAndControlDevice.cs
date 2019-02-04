@@ -3,7 +3,7 @@ using System.Linq;
 using TopologyModel.Enumerations;
 using TopologyModel.Regions;
 
-namespace TopologyModel.Tools
+namespace TopologyModel.Equipments
 {
     /// <summary>
     /// Класс конечного устройства.

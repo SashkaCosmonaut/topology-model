@@ -1,7 +1,7 @@
 ﻿using GeneticSharp.Domain.Randomizations;
 using System;
 using System.Linq;
-using TopologyModel.Tools;
+using TopologyModel.Equipments;
 
 namespace TopologyModel.GA
 {
@@ -27,7 +27,7 @@ namespace TopologyModel.GA
 
             try
             {
-                MCD = project.AvailableTools.MCDs[mcdGene];
+                MCD = project.Equipments.MCDs[mcdGene];
             }
             catch (Exception ex)
             {
@@ -47,7 +47,7 @@ namespace TopologyModel.GA
         {
             try
             {
-                var suitableMCDs = chromosome.CurrentProject.AvailableTools.MCDs
+                var suitableMCDs = chromosome.CurrentProject.Equipments.MCDs
                     .Select((mcd, index) => new { MCD = mcd, Index = index })                           // Запоминаем индекс устройства в массиве всех доступных устройств
                     .Where(q => q.MCD.IsSuitableForMCZ(chromosome.CurrentProject.MCZs[sectionIndex]))   // Выбираем только те устройства, которые подходят для места
                     .ToArray();

@@ -2,7 +2,7 @@
 using System;
 using System.Drawing;
 using System.Linq;
-using TopologyModel.Tools;
+using TopologyModel.Equipments;
 
 namespace TopologyModel.GA
 {
@@ -33,7 +33,7 @@ namespace TopologyModel.GA
 
             try
             {
-                DAD = project.AvailableTools.DADs[dadGene];
+                DAD = project.Equipments.DADs[dadGene];
                 Color = Color.FromArgb(RandomizationProvider.Current.GetInt(0, 255),
                                        RandomizationProvider.Current.GetInt(0, 255),
                                        RandomizationProvider.Current.GetInt(0, 255));
@@ -55,9 +55,9 @@ namespace TopologyModel.GA
             try
             {
                 // Декодируем КУ из гена, которое выбрано в данной секции (оно идёт первым в хромосоме)
-                var mcd = chromosome.CurrentProject.AvailableTools.MCDs[(int)chromosome.GetGene(sectionIndex * TopologyChromosome.GENES_IN_SECTION).Value];
+                var mcd = chromosome.CurrentProject.Equipments.MCDs[(int)chromosome.GetGene(sectionIndex * TopologyChromosome.GENES_IN_SECTION).Value];
 
-                var availableDADs = chromosome.CurrentProject.AvailableTools.DADs
+                var availableDADs = chromosome.CurrentProject.Equipments.DADs
                     .Select((dad, index) => new { DAD = dad, Index = index })
                     .Where(q => q.DAD.ReceivingCommunications.Keys.Any(w => mcd.SendingCommunications.Contains(w)))
                     .ToArray();

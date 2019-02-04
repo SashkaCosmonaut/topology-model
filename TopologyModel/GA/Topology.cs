@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TopologyModel.Graphs;
-using TopologyModel.Tools;
+using TopologyModel.Equipments;
 
 namespace TopologyModel.GA
 {

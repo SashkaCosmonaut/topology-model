@@ -1,9 +1,9 @@
-﻿namespace TopologyModel.Tools
+﻿namespace TopologyModel.Equipments
 {
     /// <summary>
     /// БД инструментов для использования в проекте.
     /// </summary>
-    public class ToolSet
+    public class EquipmentDB
     {
         /// <summary>
         /// Массив доступных конечных устройств.

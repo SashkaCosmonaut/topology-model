@@ -1,7 +1,7 @@
 ﻿using GeneticSharp.Domain.Randomizations;
 using System;
 using System.Linq;
-using TopologyModel.Tools;
+using TopologyModel.Equipments;
 
 namespace TopologyModel.GA
 {
@@ -61,7 +61,7 @@ namespace TopologyModel.GA
                 MACPart.Decode(chromosome.CurrentProject, sectionGenes[0], sectionGenes[1]);
                 DADPart.Decode(chromosome.CurrentProject, sectionGenes[2], sectionGenes[3]);
 
-                Channel = chromosome.CurrentProject.AvailableTools.DCs[sectionGenes[4]];
+                Channel = chromosome.CurrentProject.Equipments.DCs[sectionGenes[4]];
             }
             catch (Exception ex)
             {
@@ -106,12 +106,12 @@ namespace TopologyModel.GA
             try
             {
                 // Декодируем КУ из гена, которое выбрано в данной секции (оно идёт первым в хромосоме)
-                var mcd = chromosome.CurrentProject.AvailableTools.MCDs[(int)chromosome.GetGene(sectionIndex * TopologyChromosome.GENES_IN_SECTION).Value];
+                var mcd = chromosome.CurrentProject.Equipments.MCDs[(int)chromosome.GetGene(sectionIndex * TopologyChromosome.GENES_IN_SECTION).Value];
 
                 // Декодируем УСПД из гена, которое выбрано в данной секции (оно идёт третьим в хромосоме)
-                var dad = chromosome.CurrentProject.AvailableTools.DADs[(int)chromosome.GetGene(sectionIndex * TopologyChromosome.GENES_IN_SECTION + 2).Value];
+                var dad = chromosome.CurrentProject.Equipments.DADs[(int)chromosome.GetGene(sectionIndex * TopologyChromosome.GENES_IN_SECTION + 2).Value];
 
-                var availableChannels = chromosome.CurrentProject.AvailableTools.DCs
+                var availableChannels = chromosome.CurrentProject.Equipments.DCs
                     .Select((channel, index) => new { Channel = channel, Index = index })
                     .Where(q => mcd.SendingCommunications.Contains(q.Channel.Communication) &&
                                 dad.ReceivingCommunications.Keys.Contains(q.Channel.Communication))   // Выбираем те КПД, которые совместимы с данным КУ и УСПД

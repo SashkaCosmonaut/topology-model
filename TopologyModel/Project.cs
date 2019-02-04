@@ -4,7 +4,7 @@ using System.Linq;
 using TopologyModel.Enumerations;
 using TopologyModel.Graphs;
 using TopologyModel.Regions;
-using TopologyModel.Tools;
+using TopologyModel.Equipments;
 
 namespace TopologyModel
 {
@@ -97,7 +97,7 @@ namespace TopologyModel
         /// <summary>
         /// База данных доступного инструментария.
         /// </summary>
-        public ToolSet AvailableTools { get; set; }
+        public EquipmentDB Equipments { get; set; }
 
         /// <summary>
         /// Граф всего предприятия.

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using TopologyModel.Enumerations;
 
-namespace TopologyModel.Tools
+namespace TopologyModel.Equipments
 {
     /// <summary>
     /// Класс УСПД.

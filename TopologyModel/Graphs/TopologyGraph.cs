@@ -188,6 +188,8 @@ namespace TopologyModel.Graphs
                         .ToArray()
                     ?? new KeyValuePair<Color, TopologyEdge[]>[] { };
 
+                // TODO: добавить дополнительные грани графу для случаев, когда вдоль одной грани несколько КПД
+
                 graphviz.FormatEdge += (sender, args) =>
                 {
                     args.EdgeFormatter.Label.Value = args.Edge.ToString();      // Указываем метки граней

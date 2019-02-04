@@ -1,12 +1,11 @@
 ﻿using System;
-using TopologyModel.Graphs;
 
-namespace TopologyModel.Tools
+namespace TopologyModel.Equipments
 {
     /// <summary>
     /// Абстрактный класс некоторого инструмента для реализации сети, устройства.
     /// </summary>
-    public abstract class AbstractTool
+    public abstract class AbstractEquipment
     {
         /// <summary>
         /// Наименование устройства.

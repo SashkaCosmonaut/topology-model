@@ -147,12 +147,12 @@
     <Compile Include="Regions\AbstractRegion.cs" />
     <Compile Include="Regions\FacilityRegion.cs" />
     <Compile Include="Regions\MeasurementAndControlZone.cs" />
-    <Compile Include="Tools\AbstractDevice.cs" />
-    <Compile Include="Tools\AbstractTool.cs" />
-    <Compile Include="Tools\DataAcquisitionDevice.cs" />
-    <Compile Include="Tools\DataChannel.cs" />
-    <Compile Include="Tools\MeasurementAndControlDevice.cs" />
-    <Compile Include="Tools\ToolSet.cs" />
+    <Compile Include="Equipments\AbstractDevice.cs" />
+    <Compile Include="Equipments\AbstractEquipment.cs" />
+    <Compile Include="Equipments\DataAcquisitionDevice.cs" />
+    <Compile Include="Equipments\DataChannel.cs" />
+    <Compile Include="Equipments\MeasurementAndControlDevice.cs" />
+    <Compile Include="Equipments\EquipmentDB.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
