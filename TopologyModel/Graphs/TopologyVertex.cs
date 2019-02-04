@@ -1,33 +1,34 @@
 ﻿using System;
+using System.Drawing;
 using TopologyModel.Enumerations;
 using TopologyModel.Regions;
 
-namespace TopologyModel.TopologyGraphs
+namespace TopologyModel.Graphs
 {
-	/// <summary>
-	/// Класс вершины графа топологии.
-	/// </summary>
-	public class TopologyVertex : IComparable
-	{
-		/// <summary>
-		/// Ссылка на участок, на котором располагается данная вершина.
-		/// </summary>
-		public TopologyRegion Region { get; set; }
+    /// <summary>
+    /// Класс вершины графа топологии.
+    /// </summary>
+    public class TopologyVertex : IComparable
+    {
+        /// <summary>
+        /// Ссылка на участок, на котором располагается данная вершина.
+        /// </summary>
+        public FacilityRegion Region { get; set; }
 
         /// <summary>
         /// Ссылки на места учёта и управления, которые находятся на данной вершине.
         /// </summary>
         public MeasurementAndControlZone[] MCZs { get; set; }
 
-		/// <summary>
-		/// Координата вершины внутри участка по оси Х в матрице и в графе.
-		/// </summary>
-		public uint RegionX { get; set; }
+        /// <summary>
+        /// Координата вершины внутри участка по оси Х в матрице и в графе.
+        /// </summary>
+        public uint RegionX { get; set; }
 
-		/// <summary>
-		/// Координата вершины внутри участка по оси Y в матрице и в графе.
-		/// </summary>
-		public uint RegionY { get; set; }
+        /// <summary>
+        /// Координата вершины внутри участка по оси Y в матрице и в графе.
+        /// </summary>
+        public uint RegionY { get; set; }
 
         /// <summary>
         /// Вес вершины для расчёта трудоемкости проведения на ней работ.
@@ -41,12 +42,12 @@ namespace TopologyModel.TopologyGraphs
         /// <param name="regionX">Координата вершины внутри участка по оси Х в матрице и в графе.</param>
         /// <param name="regionY">Координата вершины внутри участка по оси Y в матрице и в графе.</param>
         /// <param name="mczs">Ссылки на места учёта и управления, которые находятся на данной вершине.</param>
-        public TopologyVertex(TopologyRegion region, uint regionX, uint regionY, MeasurementAndControlZone[] mczs = null)
-		{
+        public TopologyVertex(FacilityRegion region, uint regionX, uint regionY, MeasurementAndControlZone[] mczs = null)
+        {
             Region = region ?? throw new ArgumentNullException(nameof(region));
 
-			RegionX = regionX;
-			RegionY = regionY;
+            RegionX = regionX;
+            RegionY = regionY;
 
             MCZs = mczs;
 
@@ -72,33 +73,6 @@ namespace TopologyModel.TopologyGraphs
                 Console.WriteLine("GetLaboriousnessWeight failed! {0}", ex.Message);
                 return 0;
             }
-        }
-
-        /// <summary>
-        /// Полчить строковое представление данной вершины.
-        /// </summary>
-        /// <returns>Строка, содержащая идентификатор участка данной вершины в графе или матрице,
-        /// а также её координаты по оси У и Х внутри участка, начинающиеся с 1, а не с 0.</returns>
-        public override string ToString()
-		{
-			return $"{Region.Id}.{RegionY + 1}.{RegionX + 1}";
-		}
-
-        /// <summary>
-        /// Сравнить две вершины графа.
-        /// </summary>
-        /// <param name="other">Другая вершина графа или иной объект.</param>
-        /// <returns>0 - данный экземпляр занимает ту же позицию в порядке сортировки, что и параметр other.
-        /// -1 - данный экземпляр предшествует параметру other в порядке сортировки.
-        /// 1- данный экземпляр следует за параметром obj в порядке сортировки.</returns>
-        public int CompareTo(object other)
-        {
-            var otherVertex = other as TopologyVertex;
-
-            if (otherVertex == null) throw new ArgumentException("Incorrect type or null of: ", nameof(other));
-
-            // Для сравнения используются идентификаторы участков
-            return (int)Region.Id - (int)otherVertex.Region.Id;
         }
 
         /// <summary>
@@ -145,6 +119,39 @@ namespace TopologyModel.TopologyGraphs
         public bool IsInside()
         {
             return GetLocation() == LocationInRegion.Inside;
+        }
+
+        /// <summary>
+        /// Полчить строковое представление данной вершины.
+        /// </summary>
+        /// <returns>Строка, содержащая идентификатор участка данной вершины в графе или матрице,
+        /// а также её координаты по оси У и Х внутри участка, начинающиеся с 1, а не с 0.</returns>
+        public override string ToString()
+        {
+            return $"{Region.Id}.{RegionY + 1}.{RegionX + 1}";
+        }
+
+        /// <summary>
+        /// Сравнить две вершины графа.
+        /// </summary>
+        /// <param name="other">Другая вершина графа или иной объект.</param>
+        /// <returns>0 - данный экземпляр занимает ту же позицию в порядке сортировки, что и параметр other.
+        /// -1 - данный экземпляр предшествует параметру other в порядке сортировки.
+        /// 1 - данный экземпляр следует за параметром obj в порядке сортировки.</returns>
+        public int CompareTo(object other)
+        {
+            var o = other as TopologyVertex;
+
+            if (o == null) throw new ArgumentException("Incorrect type or null of: ", nameof(other));
+
+            var ox = o.RegionX + o.Region.X;
+            var x = RegionX + Region.X;
+
+            var oy = o.RegionY + o.Region.Y;
+            var y = RegionY + Region.Y;
+
+            // Сравниваем по расстоянию между координатами вершинами с учётом координат участков и по месту их расположения 
+            return (int)(Math.Sqrt(Math.Pow(x - ox, 2) + Math.Pow(y - oy, 2))) * ((x - ox < 0 || y - oy < 0) ? -1 : 1);
         }
     }
 }
