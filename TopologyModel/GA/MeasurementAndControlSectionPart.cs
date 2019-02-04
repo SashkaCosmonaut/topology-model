@@ -8,7 +8,7 @@ namespace TopologyModel.GA
     /// <summary>
     /// Класс той части секции топологии, в которой находится устройство учёта или управления.
     /// </summary>
-    public class MeasurementAndControlPart : AbstractTopologySectionPart
+    public class MeasurementAndControlSectionPart : AbstractTopologySectionPart
     {
         /// <summary>
         /// Устройство учёта или управления, которое используется в данной секции.
@@ -102,7 +102,7 @@ namespace TopologyModel.GA
         {
             try
             {
-                if (obj is MeasurementAndControlPart other)
+                if (obj is MeasurementAndControlSectionPart other)
                     return (Vertex == other.Vertex && MCD == other.MCD) ? 0 : 1;
             }
             catch (Exception ex)
