@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TopologyModel.Graphs;
 using TopologyModel.Tools;
-using TopologyModel.TopologyGraphs;
 
 namespace TopologyModel.GA
 {
@@ -20,7 +20,7 @@ namespace TopologyModel.GA
         /// Словарь связей между элементами одной и более секций, где ключ - УСПД, из которого исходит связь, а значение - также словарь, 
         /// в котором ключ - канал передачи, соединяющий УСПД и КУ, а значение - перечисление граней графа связи, в которых находятся КУ.
         /// </summary>
-        public Dictionary<DataAcquisitionPart, Dictionary<DataChannel, IEnumerable<TopologyEdge>>> Pathes { get; }
+        public Dictionary<DataAcquisitionSectionPart, Dictionary<DataChannel, IEnumerable<TopologyEdge>>> Pathes { get; }
 
         /// <summary>
         /// Создать новую топологию - декодировать фенотип хромосомы на базе её текущего генотипа.
@@ -31,7 +31,7 @@ namespace TopologyModel.GA
             try
             {
                 Sections = new TopologySection[chromosome.CurrentProject.MCZs.Length];
-                Pathes = new Dictionary<DataAcquisitionPart, Dictionary<DataChannel, IEnumerable<TopologyEdge>>>();
+                Pathes = new Dictionary<DataAcquisitionSectionPart, Dictionary<DataChannel, IEnumerable<TopologyEdge>>>();
 
                 DecodeSections(chromosome);
                 DecodePathes(chromosome);
@@ -50,7 +50,7 @@ namespace TopologyModel.GA
         {
             try
             {
-                for (var sectionIndex = 0; sectionIndex < chromosome.Length / TopologyChromosome.GENES_FOR_SECTION; sectionIndex++)
+                for (var sectionIndex = 0; sectionIndex < chromosome.Length / TopologyChromosome.GENES_IN_SECTION; sectionIndex++)
                 {
                     if (Sections[sectionIndex] == null)
                         Sections[sectionIndex] = new TopologySection();
@@ -78,7 +78,7 @@ namespace TopologyModel.GA
 
                     foreach (var channelGroup in dadGroup.GroupBy(w => w.Channel))  // Группы секций группируем по каналам передачи данных, которые связывают КУ и УСПД 
                     {
-                        // Находим путь между УСПД и всеми счётчиками по каждому каналу передачи в группе секций
+                        // Находим путь между УСПД и всеми КУ по каждому каналу передачи в группе секций
                         var path = TopologyPathfinder.SectionShortestPath(chromosome.CurrentProject.Graph, dadGroup.Key.Vertex, channelGroup.Select(q => q.MACPart.Vertex), channelGroup.Key);
 
                         channelPathes.Add(channelGroup.Key, path);
