@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TopologyModel.Enumerations;
 using TopologyModel.Tools;
 
-namespace TopologyModel.TopologyGraphs
+namespace TopologyModel.Graphs
 {
     /// <summary>
     /// Класс для поиска путей для секций между вершинами графа.

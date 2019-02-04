@@ -2,22 +2,21 @@
 using GeneticSharp.Domain.Fitnesses;
 using System;
 using System.Linq;
-using TopologyModel.TopologyGraphs;
 
 namespace TopologyModel.GA
 {
-	/// <summary>
-	/// Класс фитнес-функции для топологии.
-	/// </summary>
-	public class TopologyFitness : IFitness
-	{
+    /// <summary>
+    /// Класс фитнес-функции для топологии.
+    /// </summary>
+    public class TopologyFitness : IFitness
+    {
         /// <summary>
         /// Оценить приспособленность хромосомы топологии.
         /// </summary>
         /// <param name="chromosome">Оцениваемая хромосома с топологией.</param>
         /// <returns>Результат оценки.</returns>
-		public double Evaluate(IChromosome chromosome)
-		{
+        public double Evaluate(IChromosome chromosome)
+        {
             try
             {
                 var topologyChromosome = chromosome as TopologyChromosome;
@@ -35,7 +34,8 @@ namespace TopologyModel.GA
                 }
 
                 // Рассчитываем общую сумму всех полученных выше значений плюс затраты на эксплуатацию во времени 
-                // topology.Pathes;
+                // topology.Pathes; 
+                // TODO: рассчитать стоимость КПД
 
                 return fitness;     // Значение общей стоимости и будет результатом фитнес функции
             }
@@ -44,6 +44,6 @@ namespace TopologyModel.GA
                 Console.WriteLine("Evaluate failed! {0}", ex.Message);
                 return 0;
             }
-		}
-	}
+        }
+    }
 }
