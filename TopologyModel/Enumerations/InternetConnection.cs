@@ -1,24 +1,27 @@
 ﻿namespace TopologyModel.Enumerations
 {
-	/// <summary>
-	/// Варианты подключения к сети Интернет.
-	/// </summary>
-	public enum InternetConnection
-	{
-		GPRS,
+    /// <summary>
+    /// Варианты подключения УСПД к сети Интернет.
+    /// </summary>
+    public enum InternetConnection
+    {
+        GPRS,
 
-		GSM,
+        GSM,
 
-		_3G,
+        _3G,
 
-		LTE,
+        LTE,
 
-		LPWAN,
+        LPWAN,
 
-		WiFi,
+        WiFi,
 
-		Ethernet,
+        Ethernet,
 
+        /// <summary>
+        /// Ручной сбор данных.
+        /// </summary>
         Manual
-	}
+    }
 }
