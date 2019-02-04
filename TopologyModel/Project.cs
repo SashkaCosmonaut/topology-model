@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using TopologyModel.Enumerations;
+using TopologyModel.Graphs;
 using TopologyModel.Regions;
 using TopologyModel.Tools;
-using TopologyModel.TopologyGraphs;
 
 namespace TopologyModel
 {
@@ -16,17 +16,17 @@ namespace TopologyModel
         #region ProjectProperties
 
         /// <summary>
-        /// Цель минимизации в проекте (время или деньги).
+        /// Цель минимизации в проекте (время, деньги или иное).
         /// </summary>
         public CostType MinimizationGoal { get; set; }
 
         /// <summary>
-        /// Высота учитываемого размера всей территории предприятия.
+        /// Высота учитываемого размера всей территории предприятия в метрах.
         /// </summary>
         public uint Height { get; set; }
 
         /// <summary>
-        /// Ширина учитываемого размера всей территории предприятия.
+        /// Ширина учитываемого размера всей территории предприятия в метрах.
         /// </summary>
         public uint Width { get; set; }
 
@@ -42,6 +42,7 @@ namespace TopologyModel
 
         /// <summary>
         /// Требуется ли использовать локальный сервер, иначе будет использоваться удалённый сервер.
+        /// TODO: добавить координату сервера и его свойства, как УСПД, которые в ГА только будут выбираться, м.б. вынести в отдельный класс
         /// </summary>
         public bool UseLocalServer { get; set; }
 
@@ -86,7 +87,7 @@ namespace TopologyModel
         /// <summary>
         /// Массив всех участков предприятия.
         /// </summary>
-        public TopologyRegion[] Regions { get; set; }
+        public FacilityRegion[] Regions { get; set; }
 
         /// <summary>
         /// Перечень имеющихся на предприятии ТУУ
