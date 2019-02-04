@@ -11,7 +11,7 @@ namespace TopologyModel.GA
         /// <summary>
         /// Количество генов в секции топологии хромосомы.
         /// </summary>
-        public const int GENES_FOR_SECTION = 5;
+        public const int GENES_IN_SECTION = 5;
 
         /// <summary>
         /// Ссылка на текущий проект с параметрами для генерации топологии сети.
@@ -23,7 +23,7 @@ namespace TopologyModel.GA
         /// количество мест учёта и управления, умноженное на количество генов в одной секции хромосомы.
         /// </summary>
         /// <param name="project">Проект по генерации топологии сети.</param>
-        public TopologyChromosome(Project project) : base(project.MCZs.Length * GENES_FOR_SECTION)
+        public TopologyChromosome(Project project) : base(project.MCZs.Length * GENES_IN_SECTION)
         {
             try
             {
