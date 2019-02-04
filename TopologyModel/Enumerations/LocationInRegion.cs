@@ -1,7 +1,7 @@
 ﻿namespace TopologyModel.Enumerations
 {
     /// <summary>
-    /// Перечисление месторасположений внутри участка.
+    /// Перечисление вариантов месторасположения узлов графа внутри участка (перечисляются по часовой стрелке).
     /// </summary>
     public enum LocationInRegion
     {

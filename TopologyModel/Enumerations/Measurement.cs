@@ -1,23 +1,23 @@
 ﻿namespace TopologyModel.Enumerations
 {
-	/// <summary>
-	/// Измерения потребления энергоресурсов.
-	/// </summary>
-	public enum Measurement
-	{
-		ElectricityConsumption,
+    /// <summary>
+    /// Перечисление существующих на предприятии измерений потребления энергоресурсов.
+    /// </summary>
+    public enum Measurement
+    {
+        ElectricityConsumption,
 
-		ColdWaterConsumption,
+        ColdWaterConsumption,
 
         HotWaterConsumption,
 
         GasConsumption,
 
-		Temperature,
+        Temperature,
 
-		Humidity,
-		
-		Level,
+        Humidity,
+
+        Level,
 
         BatteryLevel,
 
