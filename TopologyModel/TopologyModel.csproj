@@ -123,43 +123,39 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CalculationResult.cs" />
-    <Compile Include="Enumerations\CostType.cs" />
+    <Compile Include="Enumerations\DataChannelCommunication.cs" />
     <Compile Include="Enumerations\Control.cs" />
-    <Compile Include="Enumerations\LocationInRegion.cs" />
-    <Compile Include="GA\DataAcquisitionPart.cs" />
-    <Compile Include="GA\MeasurementAndControlPart.cs" />
-    <Compile Include="GA\Topology.cs" />
-    <Compile Include="GA\TopologySection.cs" />
-    <Compile Include="GA\AbstractTopologySectionPart.cs" />
-    <Compile Include="GA\TransmissionPart.cs" />
-    <Compile Include="Tools\AbstractTool.cs" />
-    <Compile Include="Tools\DataAcquisitionDevice.cs" />
-    <Compile Include="Tools\DataChannel.cs" />
-    <Compile Include="Tools\AbstractDevice.cs" />
-    <Compile Include="Enumerations\Measurement.cs" />
-    <Compile Include="Tools\MeasurementAndControlDevice.cs" />
-    <Compile Include="GA\TopologyChromosome .cs" />
-    <Compile Include="GA\TopologyFitness.cs" />
-    <Compile Include="Regions\MeasurementAndControlZone.cs" />
+    <Compile Include="Enumerations\CostType.cs" />
+    <Compile Include="Enumerations\DataChannelTopology.cs" />
     <Compile Include="Enumerations\InternetConnection.cs" />
+    <Compile Include="Enumerations\LocationInRegion.cs" />
+    <Compile Include="Enumerations\Measurement.cs" />
+    <Compile Include="GA\AbstractTopologySectionPart.cs" />
+    <Compile Include="GA\DataAcquisitionSectionPart.cs" />
+    <Compile Include="GA\MeasurementAndControlSectionPart.cs" />
+    <Compile Include="GA\Topology.cs" />
+    <Compile Include="GA\TopologyChromosome.cs" />
+    <Compile Include="GA\TopologyFitness.cs" />
+    <Compile Include="GA\TopologySection.cs" />
+    <Compile Include="Graphs\TopologyEdge.cs" />
+    <Compile Include="Graphs\TopologyGraph.cs" />
+    <Compile Include="Graphs\TopologyPathfinder.cs" />
+    <Compile Include="Graphs\TopologyVertex.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Enumerations\Protocol.cs" />
     <Compile Include="Regions\AbstractRegion.cs" />
-    <Compile Include="Regions\TopologyRegion.cs" />
-    <Compile Include="Enumerations\DataChannelTopology.cs" />
-    <Compile Include="Tools\TransceiverDevice.cs" />
+    <Compile Include="Regions\FacilityRegion.cs" />
+    <Compile Include="Regions\MeasurementAndControlZone.cs" />
+    <Compile Include="Tools\AbstractDevice.cs" />
+    <Compile Include="Tools\AbstractTool.cs" />
+    <Compile Include="Tools\DataAcquisitionDevice.cs" />
+    <Compile Include="Tools\DataChannel.cs" />
+    <Compile Include="Tools\MeasurementAndControlDevice.cs" />
     <Compile Include="Tools\ToolSet.cs" />
-    <Compile Include="TopologyGraphs\TopologyEdge.cs" />
-    <Compile Include="TopologyGraphs\TopologyGraph.cs" />
-    <Compile Include="TopologyGraphs\TopologyPathfinder.cs" />
-    <Compile Include="TopologyGraphs\TopologyVertex.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="ClassDiagram1.cd" />
     <None Include="Configs\Config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
