@@ -17,22 +17,22 @@ namespace TopologyModel.GA
         /// </summary>
         protected static Func<TopologyChromosome, int, int>[] GeneValueGenerationFuncs = new Func<TopologyChromosome, int, int>[]
         {
-            MeasurementAndControlPart.GenerateDeviceGene,
-            MeasurementAndControlPart.GenerateVertexGene,
-            DataAcquisitionPart.GenerateDeviceGene,
-            DataAcquisitionPart.GenerateVertexGene,
-            GenerateChannelGene,
+            MeasurementAndControlSectionPart.GenerateDeviceGene,
+            MeasurementAndControlSectionPart.GenerateVertexGene,
+            DataAcquisitionSectionPart.GenerateDeviceGene,
+            DataAcquisitionSectionPart.GenerateVertexGene,
+            GenerateDataChannelGene,
         };
 
         /// <summary>
         /// Параметры выбора и расположения устройства учёта и управления, а так же исходящего КПД.
         /// </summary>
-        public MeasurementAndControlPart MACPart { get; } = new MeasurementAndControlPart();
+        public MeasurementAndControlSectionPart MACPart { get; } = new MeasurementAndControlSectionPart();
 
         /// <summary>
         /// Параметры выбора и расположения УСПД, а так же входящего КПД.
         /// </summary>
-        public DataAcquisitionPart DADPart { get; } = new DataAcquisitionPart();
+        public DataAcquisitionSectionPart DADPart { get; } = new DataAcquisitionSectionPart();
 
         /// <summary>
         /// Канал передачи данных, который используется для передачи данных между КУ и УСПД.
@@ -48,7 +48,7 @@ namespace TopologyModel.GA
         {
             try
             {
-                var sectionGenes = chromosome.GetGenes()       // Получаем гены только данной секции
+                var sectionGenes = chromosome.GetGenes()       // Получаем значения генов только данной секции
                     .Select((gene, index) => new { Value = (int)gene.Value, Index = index })
                     .Where(q => GetSectionIndex(q.Index) == sectionIndex)
                     .Select(q => q.Value)
@@ -101,20 +101,20 @@ namespace TopologyModel.GA
         /// <param name="chromosome">Текущая хромосома.</param>
         /// <param name="sectionIndex">Индекс секции, для которой генерируется ген.</param>
         /// <returns>Целочисленное значение случайного гена, соответствующее индексу в массиве доступных каналов передачи данных.</returns>
-        protected static int GenerateChannelGene(TopologyChromosome chromosome, int sectionIndex)
+        protected static int GenerateDataChannelGene(TopologyChromosome chromosome, int sectionIndex)
         {
             try
             {
                 // Декодируем КУ из гена, которое выбрано в данной секции (оно идёт первым в хромосоме)
-                var mcd = chromosome.CurrentProject.AvailableTools.MCDs[(int)chromosome.GetGene(sectionIndex * TopologyChromosome.GENES_FOR_SECTION).Value];
+                var mcd = chromosome.CurrentProject.AvailableTools.MCDs[(int)chromosome.GetGene(sectionIndex * TopologyChromosome.GENES_IN_SECTION).Value];
 
                 // Декодируем УСПД из гена, которое выбрано в данной секции (оно идёт третьим в хромосоме)
-                var dad = chromosome.CurrentProject.AvailableTools.DADs[(int)chromosome.GetGene(sectionIndex * TopologyChromosome.GENES_FOR_SECTION + 2).Value];
+                var dad = chromosome.CurrentProject.AvailableTools.DADs[(int)chromosome.GetGene(sectionIndex * TopologyChromosome.GENES_IN_SECTION + 2).Value];
 
                 var availableChannels = chromosome.CurrentProject.AvailableTools.DCs
                     .Select((channel, index) => new { Channel = channel, Index = index })
-                    .Where(q => mcd.SendingProtocols.Contains(q.Channel.Protocol) && 
-                                dad.ReceivingProtocols.Keys.Contains(q.Channel.Protocol))   // Выбираем те КПД, которые совместимы с данным КУ и УСПД
+                    .Where(q => mcd.SendingCommunications.Contains(q.Channel.Communication) &&
+                                dad.ReceivingCommunications.Keys.Contains(q.Channel.Communication))   // Выбираем те КПД, которые совместимы с данным КУ и УСПД
                     .ToArray();
 
                 var randomIndex = RandomizationProvider.Current.GetInt(0, availableChannels.Count());
@@ -123,7 +123,7 @@ namespace TopologyModel.GA
             }
             catch (Exception ex)
             {
-                Console.WriteLine("GenerateChannelGene failed! {0}", ex.Message);
+                Console.WriteLine("GenerateDataChannelGene failed! {0}", ex.Message);
                 return 0;
             }
         }
@@ -135,7 +135,7 @@ namespace TopologyModel.GA
         /// <returns>Индекс секции.</returns>
         public static int GetSectionIndex(int geneIndex)
         {
-            return geneIndex / TopologyChromosome.GENES_FOR_SECTION;
+            return geneIndex / TopologyChromosome.GENES_IN_SECTION;
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace TopologyModel.GA
         /// <returns>Индекс гена внутри секции.</returns>
         public static int GetGeneInSectionIndex(int geneIndex)
         {
-            return geneIndex % TopologyChromosome.GENES_FOR_SECTION;
+            return geneIndex % TopologyChromosome.GENES_IN_SECTION;
         }
     }
 }
