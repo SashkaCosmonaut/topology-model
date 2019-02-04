@@ -4,7 +4,7 @@
     /// БД инструментов для использования в проекте.
     /// </summary>
     public class ToolSet
-	{
+    {
         /// <summary>
         /// Массив доступных конечных устройств.
         /// </summary>
@@ -16,13 +16,8 @@
 		public DataChannel[] DCs { get; set; }
 
         /// <summary>
-        /// Массив доступных приемопередатчиков.
-        /// </summary>
-		public TransceiverDevice[] TDs { get; set; }
-
-        /// <summary>
         /// Массив доступных УСПД.
         /// </summary>
 		public DataAcquisitionDevice[] DADs { get; set; }
-	}
+    }
 }
