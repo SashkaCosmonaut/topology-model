@@ -209,7 +209,7 @@
 		{
 			"Priority": 2,
 			"Measurements": [ 4, 5 ],
-			"Сontrols": null,
+			"Controls": null,
 			"IsDeviceReplacementAvailable": true,
 			"Name": "Зона замера температуры и влажности",
 			"X": 2,
@@ -220,7 +220,7 @@
 		{
 			"Priority": 2,
 			"Measurements": [ 4, 5 ],
-			"Сontrols": null,
+			"Controls": null,
 			"IsDeviceReplacementAvailable": true,
 			"Name": "Зона замера температуры и влажности",
 			"X": 3,
@@ -231,7 +231,7 @@
 		{
 			"Priority": 2,
 			"Measurements": [ 8 ],
-			"Сontrols": [ 0 ],
+			"Controls": [ 0 ],
 			"IsDeviceReplacementAvailable": true,
 			"Name": "Замеры параметра станка и удалённое отключение",
 			"X": 6,
@@ -242,7 +242,7 @@
 		{
 			"Priority": 2,
 			"Measurements": [ 8 ],
-			"Сontrols": [ 0 ],
+			"Controls": [ 0 ],
 			"IsDeviceReplacementAvailable": true,
 			"Name": "Замеры параметра станка и удалённое отключение",
 			"X": 8,
@@ -253,7 +253,7 @@
 		{
 			"Priority": 2,
 			"Measurements": [ 8 ],
-			"Сontrols": [ 0 ],
+			"Controls": [ 0 ],
 			"IsDeviceReplacementAvailable": true,
 			"Name": "Замеры параметра станка и удалённое отключение",
 			"X": 7,
@@ -264,7 +264,7 @@
 		{
 			"Priority": 1,
 			"Measurements": [ 0, 0 ],
-			"Сontrols": null,
+			"Controls": null,
 			"IsDeviceReplacementAvailable": false,
 			"Name": "Потребление электроэнергии двумя арендаторами",
 			"X": 1,
@@ -275,7 +275,7 @@
 		{
 			"Priority": 0,
 			"Measurements": [ 1 ],
-			"Сontrols": null,
+			"Controls": null,
 			"IsDeviceReplacementAvailable": true,
 			"Name": "Потребление ХВС цехом",
 			"X": 3,
@@ -286,7 +286,7 @@
 		{
 			"Priority": 1,
 			"Measurements": [ 0 ],
-			"Сontrols": null,
+			"Controls": null,
 			"IsDeviceReplacementAvailable": true,
 			"Name": "Потребление электроэнергии цехом",
 			"X": 5,
@@ -299,8 +299,8 @@
 		"MCDs": [
 			{
 				"Measurements": [ 0 ],
-				"Сontrols": null,
-				"SendingProtocols": [ 0 ],
+				"Controls": null,
+				"SendingCommunications": [ 0 ],
 				"IsPowerRequired": false,
 				"BatteryTime": "00:00:00",
 				"BatteryServicePrice": 0.0,
@@ -311,8 +311,8 @@
 			},
 			{
 				"Measurements": [ 0 ],
-				"Сontrols": null,
-				"SendingProtocols": [ 0, 1 ],
+				"Controls": null,
+				"SendingCommunications": [ 0, 1 ],
 				"IsPowerRequired": false,
 				"BatteryTime": "00:00:00",
 				"BatteryServicePrice": 0.0,
@@ -323,8 +323,8 @@
 			},
 			{
 				"Measurements": [ 0 ],
-				"Сontrols": null,
-				"SendingProtocols": [ 0, 1, 4 ],
+				"Controls": null,
+				"SendingCommunications": [ 0, 1, 4 ],
 				"IsPowerRequired": false,
 				"BatteryTime": "00:00:00",
 				"BatteryServicePrice": 0.0,
@@ -335,8 +335,8 @@
 			},
 			{
 				"Measurements": [ 0 ],
-				"Сontrols": null,
-				"SendingProtocols": [ 0, 12 ],
+				"Controls": null,
+				"SendingCommunications": [ 0, 12 ],
 				"IsPowerRequired": false,
 				"BatteryTime": "00:00:00",
 				"BatteryServicePrice": 0.0,
@@ -347,8 +347,8 @@
 			},
 			{
 				"Measurements": [ 1 ],
-				"Сontrols": null,
-				"SendingProtocols": [ 0 ],
+				"Controls": null,
+				"SendingCommunications": [ 0 ],
 				"IsPowerRequired": false,
 				"BatteryTime": "00:00:00",
 				"BatteryServicePrice": 0.0,
@@ -359,8 +359,8 @@
 			},
 			{
 				"Measurements": [ 1 ],
-				"Сontrols": null,
-				"SendingProtocols": [ 0, 1 ],
+				"Controls": null,
+				"SendingCommunications": [ 0, 1 ],
 				"IsPowerRequired": false,
 				"BatteryTime": "00:00:00",
 				"BatteryServicePrice": 0.0,
@@ -371,8 +371,8 @@
 			},
 			{
 				"Measurements": [ 1 ],
-				"Сontrols": null,
-				"SendingProtocols": [ 0, 1, 4 ],
+				"Controls": null,
+				"SendingCommunications": [ 0, 1, 4 ],
 				"IsPowerRequired": true,
 				"BatteryTime": "00:00:00",
 				"BatteryServicePrice": 0.0,
@@ -383,8 +383,8 @@
 			},
 			{
 				"Measurements": [ 1 ],
-				"Сontrols": null,
-				"SendingProtocols": [ 0, 13 ],
+				"Controls": null,
+				"SendingCommunications": [ 0, 13 ],
 				"IsPowerRequired": true,
 				"BatteryTime": "00:00:00",
 				"BatteryServicePrice": 0.0,
@@ -395,8 +395,8 @@
 			},
 			{
 				"Measurements": [ 4, 5 ],
-				"Сontrols": null,
-				"SendingProtocols": [ 4 ],
+				"Controls": null,
+				"SendingCommunications": [ 4 ],
 				"IsPowerRequired": false,
 				"BatteryTime": "00:00:00",
 				"BatteryServicePrice": 0.0,
@@ -407,8 +407,8 @@
 			},
 			{
 				"Measurements": [ 4, 5, 7 ],
-				"Сontrols": null,
-				"SendingProtocols": [ 8 ],
+				"Controls": null,
+				"SendingCommunications": [ 8 ],
 				"IsPowerRequired": false,
 				"BatteryTime": "30.00:00:00",
 				"BatteryServicePrice": 100.0,
@@ -419,8 +419,8 @@
 			},
 			{
 				"Measurements": [ 4, 5, 7 ],
-				"Сontrols": null,
-				"SendingProtocols": [ 6 ],
+				"Controls": null,
+				"SendingCommunications": [ 6 ],
 				"IsPowerRequired": false,
 				"BatteryTime": "30.00:00:00",
 				"BatteryServicePrice": 100.0,
@@ -431,8 +431,8 @@
 			},
 			{
 				"Measurements": [ 4, 5, 7 ],
-				"Сontrols": null,
-				"SendingProtocols": [ 7 ],
+				"Controls": null,
+				"SendingCommunications": [ 7 ],
 				"IsPowerRequired": false,
 				"BatteryTime": "60.00:00:00",
 				"BatteryServicePrice": 100.0,
@@ -443,8 +443,8 @@
 			},
 			{
 				"Measurements": [ 8 ],
-				"Сontrols": [ 0 ],
-				"SendingProtocols": [ 4 ],
+				"Controls": [ 0 ],
+				"SendingCommunications": [ 4 ],
 				"IsPowerRequired": false,
 				"BatteryTime": "00:00:00",
 				"BatteryServicePrice": 0.0,
@@ -455,8 +455,8 @@
 			},
 			{
 				"Measurements": [ 8, 7 ],
-				"Сontrols": [ 0 ],
-				"SendingProtocols": [ 8 ],
+				"Controls": [ 0 ],
+				"SendingCommunications": [ 8 ],
 				"IsPowerRequired": false,
 				"BatteryTime": "30.00:00:00",
 				"BatteryServicePrice": 100.0,
@@ -467,8 +467,8 @@
 			},
 			{
 				"Measurements": [ 8, 7 ],
-				"Сontrols": [ 0 ],
-				"SendingProtocols": [ 6 ],
+				"Controls": [ 0 ],
+				"SendingCommunications": [ 6 ],
 				"IsPowerRequired": false,
 				"BatteryTime": "30.00:00:00",
 				"BatteryServicePrice": 100.0,
@@ -479,8 +479,8 @@
 			},
 			{
 				"Measurements": [ 8, 7 ],
-				"Сontrols": [ 0 ],
-				"SendingProtocols": [ 7 ],
+				"Controls": [ 0 ],
+				"SendingCommunications": [ 7 ],
 				"IsPowerRequired": false,
 				"BatteryTime": "60.00:00:00",
 				"BatteryServicePrice": 100.0,
@@ -493,7 +493,7 @@
 		"DCs": [
 			{
 				"IsWireless": false,
-				"Protocol": 4,
+				"Communication": 4,
 				"Topology": 2,
 				"MaxRange": 1000.0,
 				"MaxDevicesConnected": 32,
@@ -504,7 +504,7 @@
 			},
 			{
 				"IsWireless": true,
-				"Protocol": 7,
+				"Communication": 7,
 				"Topology": 0,
 				"MaxRange": 100.0,
 				"MaxDevicesConnected": 100,
@@ -515,7 +515,7 @@
 			},
 			{
 				"IsWireless": true,
-				"Protocol": 6,
+				"Communication": 6,
 				"Topology": 1,
 				"MaxRange": 10.0,
 				"MaxDevicesConnected": 100,
@@ -526,7 +526,7 @@
 			},
 			{
 				"IsWireless": true,
-				"Protocol": 8,
+				"Communication": 8,
 				"Topology": 0,
 				"MaxRange": 30.0,
 				"MaxDevicesConnected": 20,
@@ -537,7 +537,7 @@
 			},
 			{
 				"IsWireless": false,
-				"Protocol": 1,
+				"Communication": 1,
 				"Topology": 1,
 				"MaxRange": 100.0,
 				"MaxDevicesConnected": 1,
@@ -548,7 +548,7 @@
 			},
 			{
 				"IsWireless": false,
-				"Protocol": 0,
+				"Communication": 0,
 				"Topology": 1,
 				"MaxRange": 1000.0,
 				"MaxDevicesConnected": 100,
@@ -559,7 +559,7 @@
 			},
 			{
 				"IsWireless": false,
-				"Protocol": 12,
+				"Communication": 12,
 				"Topology": 1,
 				"MaxRange": 1.0,
 				"MaxDevicesConnected": 1,
@@ -570,7 +570,7 @@
 			},
 			{
 				"IsWireless": false,
-				"Protocol": 13,
+				"Communication": 13,
 				"Topology": 1,
 				"MaxRange": 1.0,
 				"MaxDevicesConnected": 1,
@@ -580,60 +580,14 @@
 				"InstallationTime": "00:00:00"
 			}
 		],
-		"TDs": [
-			{
-				"ReceivingProtocols": { "RS485": 32 },
-				"SendingProtocols": [ 7 ],
-				"IsPowerRequired": false,
-				"BatteryTime": "1.06:00:00",
-				"BatteryServicePrice": 100.0,
-				"Name": "Приемопередатчик с RS485-ZigBee",
-				"PurchasePrice": 5000.0,
-				"InstallationPrice": 0.0,
-				"InstallationTime": "00:00:00"
-			},
-			{
-				"ReceivingProtocols": { "ZigBee": 100 },
-				"SendingProtocols": [ 4 ],
-				"IsPowerRequired": false,
-				"BatteryTime": "1.06:00:00",
-				"BatteryServicePrice": 100.0,
-				"Name": "Приемопередатчик с ZigBee-RS485",
-				"PurchasePrice": 5000.0,
-				"InstallationPrice": 0.0,
-				"InstallationTime": "00:00:00"
-			},
-			{
-				"ReceivingProtocols": { "Analog": 10 },
-				"SendingProtocols": [ 4 ],
-				"IsPowerRequired": false,
-				"BatteryTime": "1.06:00:00",
-				"BatteryServicePrice": 100.0,
-				"Name": "Приемопередатчик с Analog-RS485",
-				"PurchasePrice": 2000.0,
-				"InstallationPrice": 0.0,
-				"InstallationTime": "00:00:00"
-			},
-			{
-				"ReceivingProtocols": { "Analog": 10 },
-				"SendingProtocols": [ 6 ],
-				"IsPowerRequired": false,
-				"BatteryTime": "1.06:00:00",
-				"BatteryServicePrice": 100.0,
-				"Name": "Приемопередатчик с Analog-RS485",
-				"PurchasePrice": 3500.0,
-				"InstallationPrice": 0.0,
-				"InstallationTime": "00:00:00"
-			}
-		],
 		"DADs": [
 			{
-				"ReceivingProtocols": {
+				"ReceivingCommunications": {
 					"Impulse": 10,
 					"RS485": 32
 				},
-				"ServerSendingProtocols": [ 6, 5, 2 ],
-				"SendingProtocols": null,
+				"ServerConnections": [ 6, 5, 2 ],
+				"SendingCommunications": null,
 				"IsPowerRequired": true,
 				"BatteryTime": "00:00:00",
 				"BatteryServicePrice": 0.0,
@@ -643,12 +597,12 @@
 				"InstallationTime": "01:00:00"
 			},
 			{
-				"ReceivingProtocols": {
+				"ReceivingCommunications": {
 					"Impulse": 10,
 					"RS485": 32
 				},
-				"ServerSendingProtocols": [ 4 ],
-				"SendingProtocols": null,
+				"ServerConnections": [ 4 ],
+				"SendingCommunications": null,
 				"IsPowerRequired": true,
 				"BatteryTime": "00:00:00",
 				"BatteryServicePrice": 0.0,
@@ -658,9 +612,9 @@
 				"InstallationTime": "01:00:00"
 			},
 			{
-				"ReceivingProtocols": { "RS485": 32 },
-				"ServerSendingProtocols": [ 2 ],
-				"SendingProtocols": null,
+				"ReceivingCommunications": { "RS485": 32 },
+				"ServerConnections": [ 2 ],
+				"SendingCommunications": null,
 				"IsPowerRequired": true,
 				"BatteryTime": "00:00:00",
 				"BatteryServicePrice": 0.0,
@@ -670,9 +624,9 @@
 				"InstallationTime": "01:00:00"
 			},
 			{
-				"ReceivingProtocols": { "RS485": 32 },
-				"ServerSendingProtocols": [ 2 ],
-				"SendingProtocols": null,
+				"ReceivingCommunications": { "RS485": 32 },
+				"ServerConnections": [ 2 ],
+				"SendingCommunications": null,
 				"IsPowerRequired": false,
 				"BatteryTime": "30.00:00:00",
 				"BatteryServicePrice": 1000.0,
@@ -682,9 +636,9 @@
 				"InstallationTime": "01:00:00"
 			},
 			{
-				"ReceivingProtocols": { "Electr_DAD_1": 1 },
-				"ServerSendingProtocols": [ 2 ],
-				"SendingProtocols": null,
+				"ReceivingCommunications": { "Electr_DAD_1": 1 },
+				"ServerConnections": [ 2 ],
+				"SendingCommunications": null,
 				"IsPowerRequired": false,
 				"BatteryTime": "00:00:00",
 				"BatteryServicePrice": 0.0,
@@ -694,9 +648,9 @@
 				"InstallationTime": "00:00:00"
 			},
 			{
-				"ReceivingProtocols": { "Water_DAD_1": 1 },
-				"ServerSendingProtocols": [ 2 ],
-				"SendingProtocols": null,
+				"ReceivingCommunications": { "Water_DAD_1": 1 },
+				"ServerConnections": [ 2 ],
+				"SendingCommunications": null,
 				"IsPowerRequired": false,
 				"BatteryTime": "00:00:00",
 				"BatteryServicePrice": 0.0,
@@ -706,9 +660,9 @@
 				"InstallationTime": "00:00:00"
 			},
 			{
-				"ReceivingProtocols": { "Analog": 100 },
-				"ServerSendingProtocols": [ 7 ],
-				"SendingProtocols": null,
+				"ReceivingCommunications": { "Analog": 100 },
+				"ServerConnections": [ 7 ],
+				"SendingCommunications": null,
 				"IsPowerRequired": false,
 				"BatteryTime": "30.00:00:00",
 				"BatteryServicePrice": 1000.0,
@@ -718,11 +672,11 @@
 				"InstallationTime": "00:00:00"
 			},
 			{
-				"ReceivingProtocols": {
+				"ReceivingCommunications": {
 					"Bluetooth": 30
 				},
-				"ServerSendingProtocols": [ 6, 5, 2 ],
-				"SendingProtocols": null,
+				"ServerConnections": [ 6, 5, 2 ],
+				"SendingCommunications": null,
 				"IsPowerRequired": true,
 				"BatteryTime": "00:00:00",
 				"BatteryServicePrice": 0.0,
@@ -732,11 +686,11 @@
 				"InstallationTime": "00:00:00"
 			},
 			{
-				"ReceivingProtocols": {
+				"ReceivingCommunications": {
 					"ZigBee": 30
 				},
-				"ServerSendingProtocols": [ 6, 5, 2 ],
-				"SendingProtocols": null,
+				"ServerConnections": [ 6, 5, 2 ],
+				"SendingCommunications": null,
 				"IsPowerRequired": true,
 				"BatteryTime": "00:00:00",
 				"BatteryServicePrice": 0.0,
@@ -746,11 +700,11 @@
 				"InstallationTime": "00:00:00"
 			},
 			{
-				"ReceivingProtocols": {
+				"ReceivingCommunications": {
 					"GHz24": 10
 				},
-				"ServerSendingProtocols": [ 6, 5, 2 ],
-				"SendingProtocols": null,
+				"ServerConnections": [ 6, 5, 2 ],
+				"SendingCommunications": null,
 				"IsPowerRequired": true,
 				"BatteryTime": "00:00:00",
 				"BatteryServicePrice": 0.0,
