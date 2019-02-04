@@ -6,39 +6,29 @@
     public abstract class AbstractRegion
     {
         /// <summary>
-        /// Глобальный автоприращиваемый идентификатор.
+        /// Наименование участка.
         /// </summary>
-        private static uint GlobalId = 0;
+        public string Name { get; set; }
 
         /// <summary>
-        /// Уникальный идентификатор участка.
+        /// Координата Х левого верхнего угла участка на территории предприятия.
         /// </summary>
-        public uint Id { get; protected set; }
+        public uint X { get; set; }
 
         /// <summary>
-		/// Наименование участка.
-		/// </summary>
-		public string Name { get; set; }
+        /// Координата Y левого верхнего угла участка на территории предприятия.
+        /// </summary>
+        public uint Y { get; set; }
 
-		/// <summary>
-		/// Координата Х левого верхнего угла участка на территории предприятия.
-		/// </summary>
-		public uint X { get; set; }
+        /// <summary>
+        /// Ширина участка по схеме в метрах.
+        /// </summary>
+        public uint Width { get; set; }
 
-		/// <summary>
-		/// Координата Y левого верхнего угла участка на территории предприятия.
-		/// </summary>
-		public uint Y { get; set; }
-
-		/// <summary>
-		/// Ширина участка по схеме в метрах.
-		/// </summary>
-		public uint Width { get; set; }
-
-		/// <summary>
-		/// Высота участка по схеме в метрах.
-		/// </summary>
-		public uint Height { get; set; }
+        /// <summary>
+        /// Высота участка по схеме в метрах.
+        /// </summary>
+        public uint Height { get; set; }
 
         /// <summary>
         /// Получить строковую интерпретацию участка.
@@ -46,21 +36,13 @@
         /// <returns>Строка с описанием свойств объекта участка.</returns>
         public override string ToString()
         {
-            return Id + ". " + Name;
+            return Name;
         }
 
         /// <summary>
-        /// Получить информацию в текстовом виде о свойствах участка.
+        /// Получить подробную информацию в текстовом виде о свойствах участка.
         /// </summary>
         /// <returns>Строка с информацией об участке.</returns>
         public abstract string GetInfo();
-
-        /// <summary>
-        /// Создать и проинициализировать некоторый участок по умолчанию.
-        /// </summary>
-        public AbstractRegion()
-        {
-            Id = ++GlobalId;
-        }
     }
 }
