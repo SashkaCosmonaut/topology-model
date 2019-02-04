@@ -1,6 +1,4 @@
-﻿using System;
-using TopologyModel.Enumerations;
-using TopologyModel.Graphs;
+﻿using TopologyModel.Enumerations;
 
 namespace TopologyModel.Tools
 {

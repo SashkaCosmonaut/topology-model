@@ -33,12 +33,12 @@ namespace TopologyModel.Tools
             try
             {
                 var measurementsResult = mcz.Measurements != null && mcz.Measurements.Any()
-                    ? mcz.Measurements.All(m => Measurements.Contains(m))   // Устройство подхдит, если содержит все измерения места
-                    : true;                                                 // Если нет измерений на месте, то устройство автоматически подходит    
+                    ? Measurements!= null && Measurements.Any() && mcz.Measurements.All(m => Measurements.Contains(m))  // Устройство подхдит, если содержит все измерения места
+                    : true;                                                                                             // Если нет измерений на месте, то устройство автоматически подходит    
 
                 var controlsResult = mcz.Controls != null && mcz.Controls.Any()
-                    ? mcz.Controls.All(c => Controls.Contains(c))           // Устройство подхдит, если поддерживает все управляющие воздействия места
-                    : true;                                                 // Если воздействий на месте не требуется, то устройство автоматически подходит    
+                    ? Controls != null && Controls.Any() && mcz.Controls.All(c => Controls.Contains(c)) // Устройство подхдит, если поддерживает все управляющие воздействия места
+                    : true;                                                                             // Если воздействий на месте не требуется, то устройство автоматически подходит    
 
                 return measurementsResult && controlsResult;
             }
