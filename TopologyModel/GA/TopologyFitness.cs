@@ -29,12 +29,20 @@ namespace TopologyModel.GA
 
                 var project = topologyChromosome.CurrentProject;
 
+                // 0. Считаем стоимость использования сервера
+                if (project.UseLocalServer)
+                    fitness += project.LocalServerMonthlyPayment * project.UsageMonths;
+                else
+                    fitness += project.RemoteServerMonthlyPayment * project.UsageMonths;
+
                 // 1. Группируем секции по УСПД
-                // 2. Перебираем группы
-                // 2.1. Считаем стоимость УСПД каждой группы, чем больше УСПД в общих местах, тем ниже стоимость
-                foreach (var dadGroup in topology.Sections.GroupBy(q => q.DADPart))
+                foreach (var dadGroup in topology.Sections.GroupBy(q => q.DADPart))     // 2. Перебираем группы
                 {
+                    // 2.1. Считаем стоимость УСПД каждой группы, чем больше УСПД в общих группах, тем ниже стоимость
                     fitness += dadGroup.Key.GetCost(project);
+
+                    // 2.2. Считаем суммарную стоимость счётчиков в группе
+                    fitness += dadGroup.Sum(q => q.MACPart.GetCost(project));
                 }
 
                 return -fitness;     // Значение общей стоимости и будет результатом фитнес функции

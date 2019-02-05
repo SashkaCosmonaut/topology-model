@@ -22,7 +22,7 @@
 			"HasPower": false,
 			"BadMobileInternetSignal": 1,
 			"Aggressiveness": [ 5, 5, 5, 5, 5 ],
-			"Unavailability": [ 5, 5, 5, 5, 10 ],
+			"Unavailability": [ 7, 7, 7, 7, 10 ],
 			"Laboriousness": [ 2, 2, 2, 2, 10 ],
 			"BadRadioTransmittance": [ 5, 5, 5, 5, 1 ],
 			"BadWiredTransmittance": [ 2, 2, 2, 2, 10 ],
@@ -38,7 +38,7 @@
 			"HasPower": false,
 			"BadMobileInternetSignal": 1,
 			"Aggressiveness": [ 2, 2, 2, 2, 2 ],
-			"Unavailability": [ 5, 5, 5, 5, 10 ],
+			"Unavailability": [ 6, 6, 6, 6, 10 ],
 			"Laboriousness": [ 2, 2, 2, 2, 10 ],
 			"BadRadioTransmittance": [ 5, 5, 5, 5, 1 ],
 			"BadWiredTransmittance": [ 2, 2, 2, 2, 10 ],
@@ -54,7 +54,7 @@
 			"HasPower": false,
 			"BadMobileInternetSignal": 1,
 			"Aggressiveness": [ 2, 2, 2, 2, 3 ],
-			"Unavailability": [ 2, 2, 2, 2, 10 ],
+			"Unavailability": [ 3, 3, 3, 3, 10 ],
 			"Laboriousness": [ 1, 1, 1, 1, 10 ],
 			"BadRadioTransmittance": [ 5, 5, 1, 5, 2 ],
 			"BadWiredTransmittance": [ 2, 2, 1, 2, 10 ],
@@ -182,7 +182,7 @@
 			"HasPower": false,
 			"BadMobileInternetSignal": 1,
 			"Aggressiveness": [ 2, 2, 2, 2, 3 ],
-			"Unavailability": [ 2, 2, 2, 2, 5 ],
+			"Unavailability": [ 3, 3, 3, 3, 5 ],
 			"Laboriousness": [ 2, 2, 2, 2, 2 ],
 			"BadRadioTransmittance": [ 5, 5, 5, 5, 1 ],
 			"BadWiredTransmittance": [ 2, 2, 2, 2, 4 ],
@@ -502,7 +502,7 @@
 				"MaxRange": 1000.0,
 				"MaxDevicesConnected": 32,
 				"Name": "Кабель RS-485",
-				"PurchasePrice": 0.0,
+				"PurchasePrice": 20.0,
 				"InstallationPrice": 100.0,
 				"InstallationTime": "00:10:00"
 			},
@@ -546,7 +546,7 @@
 				"MaxRange": 100.0,
 				"MaxDevicesConnected": 1,
 				"Name": "Импульсный канал",
-				"PurchasePrice": 0.0,
+				"PurchasePrice": 10.0,
 				"InstallationPrice": 0.0,
 				"InstallationTime": "00:00:00"
 			},
@@ -561,7 +561,7 @@
 				"InstallationPrice": 0.0,
 				"InstallationTime": "00:00:00"
 			},
-			{
+			/*	{
 				"IsWireless": false,
 				"Communication": 12,
 				"Topology": 1,
@@ -582,7 +582,7 @@
 				"PurchasePrice": 0.0,
 				"InstallationPrice": 0.0,
 				"InstallationTime": "00:00:00"
-			}
+			}*/
 		],
 		"DADs": [
 			{

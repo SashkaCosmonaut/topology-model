@@ -15,6 +15,7 @@ namespace TopologyModel.Regions
 
         /// <summary>
         /// Множество всех измерений потребления энергоресурсов, доступных на данной ТУУ
+        /// TODO: как быть, когда надо ставить несколько счётчиков на несколько измерений?
         /// </summary>
         public Measurement[] Measurements { get; set; }
 
