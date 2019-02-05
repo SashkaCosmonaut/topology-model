@@ -184,8 +184,11 @@ namespace TopologyModel.Graphs
             {
                 // Собираем грани путей как перечисление ключей и значений, где ключ - цвет пути, значение - грани пути, если топология не нулевая
                 var coloredEdges = topology?.Pathes
-                        .Select(q => new KeyValuePair<Color, TopologyEdge[]>(q.Key.Color, q.Value.Values.SelectMany(w => w).ToArray()))
-                        .ToArray()
+                    .Select(path =>
+                        new KeyValuePair<Color, TopologyEdge[]>(
+                            path.Key.Color, 
+                            path.Value.SelectMany(q => q.Value ?? new TopologyEdge[] { }).ToArray()))
+                    .ToArray()
                     ?? new KeyValuePair<Color, TopologyEdge[]>[] { };
 
                 // TODO: добавить дополнительные грани графу для случаев, когда вдоль одной грани несколько КПД
