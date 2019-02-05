@@ -635,7 +635,7 @@
 				"InstallationPrice": 3000.0,
 				"InstallationTime": "01:00:00"
 			},
-			{
+			/*			{
 				"ReceivingCommunications": { "Electr_DAD_1": 1 },
 				"ServerConnections": [ 2 ],
 				"SendingCommunications": null,
@@ -670,7 +670,7 @@
 				"PurchasePrice": 0.0,
 				"InstallationPrice": 0.0,
 				"InstallationTime": "00:00:00"
-			},
+			},*/
 			{
 				"ReceivingCommunications": {
 					"Bluetooth": 30
