@@ -118,8 +118,6 @@ namespace TopologyModel
 
                 Graph = new TopologyGraph(verticesMatrix, WeightCoefficients);
 
-                AddDefaultEquipment();
-
                 Console.WriteLine("Initialize the graph... Done!");
 
                 return true;
@@ -197,33 +195,6 @@ namespace TopologyModel
             {
                 Console.WriteLine("GetMCZsInVertex failed! {0}", ex.Message);
                 return null;
-            }
-        }
-
-        /// <summary>
-        /// Добавить в БД оборудования оборудование по умолчнанию.
-        /// </summary>
-        protected void AddDefaultEquipment()
-        {
-            try
-            {
-                // По умолчанию имеется ненайденный КПД для взаимодействия КУ и УСПД 
-                Equipments.DCs.Add(new DataChannel
-                {
-                    Communication = DataChannelCommunication.None,
-                    Name = "-"
-                });
-
-                // Каждое устройство также может иметь ненайденный КПД, если не нашлось способа связать КУ и УСПД
-                foreach (var item in Equipments.MCDs)
-                    item.SendingCommunications.Add(DataChannelCommunication.None);
-
-                foreach (var item in Equipments.DADs)
-                    item.ReceivingCommunications.Add(DataChannelCommunication.None, 0);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("AddDefaultEquipment failed! {0}", ex.Message);
             }
         }
     }

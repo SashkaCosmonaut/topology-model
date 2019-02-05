@@ -27,15 +27,15 @@ namespace TopologyModel.GA
 
                 var fitness = 0.0;  // Результирующее значение функции
 
-                foreach (var dadGroup in topology.Sections.GroupBy(q => q.DADPart))                         // Группируем секции по частям с УСПД и перебираем группы
-                {
-                    fitness += dadGroup.Key.GetCost(topologyChromosome.CurrentProject);                     // Рассчитываем целевую стоимость УСПД в группе
-                    fitness += dadGroup.Sum(q => q.MACPart.GetCost(topologyChromosome.CurrentProject));     // Рассчитываем целевую стоимость всех КУ в группе
-                }
+                var project = topologyChromosome.CurrentProject;
 
-                // Рассчитываем общую сумму всех полученных выше значений плюс затраты на эксплуатацию во времени 
-                // topology.Pathes; 
-                // TODO: рассчитать стоимость КПД
+                // 1. Группируем секции по УСПД
+                // 2. Перебираем группы
+                // 2.1. Считаем стоимость УСПД каждой группы, чем больше УСПД в общих местах, тем ниже стоимость
+                foreach (var dadGroup in topology.Sections.GroupBy(q => q.DADPart))
+                {
+                    fitness += dadGroup.Key.GetCost(project);
+                }
 
                 return -fitness;     // Значение общей стоимости и будет результатом фитнес функции
             }

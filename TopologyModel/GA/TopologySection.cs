@@ -105,21 +105,7 @@ namespace TopologyModel.GA
         {
             try
             {
-                // Декодируем КУ из гена, которое выбрано в данной секции (оно идёт первым в хромосоме)
-                var mcd = chromosome.CurrentProject.Equipments.MCDs[(int)chromosome.GetGene(sectionIndex * TopologyChromosome.GENES_IN_SECTION).Value];
-
-                // Декодируем УСПД из гена, которое выбрано в данной секции (оно идёт третьим в хромосоме)
-                var dad = chromosome.CurrentProject.Equipments.DADs[(int)chromosome.GetGene(sectionIndex * TopologyChromosome.GENES_IN_SECTION + 2).Value];
-
-                var availableChannels = chromosome.CurrentProject.Equipments.DCs
-                    .Select((channel, index) => new { Channel = channel, Index = index })
-                    .Where(q => mcd.SendingCommunications.Contains(q.Channel.Communication) &&
-                                dad.ReceivingCommunications.Keys.Contains(q.Channel.Communication))   // Выбираем те КПД, которые совместимы с данным КУ и УСПД
-                    .ToArray();
-
-                var randomIndex = RandomizationProvider.Current.GetInt(0, availableChannels.Count());
-
-                return availableChannels[randomIndex].Index;
+                return RandomizationProvider.Current.GetInt(0, chromosome.CurrentProject.Equipments.DCs.Length);
             }
             catch (Exception ex)
             {

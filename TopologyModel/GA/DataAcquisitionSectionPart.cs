@@ -54,17 +54,7 @@ namespace TopologyModel.GA
         {
             try
             {
-                // Декодируем КУ из гена, которое выбрано в данной секции (оно идёт первым в хромосоме)
-                var mcd = chromosome.CurrentProject.Equipments.MCDs[(int)chromosome.GetGene(sectionIndex * TopologyChromosome.GENES_IN_SECTION).Value];
-
-                var availableDADs = chromosome.CurrentProject.Equipments.DADs
-                    .Select((dad, index) => new { DAD = dad, Index = index })
-                    .Where(q => q.DAD.ReceivingCommunications.Keys.Any(w => mcd.SendingCommunications.Contains(w)))
-                    .ToArray();
-
-                var randomIndex = RandomizationProvider.Current.GetInt(0, availableDADs.Count());
-
-                return availableDADs[randomIndex].Index;
+                return RandomizationProvider.Current.GetInt(0, chromosome.CurrentProject.Equipments.DADs.Length);
             }
             catch (Exception ex)
             {

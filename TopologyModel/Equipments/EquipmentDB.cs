@@ -15,7 +15,7 @@ namespace TopologyModel.Equipments
         /// <summary>
         /// Массив доступных каналов передачи данных.
         /// </summary>
-		public List<DataChannel> DCs { get; set; }
+		public DataChannel[] DCs { get; set; }
 
         /// <summary>
         /// Массив доступных УСПД.
