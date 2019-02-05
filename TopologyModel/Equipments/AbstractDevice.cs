@@ -42,17 +42,19 @@ namespace TopologyModel.Equipments
             {
                 var cost = 0.0;
 
+                var vertexLaboriousness = 1 + vertex.LaboriousnessWeight / 10;
+
                 // TODO: добавить в свойства проекта час работы, чтобы можно было точнее считать затраты на всё вместе
                 if (project.MinimizationGoal == CostType.Time || project.MinimizationGoal == CostType.All)
                 {
                     // Для времени важно только время на установку оборудования, которое может возрасти втрое из-за трудоемкости
-                    cost += InstallationTime.TotalHours * vertex.LaboriousnessWeight / 10;
+                    cost += InstallationTime.TotalHours * vertexLaboriousness;
                 }
                 else if (project.MinimizationGoal != CostType.Time)
                 {
                     // Если не используем мастную рабочую силу, то умножаем стоимость установки 
                     // на трудоемкость проведения работ, которая может увеличить стоимость втрое
-                    cost += PurchasePrice + (project.UseLocalEmployee ? 0 : InstallationPrice * vertex.LaboriousnessWeight / 10);
+                    cost += PurchasePrice + (project.UseLocalEmployee ? 0 : InstallationPrice * vertexLaboriousness);
 
                     // Если учитываем стоимость обслуживания или всё подряд
                     if (project.MinimizationGoal == CostType.InstantAndMaintenanceMoney || project.MinimizationGoal == CostType.All)
@@ -60,7 +62,7 @@ namespace TopologyModel.Equipments
                         // Если не используем местную рабочую силу и на участке нет питания или оно вообще не требуется, 
                         // то добавляем стоимость замены батареек за весь период эксплуатации
                         if (!project.UseLocalEmployee && !(IsPowerRequired && vertex.Region.HasPower) && BatteryTime.TotalHours > 0)
-                            cost += (new TimeSpan((int)project.UsageMonths * 30, 0, 0, 0).TotalHours / BatteryTime.TotalHours) * BatteryServicePrice;
+                            cost += (new TimeSpan((int)project.UsageMonths * 30, 0, 0, 0).TotalHours / BatteryTime.TotalHours) * BatteryServicePrice * vertexLaboriousness;
                     }
                 }
 

@@ -37,7 +37,7 @@ namespace TopologyModel.GA
                 // topology.Pathes; 
                 // TODO: рассчитать стоимость КПД
 
-                return fitness;     // Значение общей стоимости и будет результатом фитнес функции
+                return -fitness;     // Значение общей стоимости и будет результатом фитнес функции
             }
             catch (Exception ex)
             {
