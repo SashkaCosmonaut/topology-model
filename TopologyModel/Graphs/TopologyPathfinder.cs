@@ -1,5 +1,7 @@
-﻿using System;
+﻿using QuickGraph.Algorithms;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using TopologyModel.Enumerations;
 using TopologyModel.Equipments;
 
@@ -69,7 +71,27 @@ namespace TopologyModel.Graphs
         /// <returns>Массив вершин пути в графе.</returns>
         private static IEnumerable<TopologyEdge> StarShortestPath(TopologyGraph graph, TopologyVertex source, IEnumerable<TopologyVertex> targets, DataChannel dataChannel)
         {
-            return null;
+            try
+            {
+                var resultPath = new List<TopologyEdge>();
+
+                // Задаём источник и способ расчёта весов   
+                var tryGetPath = graph.ShortestPathsDijkstra((edge) => { return dataChannel.IsWireless ? edge.WirelessWeight : edge.WiredWeight; }, source);
+
+                foreach (var target in targets.Where(t => t != source)) // Пропускаем случаи, когда УСПД и КУ находятся в одной вершине
+                {
+                    tryGetPath(target, out var path);
+
+                    resultPath.AddRange(path);
+                }
+
+                return resultPath;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("StarShortestPath failed! {0}", ex.Message);
+                return null;
+            }
         }
 
         /// <summary>
