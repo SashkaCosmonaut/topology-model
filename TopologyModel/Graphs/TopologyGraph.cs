@@ -149,7 +149,7 @@ namespace TopologyModel.Graphs
             {
                 // Собираем вершины всех УСПД и КУ, а также все грани, если топология не нулевая
                 var dadVertices = topology?.Sections.Select(q => q.DADPart.Vertex) ?? new TopologyVertex[] { };
-                var mcdVertices = topology?.Sections.Select(q => q.MACPart.Vertex) ?? new TopologyVertex[] { };
+                var mcdVertices = topology?.Sections.Select(q => q.MCDPart.Vertex) ?? new TopologyVertex[] { };
 
                 graphviz.FormatVertex += (sender, args) =>
                 {

@@ -80,7 +80,7 @@ namespace TopologyModel.GA
                     foreach (var channelGroup in dadGroup.GroupBy(w => w.Channel))  // Группы секций группируем по каналам передачи данных, которые связывают КУ и УСПД 
                     {
                         // Находим путь между УСПД и всеми КУ по каждому каналу передачи в группе секций
-                        var path = TopologyPathfinder.SectionShortestPath(chromosome.CurrentProject.Graph, dadGroup.Key.Vertex, channelGroup.Select(q => q.MACPart.Vertex), channelGroup.Key);
+                        var path = TopologyPathfinder.SectionShortestPath(chromosome.CurrentProject.Graph, dadGroup.Key.Vertex, channelGroup.Select(q => q.MCDPart.Vertex), channelGroup.Key);
 
                         channelPathes.Add(channelGroup.Key, path);
                     }
@@ -117,8 +117,8 @@ namespace TopologyModel.GA
                                         Devices = channelGroup.Select(q =>
                                             new
                                             {
-                                                q.MACPart.MCD.Name,
-                                                Vertex = q.MACPart.Vertex.ToString()
+                                                q.MCDPart.MCD.Name,
+                                                Vertex = q.MCDPart.Vertex.ToString()
                                             }).ToArray()
                                     }).ToArray()
                         }).ToArray();

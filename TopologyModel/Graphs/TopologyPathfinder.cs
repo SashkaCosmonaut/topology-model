@@ -10,6 +10,8 @@ namespace TopologyModel.Graphs
     /// </summary>
     public static class TopologyPathfinder
     {
+        // TODO: Сделать кэш уже найденных путей и брать из него, если можно не искать
+
         /// <summary>
         /// Найти кратчайший путь в секции от вершины источника - УСПД, через все целевые вершины КУ.
         /// </summary>

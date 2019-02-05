@@ -27,7 +27,7 @@ namespace TopologyModel.GA
         /// <summary>
         /// Параметры выбора и расположения устройства учёта и управления, а так же исходящего КПД.
         /// </summary>
-        public MeasurementAndControlSectionPart MACPart { get; } = new MeasurementAndControlSectionPart();
+        public MeasurementAndControlSectionPart MCDPart { get; } = new MeasurementAndControlSectionPart();
 
         /// <summary>
         /// Параметры выбора и расположения УСПД, а так же входящего КПД.
@@ -58,7 +58,7 @@ namespace TopologyModel.GA
                     throw new Exception("Incorrect section size!");
 
                 // 0-й ген - тип КУ, 1-й ген - узел КУ, 2-й ген - тип УСПД, 3-й ген - узел УСПД, 4-й ген - КПД
-                MACPart.Decode(chromosome.CurrentProject, sectionGenes[0], sectionGenes[1]);
+                MCDPart.Decode(chromosome.CurrentProject, sectionGenes[0], sectionGenes[1]);
                 DADPart.Decode(chromosome.CurrentProject, sectionGenes[2], sectionGenes[3]);
 
                 Channel = chromosome.CurrentProject.Equipments.DCs[sectionGenes[4]];
