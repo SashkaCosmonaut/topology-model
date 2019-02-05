@@ -84,9 +84,18 @@ namespace TopologyModel
         {
             try
             {
-                var graphLabel =
-                    project.Regions.Select(q => PrepareJSONForGraphviz(q.GetInfo())).Aggregate("", (current, next) => current + "\r\n\r\n" + next) +
-                    project.MCZs.Select(q => PrepareJSONForGraphviz(q.GetInfo())).Aggregate("", (current, next) => current + "\r\n\r\n" + next);
+                // Везде добавляем переносы строк для красоты
+                var graphLabel = PrepareJSONForGraphviz(topology.GetInfo()).Replace("{'DAD", "\r\n\r\n{'DAD");
+
+                graphLabel += project.Regions
+                    .Select(q => PrepareJSONForGraphviz(q.GetInfo()))
+                    .Aggregate("", (current, next) => current + "\r\n\r\n" + next)
+                    .Replace("},'", "},\r\n'");
+
+                graphLabel += project.MCZs
+                    .Select(q => PrepareJSONForGraphviz(q.GetInfo()))
+                    .Aggregate("", (current, next) => current + "\r\n\r\n" + next)
+                    .Replace("},'", "},\r\n'");
 
                 var filename = topology == null         // Если генерируем файл с отображением топологии, то изменяем имя
                     ? project.GraphDotFilename
@@ -111,9 +120,8 @@ namespace TopologyModel
             try
             {
                 return JSONstring
-                    .Replace('\"', '\'')            // Заменяем кавычки для Graphviz
-                    .Replace("},'", "},\r\n'")      // Добавляем переносы строк для красоты
-                    .Replace(",", ", ");            // ... и пробелы
+                    .Replace('\"', '\'')        // Заменяем кавычки для Graphviz
+                    .Replace(",", ", ");        // и добавляем пробелы
             }
             catch (Exception ex)
             {
@@ -163,7 +171,8 @@ namespace TopologyModel
                     Termination = new GenerationNumberTermination(100)
                 };
 
-                ga.GenerationRan += (c, e) => {
+                ga.GenerationRan += (c, e) =>
+                {
                     Console.WriteLine("Generations: {0}", ga.Population.GenerationsNumber);
                     Console.WriteLine("Time: {0}", ga.TimeEvolving);
 
