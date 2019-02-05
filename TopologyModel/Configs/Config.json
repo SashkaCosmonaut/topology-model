@@ -6,11 +6,15 @@
 	"UsageMonths": 12,
 	"UseLocalServer": false,
 	"UseLocalEmployee": false,
-	"IsInternetAvailable": false,
+	"IsInternetAvailable": true,
 	"LocalServerMonthlyPayment": 999999.0,
 	"RemoteServerMonthlyPayment": 2000.0,
 	"GraphDotFilename": "graph.dot",
-	"MobileInternetMonthlyPayment": { "_3G": 300.0 },
+	"MobileInternetMonthlyPayment": {
+		"_3G": 300.0,
+		"GPRS": 100.0,
+		"LTE": 500.0
+	},
 	"Regions": [
 		{
 			"HasLan": false,
@@ -594,6 +598,20 @@
 				"Name": "УСПД ООО 'ЕМС ГРУП'",
 				"PurchasePrice": 10000.0,
 				"InstallationPrice": 2000.0,
+				"InstallationTime": "01:00:00"
+			},
+			{
+				"ReceivingCommunications": {
+					"RS485": 32
+				},
+				"ServerConnections": [ 5, 6 ],
+				"SendingCommunications": null,
+				"IsPowerRequired": true,
+				"BatteryTime": "00:00:00",
+				"BatteryServicePrice": 0.0,
+				"Name": "Ethernet УСПД",
+				"PurchasePrice": 5000.0,
+				"InstallationPrice": 1000.0,
 				"InstallationTime": "01:00:00"
 			},
 			{
