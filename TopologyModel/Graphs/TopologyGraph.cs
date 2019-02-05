@@ -182,14 +182,8 @@ namespace TopologyModel.Graphs
         {
             try
             {
-                // Собираем грани путей как перечисление ключей и значений, где ключ - цвет пути, значение - грани пути, если топология не нулевая
-                var coloredEdges = topology?.Pathes
-                    .Select(path =>
-                        new KeyValuePair<Color, TopologyEdge[]>(
-                            path.Key.Color, 
-                            path.Value.SelectMany(q => q.Value ?? new TopologyEdge[] { }).ToArray()))
-                    .ToArray()
-                    ?? new KeyValuePair<Color, TopologyEdge[]>[] { };
+                // Собираем все имеющиеся в предлагаемой топологии пути, если она есть
+                var pathes = topology?.Pathes.SelectMany(q => q.Value) ?? new TopologyPath[] { };
 
                 // TODO: добавить дополнительные грани графу для случаев, когда вдоль одной грани несколько КПД
 
@@ -203,7 +197,7 @@ namespace TopologyModel.Graphs
                     if (args.Edge.IsAlongTheBorder())                           // Грани вдоль границ участков окрашиваем в оранжевый цвет
                         args.EdgeFormatter.StrokeColor = Color.Orange;
 
-                    HighlightTopologyEdge(args, coloredEdges);
+                    HighlightTopologyEdge(args, pathes);
                 };
             }
             catch (Exception ex)
@@ -275,16 +269,18 @@ namespace TopologyModel.Graphs
         /// Выделить цветом на графе связи топологии между вершинами графа. 
         /// </summary>
         /// <param name="args">Аргументы события отрисовки грани.</param>
-        /// <param name="coloredEdges">Сгруппированное по цветам перечисление всех граней топологии.</param>
-        protected void HighlightTopologyEdge(FormatEdgeEventArgs<TopologyVertex, TopologyEdge> args, KeyValuePair<Color, TopologyEdge[]>[] coloredEdges)
+        /// <param name="pathes">Перечисление всех имеющихся путей в графе.</param>
+        protected void HighlightTopologyEdge(FormatEdgeEventArgs<TopologyVertex, TopologyEdge> args, IEnumerable<TopologyPath> pathes)
         {
             try
             {
-                foreach (var coloredEdge in coloredEdges.Where(q => q.Value.Contains(args.Edge)))
-                {
-                    args.EdgeFormatter.FontColor = coloredEdge.Key;
-                    args.EdgeFormatter.StrokeColor = coloredEdge.Key;
-                }
+                // Окрашиваем вершину цветом первого попавшегося пути
+                var firstPath = pathes.FirstOrDefault(q => q.Path.Contains(args.Edge));
+
+                if (firstPath == null) return;
+
+                args.EdgeFormatter.FontColor = firstPath.Color;
+                args.EdgeFormatter.StrokeColor = firstPath.Color;
             }
             catch (Exception ex)
             {

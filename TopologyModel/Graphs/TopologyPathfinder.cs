@@ -21,8 +21,8 @@ namespace TopologyModel.Graphs
         /// <param name="source">Вершина графа с УСПД.</param>
         /// <param name="targets">Вершины КУ, которые нужно соединить кратчайшим путём.</param>
         /// <param name="dataChannel">Канал передачи данных, по которому соеденяются КУ и УСПД.</param>
-        /// <returns>Массив вершин пути в графе.</returns>
-        public static IEnumerable<TopologyEdge> SectionShortestPath(TopologyGraph graph, TopologyVertex source, IEnumerable<TopologyVertex> targets, DataChannel dataChannel)
+        /// <returns>Перечисление путей в графе.</returns>
+        public static IEnumerable<TopologyPath> SectionShortestPath(TopologyGraph graph, TopologyVertex source, IEnumerable<TopologyVertex> targets, DataChannel dataChannel)
         {
             try
             {
@@ -55,8 +55,8 @@ namespace TopologyModel.Graphs
         /// <param name="source">Вершина графа с УСПД.</param>
         /// <param name="targets">Вершины КУ, которые нужно соединить кратчайшим путём.</param>
         /// <param name="dataChannel">Канал передачи данных, по которому соеденяются КУ и УСПД.</param>
-        /// <returns>Массив вершин пути в графе.</returns>
-        private static IEnumerable<TopologyEdge> MeshShortestPath(TopologyGraph graph, TopologyVertex source, IEnumerable<TopologyVertex> targets, DataChannel dataChannel)
+        /// <returns>Перечисление путей в графе.</returns>
+        private static IEnumerable<TopologyPath> MeshShortestPath(TopologyGraph graph, TopologyVertex source, IEnumerable<TopologyVertex> targets, DataChannel dataChannel)
         {
             return null;
         }
@@ -68,12 +68,12 @@ namespace TopologyModel.Graphs
         /// <param name="source">Вершина графа с УСПД.</param>
         /// <param name="targets">Вершины КУ, которые нужно соединить кратчайшим путём.</param>
         /// <param name="dataChannel">Канал передачи данных, по которому соеденяются КУ и УСПД.</param>
-        /// <returns>Массив вершин пути в графе.</returns>
-        private static IEnumerable<TopologyEdge> StarShortestPath(TopologyGraph graph, TopologyVertex source, IEnumerable<TopologyVertex> targets, DataChannel dataChannel)
+        /// <returns>Перечисление путей в графе.</returns>
+        private static IEnumerable<TopologyPath> StarShortestPath(TopologyGraph graph, TopologyVertex source, IEnumerable<TopologyVertex> targets, DataChannel dataChannel)
         {
             try
             {
-                var resultPath = new List<TopologyEdge>();
+                var resultPath = new List<TopologyPath>();
 
                 // Задаём источник и способ расчёта весов   
                 var tryGetPath = graph.ShortestPathsDijkstra((edge) => { return dataChannel.IsWireless ? edge.WirelessWeight : edge.WiredWeight; }, source);
@@ -82,7 +82,13 @@ namespace TopologyModel.Graphs
                 {
                     tryGetPath(target, out var path);
 
-                    resultPath.AddRange(path);
+                    resultPath.Add(new TopologyPath
+                    {
+                        DataChannel = dataChannel,
+                        Path = path,
+                        Source = source,
+                        Target = target
+                    });
                 }
 
                 return resultPath;
@@ -101,8 +107,8 @@ namespace TopologyModel.Graphs
         /// <param name="source">Вершина графа с УСПД.</param>
         /// <param name="targets">Вершины КУ, которые нужно соединить кратчайшим путём.</param>
         /// <param name="dataChannel">Канал передачи данных, по которому соеденяются КУ и УСПД.</param>
-        /// <returns>Массив вершин пути в графе.</returns>
-        private static IEnumerable<TopologyEdge> BusShortestPath(TopologyGraph graph, TopologyVertex source, IEnumerable<TopologyVertex> targets, DataChannel dataChannel)
+        /// <returns>Перечисление путей в графе.</returns>
+        private static IEnumerable<TopologyPath> BusShortestPath(TopologyGraph graph, TopologyVertex source, IEnumerable<TopologyVertex> targets, DataChannel dataChannel)
         {
             return null;
         }

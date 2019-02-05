@@ -17,11 +17,6 @@ namespace TopologyModel.GA
         public DataAcquisitionDevice DAD { get; protected set; }
 
         /// <summary>
-        /// Случайный цвет для закраски КПД, исходящих из УСПД данной части.
-        /// </summary>
-        public Color Color { get; set; }
-
-        /// <summary>
         /// Декодировать содержимое данной части секции.
         /// </summary>
         /// <param name="project">Текщуий используемый проект.</param>
@@ -34,9 +29,6 @@ namespace TopologyModel.GA
             try
             {
                 DAD = project.Equipments.DADs[dadGene];
-                Color = Color.FromArgb(RandomizationProvider.Current.GetInt(0, 255),
-                                       RandomizationProvider.Current.GetInt(0, 255),
-                                       RandomizationProvider.Current.GetInt(0, 255));
             }
             catch (Exception ex)
             {
