@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TopologyModel.Graphs;
 using TopologyModel.Equipments;
+using Newtonsoft.Json;
 
 namespace TopologyModel.GA
 {
@@ -90,6 +91,44 @@ namespace TopologyModel.GA
             catch (Exception ex)
             {
                 Console.WriteLine("DecodePathes failed! {0}", ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Получить информацию о топологии.
+        /// </summary>
+        /// <returns>Строковое представление топологии.</returns>
+        public string GetInfo()
+        {
+            try
+            {
+                var groups = Sections
+                    .GroupBy(section => section.DADPart)
+                    .Select(dadGroup =>
+                        new
+                        {
+                            DAD = new { dadGroup.Key.DAD.Name, Vertex = dadGroup.Key.Vertex.ToString() },
+                            Connected = dadGroup
+                                .GroupBy(group => group.Channel)
+                                .Select(channelGroup =>
+                                    new
+                                    {
+                                        Channel = channelGroup.Key.Name,
+                                        Devices = channelGroup.Select(q =>
+                                            new
+                                            {
+                                                q.MACPart.MCD.Name,
+                                                Vertex = q.MACPart.Vertex.ToString()
+                                            }).ToArray()
+                                    }).ToArray()
+                        }).ToArray();
+
+                return JsonConvert.SerializeObject(groups);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Topology GetInfo failed! {0}", ex.Message);
+                return "";
             }
         }
     }
