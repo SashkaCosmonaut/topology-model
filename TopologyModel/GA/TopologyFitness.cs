@@ -79,10 +79,10 @@ namespace TopologyModel.GA
             {
                 // Условие разбито на несколько для повышения производительности
                 if (!dadPart.DAD.ReceivingCommunications.Keys.Contains(dataChannel.Communication))              // Если УСПД не поддерживает данный канал, дальше можно не смотреть
-                    return 999999;
+                    return 99999999;
     
                 if (connectedMCDs.Any(q => !q.MCD.SendingCommunications.Contains(dataChannel.Communication)))   // Если есть хоть одно КУ, которое не поддерживает канал, то дальше можно не смотреть
-                    return 999999;
+                    return 99999999;
 
                 // Найти все пути, соединяющие УСПД и все КУ, присоединённые по данному КПД
                 var path = TopologyPathfinder.SectionShortestPath(graph, dadPart.Vertex, connectedMCDs.Select(q => q.Vertex), dataChannel);
