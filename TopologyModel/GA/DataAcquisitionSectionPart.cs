@@ -1,7 +1,5 @@
 ﻿using GeneticSharp.Domain.Randomizations;
 using System;
-using System.Drawing;
-using System.Linq;
 using TopologyModel.Equipments;
 
 namespace TopologyModel.GA

@@ -72,7 +72,8 @@ namespace TopologyModel.GA
         {
             try
             {
-                foreach (var dadGroup in Sections.GroupBy(q => q.DADPart))          // Группируем секции по частям с УСПД и перебираем группы
+                // Группируем секции по частям с УСПД и перебираем группы
+                foreach (var dadGroup in Sections.GroupBy(q => q.DADPart, new DataAcquisitionSectionPartComparer()))
                 {
                     var pathes = new List<TopologyPath>();
 
@@ -103,7 +104,7 @@ namespace TopologyModel.GA
             try
             {
                 var groups = Sections
-                    .GroupBy(section => section.DADPart)
+                    .GroupBy(section => section.DADPart, new DataAcquisitionSectionPartComparer())
                     .Select(dadGroup =>
                         new
                         {

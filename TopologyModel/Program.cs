@@ -47,6 +47,8 @@ namespace TopologyModel
             {
                 Console.WriteLine("Main failed! {0}", ex.Message);
             }
+
+            Console.ReadKey();
         }
 
         /// <summary>

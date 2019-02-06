@@ -38,8 +38,8 @@ namespace TopologyModel.GA
                 else
                     fitness += project.RemoteServerMonthlyPayment * project.UsageMonths;
 
-                // 1. Группируем секции по УСПД
-                foreach (var dadGroup in topology.Sections.GroupBy(q => q.DADPart))     // 2. Перебираем группы
+                // 1. Группируем секции по УСПД. 2. Перебираем группы
+                foreach (var dadGroup in topology.Sections.GroupBy(q => q.DADPart, new DataAcquisitionSectionPartComparer()))
                 {
                     // 2.1. Считаем стоимость УСПД каждой группы, чем больше УСПД в общих группах, тем ниже стоимость
                     fitness += dadGroup.Key.GetCost(project);

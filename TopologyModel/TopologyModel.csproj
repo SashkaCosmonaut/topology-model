@@ -131,6 +131,7 @@
     <Compile Include="Enumerations\LocationInRegion.cs" />
     <Compile Include="Enumerations\Measurement.cs" />
     <Compile Include="GA\AbstractTopologySectionPart.cs" />
+    <Compile Include="GA\DataAcquisitionSectionPartComparer.cs" />
     <Compile Include="GA\DataAcquisitionSectionPart.cs" />
     <Compile Include="GA\MeasurementAndControlSectionPart.cs" />
     <Compile Include="GA\Topology.cs" />

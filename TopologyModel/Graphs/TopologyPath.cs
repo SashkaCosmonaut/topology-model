@@ -33,6 +33,7 @@ namespace TopologyModel.Graphs
 
         /// <summary>
         /// Случайный цвет для закраски данного пути.
+        /// TODO: цвет перенести в DataChannel
         /// </summary>
         public Color Color { get; set; }
 
