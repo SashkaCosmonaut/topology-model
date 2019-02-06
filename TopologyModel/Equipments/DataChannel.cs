@@ -1,4 +1,6 @@
-﻿using TopologyModel.Enumerations;
+﻿using System;
+using TopologyModel.Enumerations;
+using TopologyModel.Graphs;
 
 namespace TopologyModel.Equipments
 {
@@ -31,5 +33,25 @@ namespace TopologyModel.Equipments
         /// Максимально допустимое количество устройств, которые могут передавать данные через данный КПД
         /// </summary>
         public uint MaxDevicesConnected { get; set; }
+
+        /// <summary>
+        /// Рассчитать базовые затраты на использование данного КПД для формирования сети.
+        /// </summary>
+        /// <param name="project">Свойства проекта.</param>
+        /// <param name="vertex">Вершина графа, в которой установлен инструмент.</param>
+        /// <returns>Значение выбранных затрат на данный инструмент.</returns>
+        public override double GetCost(Project project, TopologyVertex vertex)
+        {
+            try
+            {
+                // Для беспроводной связи метр проведения ничего не стоит
+                return IsWireless ? 0 : base.GetCost(project, vertex);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("DataChannel GetCost failed! {0}", ex.Message);
+                return 999999;
+            }
+        }
     }
 }

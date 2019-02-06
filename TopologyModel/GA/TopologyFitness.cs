@@ -84,13 +84,10 @@ namespace TopologyModel.GA
                 if (connectedMCDs.Any(q => !q.MCD.SendingCommunications.Contains(dataChannel.Communication)))   // Если есть хоть одно КУ, которое не поддерживает канал, то дальше можно не смотреть
                     return 999999;
 
+                // Найти все пути, соединяющие УСПД и все КУ, присоединённые по данному КПД
                 var path = TopologyPathfinder.SectionShortestPath(graph, dadPart.Vertex, connectedMCDs.Select(q => q.Vertex), dataChannel);
 
-                // TODO: проверить ещё те, у которых источник и приёмник находятся в одной вершине, для них пути не будет
-
-
-                // TODO: Проверить, что УСПД поддерживает количество подключенных устройств по КПД и КПД поддерживает количество передаваемых устройств
-                return 0;
+                return path?.Sum(q => q.GetCost()) ?? 999999;  // Вернуть сумму стоимостей всех составных частей пути, если путь не найден, то плохо - высокая стоимость
             }
             catch (Exception ex)
             {

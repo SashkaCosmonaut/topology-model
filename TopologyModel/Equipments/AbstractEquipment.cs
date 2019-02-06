@@ -1,4 +1,6 @@
 ﻿using System;
+using TopologyModel.Enumerations;
+using TopologyModel.Graphs;
 
 namespace TopologyModel.Equipments
 {
@@ -34,6 +36,41 @@ namespace TopologyModel.Equipments
         public override string ToString()
         {
             return Name;
+        }
+
+        /// <summary>
+        /// Рассчитать базовые затраты на использование данного инструмента для формирования сети.
+        /// </summary>
+        /// <param name="project">Свойства проекта.</param>
+        /// <param name="vertex">Вершина графа, в которой установлен инструмент.</param>
+        /// <returns>Значение выбранных затрат на данный инструмент.</returns>
+        public virtual double GetCost(Project project, TopologyVertex vertex)
+        {
+            try
+            {
+                var cost = 0.0;
+
+                var laboriousnessFactor = 1 + vertex.LaboriousnessWeight / 10;  // В худшем случае затраты могут возрасти в 4 раза
+
+                // TODO: добавить в свойства проекта час работы, чтобы можно было точнее считать затраты на всё вместе
+                if (project.MinimizationGoal == CostType.Time || project.MinimizationGoal == CostType.All)
+                {
+                    // Для расчета временных и всех затрат важно время на установку оборудования
+                    cost += InstallationTime.TotalHours * laboriousnessFactor;
+                }
+                else if (project.MinimizationGoal != CostType.Time)
+                {
+                    // Если не используем мастную рабочую силу, то умножаем стоимость установки на трудоемкость проведения работ
+                    cost += PurchasePrice + (project.UseLocalEmployee ? 0 : InstallationPrice * laboriousnessFactor);
+                }
+
+                return cost;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("AbstractEquipment GetCost failed! {0}", ex.Message);
+                return 999999;
+            }
         }
     }
 }

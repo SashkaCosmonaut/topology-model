@@ -52,5 +52,34 @@ namespace TopologyModel.Graphs
                 Console.WriteLine("TopologyPath failed! {0}", ex.Message);
             }
         }
+
+        /// <summary>
+        /// Получить стоимость реализации данного пути.
+        /// </summary>
+        /// <returns>Стоимость реализации проведения данного пути.</returns>
+        public double GetCost()
+        {
+            try
+            {
+                if (Path == null)           // Пути может не быть если источник и цель совпадают или путь не нашли
+                {
+                    if (Source == Target)
+                        return 0;
+
+                    return 999999;
+                }
+                
+                // TODO: проверить ещё те, у которых источник и приёмник находятся в одной вершине, для них пути не будет
+
+                // TODO: Проверить, что УСПД поддерживает количество подключенных устройств по КПД и КПД поддерживает количество передаваемых устройств
+
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("TopologyPath GetCost failed! {0}", ex.Message);
+                return 999999;
+            }
+        }
     }
 }
