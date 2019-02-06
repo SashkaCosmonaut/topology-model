@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using TopologyModel.Enumerations;
+using TopologyModel.Equipments;
 
 namespace TopologyModel.Graphs
 {
@@ -120,6 +121,16 @@ namespace TopologyModel.Graphs
         public bool IsInside()
         {
             return !IsAcrossTheBorder(Source, Target) && GetInRegionLocation(Source, Target) == LocationInRegion.Inside;
+        }
+
+        /// <summary>
+        /// Выбрать вес грани в соответствии с КПД, который по ней проложен.
+        /// </summary>
+        /// <param name="dataChannel">КПД, проложенный по грани.</param>
+        /// <returns>Значение веса грани.</returns>
+        public double ChooseWeight(DataChannel dataChannel)
+        {
+            return dataChannel.IsWireless ? WirelessWeight : WiredWeight;
         }
 
         /// <summary>
