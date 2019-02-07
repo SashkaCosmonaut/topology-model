@@ -22,15 +22,23 @@ namespace TopologyModel.Graphs
         public float WirelessWeight { get; }
 
         /// <summary>
+        /// Отображать ли метку данной грани.
+        /// </summary>
+        protected bool Labeled { get; }
+
+        /// <summary>
         /// Создать новую грань графа.
         /// </summary>
         /// <param name="source">Вершина графа - источник грани.</param>
         /// <param name="target">Вершина графа - приемник грани.</param>
         /// <param name="weightCoefficients">Весовые коэффициенты для рассчётов весов граней.</param>
-        public TopologyEdge(TopologyVertex source, TopologyVertex target, Dictionary<string, float> weightCoefficients = null) : base(source, target)
+        /// <param name="labeled">Отображать ли метку данной грани.</param>
+        public TopologyEdge(TopologyVertex source, TopologyVertex target, Dictionary<string, float> weightCoefficients = null, bool labeled = true) : base(source, target)
         {
             try
             {
+                Labeled = labeled;
+
                 // Если связь между участками, берётся среднее от значений границ смежных участков
                 WirelessWeight = IsAcrossTheBorder()
                     ? (Source.Region.GetBadRadioTransmittanceEstimate(GetLocation(Source, Target)) +
@@ -93,7 +101,7 @@ namespace TopologyModel.Graphs
         /// <returns>Строка с весами грани через запятую, округлёнными до одного знака после запятой.</returns>
         public override string ToString()
         {
-            return $"{WiredWeight:0.0}; {WirelessWeight:0.0}";
+            return Labeled ? $"{WiredWeight:0.0}; {WirelessWeight:0.0}" : "";
         }
 
         /// <summary>
