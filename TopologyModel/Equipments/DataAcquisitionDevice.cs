@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TopologyModel.Enumerations;
+using TopologyModel.GA;
 using TopologyModel.Graphs;
 using TopologyModel.Regions;
 
@@ -14,13 +15,11 @@ namespace TopologyModel.Equipments
     {
         /// <summary>
         /// Множество доступных стандартов приёма данных и максимальное количество подключаемых устройств 
-        /// TODO: в фитнес-функции нужно учитывать количество подключаемых устройств
         /// </summary>
         public Dictionary<DataChannelCommunication, int> ReceivingCommunications { get; set; }
 
         /// <summary>
         /// Множество доступных способов передачи данных на сервер
-        /// TODO: в фитнес функции надо учитывать, подходит ли устройство участку
         /// </summary>
         public InternetConnection[] ServerConnections { get; set; }
 
@@ -41,12 +40,12 @@ namespace TopologyModel.Equipments
                     var availableConnections = ServerConnections.Where(q => project.MobileInternetMonthlyPayment.ContainsKey(q));
 
                     if (!availableConnections.Any())    // Если в проекте не задано не одного тарифа мобильного Интернета, который поддерживается УСПД
-                        return cost + 999999;
+                        return TopologyFitness.UNACCEPTABLE;
 
                     // Берём самый дешёвый способ передачи данных
                     cost += availableConnections.Min(q => project.MobileInternetMonthlyPayment[q]) * project.UsageMonths;
 
-                    cost += PurchasePrice * vertex.Region.BadMobileInternetSignal / 10; // Учитываем затраты на плохую связь
+                    cost += PurchasePrice * (1 + vertex.Region.BadMobileInternetSignal / 10); // Учитываем затраты на плохую связь
                 }   
             }
             catch (Exception ex)

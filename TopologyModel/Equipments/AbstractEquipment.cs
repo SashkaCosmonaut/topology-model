@@ -1,5 +1,6 @@
 ﻿using System;
 using TopologyModel.Enumerations;
+using TopologyModel.GA;
 using TopologyModel.Graphs;
 
 namespace TopologyModel.Equipments
@@ -69,7 +70,7 @@ namespace TopologyModel.Equipments
             catch (Exception ex)
             {
                 Console.WriteLine("AbstractEquipment GetCost failed! {0}", ex.Message);
-                return 999999;
+                return TopologyFitness.UNACCEPTABLE;
             }
         }
     }

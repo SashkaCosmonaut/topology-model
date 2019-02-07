@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using TopologyModel.Equipments;
+using TopologyModel.GA;
 
 namespace TopologyModel.Graphs
 {
@@ -67,9 +68,12 @@ namespace TopologyModel.Graphs
                     if (Source == Target)
                         return 0;
 
-                    return 999999;
+                    return TopologyFitness.UNACCEPTABLE;
                 }
-                
+                // TODO: нужно учитывать количество подключаемых устройств
+
+                // TODO: проверить дальность пути и проходимость сквозь участки беспроводной связи 
+
                 // TODO: проверить ещё те, у которых источник и приёмник находятся в одной вершине, для них пути не будет
 
                 // TODO: Проверить, что УСПД поддерживает количество подключенных устройств по КПД и КПД поддерживает количество передаваемых устройств
@@ -79,7 +83,7 @@ namespace TopologyModel.Graphs
             catch (Exception ex)
             {
                 Console.WriteLine("TopologyPath GetCost failed! {0}", ex.Message);
-                return 999999;
+                return TopologyFitness.UNACCEPTABLE;
             }
         }
     }

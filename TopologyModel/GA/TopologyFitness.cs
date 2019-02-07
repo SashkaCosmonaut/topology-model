@@ -1,7 +1,6 @@
 ﻿using GeneticSharp.Domain.Chromosomes;
 using GeneticSharp.Domain.Fitnesses;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using TopologyModel.Equipments;
 using TopologyModel.Graphs;
@@ -13,6 +12,16 @@ namespace TopologyModel.GA
     /// </summary>
     public class TopologyFitness : IFitness
     {
+        /// <summary>
+        /// Значение фитнес-функции для недопустимого случая.
+        /// </summary>
+        public const double UNACCEPTABLE = 999999999;
+
+        /// <summary>
+        /// Значение фитнес-функции для плохого случая.
+        /// </summary>
+        public const double BAD = 999999;
+
         /// <summary>
         /// Оценить приспособленность хромосомы топологии.
         /// </summary>
@@ -79,20 +88,20 @@ namespace TopologyModel.GA
             {
                 // Условие разбито на несколько для повышения производительности
                 if (!dadPart.DAD.ReceivingCommunications.Keys.Contains(dataChannel.Communication))              // Если УСПД не поддерживает данный канал, дальше можно не смотреть
-                    return 99999999;
+                    return UNACCEPTABLE;
     
                 if (connectedMCDs.Any(q => !q.MCD.SendingCommunications.Contains(dataChannel.Communication)))   // Если есть хоть одно КУ, которое не поддерживает канал, то дальше можно не смотреть
-                    return 99999999;
+                    return UNACCEPTABLE;
 
                 // Найти все пути, соединяющие УСПД и все КУ, присоединённые по данному КПД
                 var path = TopologyPathfinder.SectionShortestPath(graph, dadPart.Vertex, connectedMCDs.Select(q => q.Vertex), dataChannel);
 
-                return path?.Sum(q => q.GetCost()) ?? 999999;  // Вернуть сумму стоимостей всех составных частей пути, если путь не найден, то плохо - высокая стоимость
+                return path?.Sum(q => q.GetCost()) ?? UNACCEPTABLE;  // Вернуть сумму стоимостей всех составных частей пути, если путь не найден, то плохо - высокая стоимость
             }
             catch (Exception ex)
             {
                 Console.WriteLine("GetConnectionCost failed! {0}", ex.Message);
-                return 999999;
+                return UNACCEPTABLE;
             }
         }
     }
