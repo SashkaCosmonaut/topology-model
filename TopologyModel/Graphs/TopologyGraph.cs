@@ -118,17 +118,29 @@ namespace TopologyModel.Graphs
                 var graphviz = new GraphvizAlgorithm<TopologyVertex, TopologyEdge>(this);
 
                 graphviz.GraphFormat.RankDirection = GraphvizRankDirection.LR;
-
                 graphviz.GraphFormat.Label = graphLabel;
 
-                SetupVerticesFormat(graphviz, topology);
 
-                SetupEdgesFormat(graphviz, topology);
+                // Собрать вершины всех УСПД и КУ и настроить отображение вершин
+                var dadVertices = topology?.Sections.Select(q => q.DADPart.Vertex) ?? new TopologyVertex[] { };
+                var mcdVertices = topology?.Sections.Select(q => q.MCDPart.Vertex) ?? new TopologyVertex[] { };
+
+                SetupVerticesFormat(graphviz, dadVertices, mcdVertices);
+
+
+                // Сгенерировать дополнительные и настроить отображение граней
+                var topologyEdges = GetTopologyEdges(topology);
+
+                AddEdgeRange(topologyEdges.Keys);       // Добавить дополнительные окрашенные грани путей топологии
+
+                SetupEdgesFormat(graphviz, topologyEdges);
+
 
                 graphviz.Generate(new FileDotEngine(), filename);
 
-                Console.WriteLine("Done!");
+                RemoveEdges(topologyEdges.Keys);      // Удалить добавленные дополнительные грани
 
+                Console.WriteLine("Done!");
                 return true;
             }
             catch (Exception ex)
@@ -139,32 +151,61 @@ namespace TopologyModel.Graphs
         }
 
         /// <summary>
-        /// Настроить отображение вершин графа.
+        /// Получить дополнительные грани топологии для отображения на графе.
         /// </summary>
-        /// <param name="graphviz">Объект алгоритма Graphviz для используемого графа.</param>
         /// <param name="topology">Отображаемая по желанию предлагаемая методом топология.</param>
-        protected void SetupVerticesFormat(GraphvizAlgorithm<TopologyVertex, TopologyEdge> graphviz, Topology topology)
+        /// <returns>Словарь, где ключ - грань топологии, а значение - её цвет.</returns>
+        protected Dictionary<TopologyEdge, Color> GetTopologyEdges(Topology topology)
         {
             try
             {
-                // Собираем вершины всех УСПД и КУ, а также все грани, если топология не нулевая
-                var dadVertices = topology?.Sections.Select(q => q.DADPart.Vertex) ?? new TopologyVertex[] { };
-                var mcdVertices = topology?.Sections.Select(q => q.MCDPart.Vertex) ?? new TopologyVertex[] { };
+                if (topology == null)
+                    return new Dictionary<TopologyEdge, Color>();
 
+                return topology.Pathes
+                    .SelectMany(q => q.Value)
+                    .SelectMany(q =>
+                        q.Path?.ToDictionary(w => new TopologyEdge(w.Source, w.Target, labeled: false), w => q.Color)
+                        ?? new Dictionary<TopologyEdge, Color>())
+                    .ToDictionary(q => q.Key, q => q.Value);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("GetColoredEdges failed! {0}", ex.Message);
+                return new Dictionary<TopologyEdge, Color>();
+            }
+        }
+
+        /// <summary>
+        /// Настроить отображение вершин графа.
+        /// </summary>
+        /// <param name="graphviz">Объект алгоритма Graphviz для используемого графа.</param>
+        /// <param name="dadVertices">Перечисление всех вершин с УСПД в топологии.</param>
+        /// <param name="mcdVertices">Перечисление всех вергин с КУ в топологии.</param>
+        protected void SetupVerticesFormat(GraphvizAlgorithm<TopologyVertex, TopologyEdge> graphviz,
+                                           IEnumerable<TopologyVertex> dadVertices, IEnumerable<TopologyVertex> mcdVertices)
+        {
+            try
+            {
                 graphviz.FormatVertex += (sender, args) =>
                 {
-                    // В вершине указываем id участка и координаты внутри участка
-                    args.VertexFormatter.Label = args.Vertex.ToString() + "\r\n" + args.Vertex.LaboriousnessWeight;
-                    args.VertexFormatter.Group = $"{args.Vertex.Region.Id}_{args.Vertex.RegionY}";      // Группируем участки на графе
+                    try
+                    {
+                        // В вершине указываем id участка и координаты внутри участка
+                        args.VertexFormatter.Label = args.Vertex.ToString() + "\r\n" + args.Vertex.LaboriousnessWeight;
+                        args.VertexFormatter.Group = $"{args.Vertex.Region.Id}_{args.Vertex.RegionY}";      // Группируем участки на графе
 
-                    // Добавить наименование участка к его угловому узлу (заменить в файле на xlabel и добавить forcelabels=true)
-                    args.VertexFormatter.ToolTip = (args.Vertex.RegionX == 0 && args.Vertex.RegionY == 0)
-                        ? args.Vertex.Region.Name
-                        : "";
+                        // Добавить наименование участка к его угловому узлу (заменить в файле на xlabel и добавить forcelabels=true)
+                        args.VertexFormatter.ToolTip = (args.Vertex.RegionX == 0 && args.Vertex.RegionY == 0)
+                            ? args.Vertex.Region.Name
+                            : "";
 
-                    SetVertexColor(args);
-
-                    HighlightTopologyVertex(args, dadVertices, mcdVertices);
+                        SetVertexColors(args, dadVertices, mcdVertices);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("SetupVerticesFormat failed! {0}", ex.Message);
+                    }
                 };
             }
             catch (Exception ex)
@@ -174,43 +215,12 @@ namespace TopologyModel.Graphs
         }
 
         /// <summary>
-        /// Настроить отображение граней графа стандартно с двумя весами каждой грани.
+        /// Задать цвета вершины.
         /// </summary>
-        /// <param name="graphviz">Объект алгоритма Graphviz для используемого графа.</param>
-        /// <param name="topology">Отображаемая по желанию предлагаемая методом топология.</param>
-        protected void SetupEdgesFormat(GraphvizAlgorithm<TopologyVertex, TopologyEdge> graphviz, Topology topology)
-        {
-            try
-            {
-                // Собираем все имеющиеся в предлагаемой топологии пути, если она есть
-                var pathes = topology?.Pathes.SelectMany(q => q.Value) ?? new TopologyPath[] { };
-
-                // TODO: добавить дополнительные грани графу для случаев, когда вдоль одной грани несколько КПД
-
-                graphviz.FormatEdge += (sender, args) =>
-                {
-                    args.EdgeFormatter.Label.Value = args.Edge.ToString();      // Указываем метки граней
-
-                    if (args.Edge.IsAcrossTheBorder())                          // Грани через участки окрашиваем в красный цвет
-                        args.EdgeFormatter.StrokeColor = Color.Red;
-
-                    if (args.Edge.IsAlongTheBorder())                           // Грани вдоль границ участков окрашиваем в оранжевый цвет
-                        args.EdgeFormatter.StrokeColor = Color.Orange;
-
-                    HighlightTopologyEdge(args, pathes);
-                };
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("SetupEdgesFormat failed! {0}", ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// Задать цвет фона вершины.
-        /// </summary>
-        /// <param name="args">Аргументы форматирования вершины.</param>
-        protected void SetVertexColor(FormatVertexEventArgs<TopologyVertex> args)
+        /// <param name="args">Аргументы события отрисовки вершины.</param>
+        /// <param name="dadVertices">Перечисление всех вершин с УСПД в топологии.</param>
+        /// <param name="mcdVertices">Перечисление всех вергин с КУ в топологии.</param>
+        protected void SetVertexColors(FormatVertexEventArgs<TopologyVertex> args, IEnumerable<TopologyVertex> dadVertices, IEnumerable<TopologyVertex> mcdVertices)
         {
             try
             {
@@ -224,6 +234,8 @@ namespace TopologyModel.Graphs
 
                 else
                     args.VertexFormatter.FillColor = Color.WhiteSmoke;  // Все остальные вершины - почти белые
+
+                HighlightVertex(args, dadVertices, mcdVertices);
             }
             catch (Exception ex)
             {
@@ -237,7 +249,7 @@ namespace TopologyModel.Graphs
         /// <param name="args">Аргументы события отрисовки вершины.</param>
         /// <param name="dadVertices">Перечисление всех вершин с УСПД в топологии.</param>
         /// <param name="mcdVertices">Перечисление всех вергин с КУ в топологии.</param>
-        protected void HighlightTopologyVertex(FormatVertexEventArgs<TopologyVertex> args, IEnumerable<TopologyVertex> dadVertices, IEnumerable<TopologyVertex> mcdVertices)
+        protected void HighlightVertex(FormatVertexEventArgs<TopologyVertex> args, IEnumerable<TopologyVertex> dadVertices, IEnumerable<TopologyVertex> mcdVertices)
         {
             try
             {
@@ -261,7 +273,42 @@ namespace TopologyModel.Graphs
             }
             catch (Exception ex)
             {
-                Console.WriteLine("HighlightTopologyVertex failed! {0}", ex.Message);
+                Console.WriteLine("HighlightVertex failed! {0}", ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Настроить отображение граней графа стандартно с двумя весами каждой грани.
+        /// </summary>
+        /// <param name="graphviz">Объект алгоритма Graphviz для используемого графа.</param>
+        /// <param name="coloredEdges">Перечисление окрашенных путей в графе.</param>
+        protected void SetupEdgesFormat(GraphvizAlgorithm<TopologyVertex, TopologyEdge> graphviz, Dictionary<TopologyEdge, Color> coloredEdges)
+        {
+            try
+            {
+                graphviz.FormatEdge += (sender, args) =>
+                {
+                    try
+                    {
+                        args.EdgeFormatter.Label.Value = args.Edge.ToString();      // Указываем метки граней
+
+                        if (args.Edge.IsAcrossTheBorder())                          // Грани через участки окрашиваем в красный цвет
+                            args.EdgeFormatter.StrokeColor = Color.Red;
+
+                        if (args.Edge.IsAlongTheBorder())                           // Грани вдоль границ участков окрашиваем в оранжевый цвет
+                            args.EdgeFormatter.StrokeColor = Color.Orange;
+
+                        HighlightEdge(args, coloredEdges);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("SetupEdgesFormat failed! {0}", ex.Message);
+                    }
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("SetupEdgesFormat failed! {0}", ex.Message);
             }
         }
 
@@ -269,22 +316,19 @@ namespace TopologyModel.Graphs
         /// Выделить цветом на графе связи топологии между вершинами графа. 
         /// </summary>
         /// <param name="args">Аргументы события отрисовки грани.</param>
-        /// <param name="pathes">Перечисление всех имеющихся путей в графе.</param>
-        protected void HighlightTopologyEdge(FormatEdgeEventArgs<TopologyVertex, TopologyEdge> args, IEnumerable<TopologyPath> pathes)
+        /// <param name="coloredEdges">Перечисление окрашенных путей в графе.</param>
+        protected void HighlightEdge(FormatEdgeEventArgs<TopologyVertex, TopologyEdge> args, Dictionary<TopologyEdge, Color> coloredEdges)
         {
             try
             {
-                // Окрашиваем вершину цветом первого попавшегося пути
-                var firstPath = pathes.FirstOrDefault(q => q.Path.Contains(args.Edge));
+                if (!coloredEdges.ContainsKey(args.Edge)) return;
 
-                if (firstPath == null) return;
-
-                args.EdgeFormatter.FontColor = firstPath.Color;
-                args.EdgeFormatter.StrokeColor = firstPath.Color;
+                args.EdgeFormatter.FontColor = coloredEdges[args.Edge];
+                args.EdgeFormatter.StrokeColor = coloredEdges[args.Edge];
             }
             catch (Exception ex)
             {
-                Console.WriteLine("HighlightTopologyEdge failed! {0}", ex.Message);
+                Console.WriteLine("HighlightEdge failed! {0}", ex.Message);
             }
         }
     }
