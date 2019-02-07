@@ -10,6 +10,7 @@
 	"LocalServerMonthlyPayment": 999999.0,
 	"RemoteServerMonthlyPayment": 2000.0,
 	"GraphDotFilename": "graph.dot",
+	"CostPerHour": 100,
 	"MobileInternetMonthlyPayment": {
 		"_3G": 300.0,
 		"GPRS": 100.0,
@@ -560,7 +561,7 @@
 				"PurchasePrice": 0.0,
 				"InstallationPrice": 0.0,
 				"InstallationTime": "00:00:00"
-			},
+			}
 			/*	{
 				"IsWireless": false,
 				"Communication": 12,

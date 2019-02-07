@@ -82,6 +82,11 @@ namespace TopologyModel
         /// </summary>
         public string GraphDotFilename { get; set; } = "unnamed.dot";
 
+        /// <summary>
+        /// Условная стоимость часа выполнения работ.
+        /// </summary>
+        public double CostPerHour { get; set; }
+
         #endregion
 
         /// <summary>

@@ -62,9 +62,6 @@ namespace TopologyModel.GA
                             GetConnectionCost(topologyChromosome.CurrentProject.Graph, dadGroup.Key, channelGroup.Select(q => q.MCDPart).ToArray(), channelGroup.Key));  
                 }
 
-                // TODO: надо делать накопительной неподходящесть хромосомы, т.е. если несколько вариантов в хромосоме подходят, 
-                // а один неподходит, то она неподходящая, но это лучше, чем если бы все были неподходящими
-
                 return -fitness;     // Значение общей стоимости и будет результатом фитнес функции
             }
             catch (Exception ex)

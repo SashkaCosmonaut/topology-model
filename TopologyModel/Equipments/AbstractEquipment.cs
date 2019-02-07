@@ -53,11 +53,14 @@ namespace TopologyModel.Equipments
 
                 var laboriousnessFactor = 1 + vertex.LaboriousnessWeight / 10;  // В худшем случае затраты могут возрасти в 4 раза
 
-                // TODO: добавить в свойства проекта час работы, чтобы можно было точнее считать затраты на всё вместе
                 if (project.MinimizationGoal == CostType.Time || project.MinimizationGoal == CostType.All)
                 {
                     // Для расчета временных и всех затрат важно время на установку оборудования
                     cost += InstallationTime.TotalHours * laboriousnessFactor;
+
+                    // Если считаем всё, то учитываем время умножаем на час работ, чтобы стоимость привести к деньгам
+                    if (project.MinimizationGoal == CostType.All)
+                        cost *= project.CostPerHour;
                 }
                 else if (project.MinimizationGoal != CostType.Time)
                 {
