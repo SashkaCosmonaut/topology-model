@@ -31,11 +31,6 @@ namespace TopologyModel.Equipments
         public double MaxRange { get; set; }
 
         /// <summary>
-        /// Максимально допустимое количество устройств, которые могут передавать данные через данный КПД
-        /// </summary>
-        public uint MaxDevicesConnected { get; set; }
-
-        /// <summary>
         /// Рассчитать базовые затраты на использование данного КПД на одном узле для формирования сети.
         /// </summary>
         /// <param name="project">Свойства проекта.</param>
