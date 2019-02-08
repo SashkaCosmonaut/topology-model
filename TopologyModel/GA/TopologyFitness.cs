@@ -1,7 +1,9 @@
 ﻿using GeneticSharp.Domain.Chromosomes;
 using GeneticSharp.Domain.Fitnesses;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using TopologyModel.Enumerations;
 using TopologyModel.Equipments;
 using TopologyModel.Graphs;
 
@@ -83,14 +85,6 @@ namespace TopologyModel.GA
         {
             try
             {
-                // 1. Проверить количество подключаемых устройств в самом КПД
-                // 2. Проверить, что УСПД поддерживает количество подключенных устройств по КПД и КПД поддерживает количество передаваемых устройств
-                // 3. Проверить дальность пути и проходимость сквозь участки беспроводной связи 
-
-                // MaxRange
-
-                // MaxDevicesConnected
-
                 // Условие разбито на несколько для повышения производительности
                 if (!dadPart.DAD.ReceivingCommunications.Keys.Contains(dataChannel.Communication))              // Если УСПД не поддерживает данный канал, дальше можно не смотреть
                     return UNACCEPTABLE;
@@ -98,15 +92,58 @@ namespace TopologyModel.GA
                 if (connectedMCDs.Any(q => !q.MCD.SendingCommunications.Contains(dataChannel.Communication)))   // Если есть хоть одно КУ, которое не поддерживает канал, то дальше можно не смотреть
                     return UNACCEPTABLE;
 
-                // Найти все пути, соединяющие УСПД и все КУ, присоединённые по данному КПД
-                var path = TopologyPathfinder.SectionShortestPath(project.Graph, dadPart.Vertex, connectedMCDs.Select(q => q.Vertex), dataChannel);
+                var dadUsedCommunication = dadPart.DAD.ReceivingCommunications.SingleOrDefault(q => q.Key == dataChannel.Communication);
 
-                return path?.Sum(q => q.GetCost(project)) ?? UNACCEPTABLE;  // Вернуть сумму стоимостей всех составных частей пути, если путь не найден, то плохо - высокая стоимость
+                // Проверить, что УСПД поддерживает количество подключенных устройств по КПД
+                if (dadUsedCommunication.Key == default(DataChannelCommunication) || connectedMCDs.Length > dadUsedCommunication.Value)
+                    return UNACCEPTABLE;
+
+                // Найти все пути, соединяющие УСПД и все КУ, присоединённые по данному КПД
+                var pathes = TopologyPathfinder.SectionShortestPath(project.Graph, dadPart.Vertex, connectedMCDs.Select(q => q.Vertex), dataChannel);
+
+                if (!IsInRange(pathes, dataChannel))    // Проверить дальность пути и проходимость сквозь участки беспроводной связи 
+                    return UNACCEPTABLE;
+
+                return pathes?.Sum(q => q.GetCost(project)) ?? UNACCEPTABLE;  // Вернуть сумму стоимостей всех составных частей пути, если путь не найден, то плохо - высокая стоимость
             }
             catch (Exception ex)
             {
                 Console.WriteLine("GetConnectionCost failed! {0}", ex.Message);
                 return UNACCEPTABLE;
+            }
+        }
+
+        /// <summary>
+        /// Проверить, что все пути, по которым соеденены устройства удовлетворяют требованию длины.
+        /// </summary>
+        /// <param name="pathes">Пути, по которым КУ соединены с УСПД.</param>
+        /// <param name="dataChannel">КПД, которым соединены устройства.</param>
+        /// <returns>True, если удовлентворяют.</returns>
+        protected bool IsInRange(IEnumerable<TopologyPath> pathes, DataChannel dataChannel)
+        {
+            try
+            {
+                if (pathes == null) return false;
+
+                switch (dataChannel.Topology)
+                {
+                    // Для звезды и меша проверяем, что длина максимального пути не больше требуемого
+                    case DataChannelTopology.Mesh:
+                    case DataChannelTopology.Star:
+                        return pathes.Max(q => q.GetDistance()) < dataChannel.MaxRange;
+
+                    // Для шины проверяем, что суммарная длина не больше требуемой
+                    case DataChannelTopology.Bus:
+                        return pathes.Sum(q => q.GetDistance()) < dataChannel.MaxRange;
+
+                    default:
+                        return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("IsInRange failed! {0}", ex.Message);
+                return false;
             }
         }
     }

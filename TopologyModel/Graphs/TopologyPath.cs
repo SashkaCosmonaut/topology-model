@@ -56,6 +56,28 @@ namespace TopologyModel.Graphs
         }
 
         /// <summary>
+        /// Получить расстояние данного пути с учётом окружающей среды.
+        /// </summary>
+        /// <returns>Длина пути с учётом всех трудностей, которые накладывает окружающая среда.</returns>
+        public double GetDistance()
+        {
+            try
+            {
+                // Если ограничение на беспроводную связь больше 1, то каждое значение ограничения снижает дальность на 5 м.
+                if (DataChannel.IsWireless)
+                    return Path?.Sum(w => w.WirelessWeight * (w.WirelessWeight == 1 ? 1 : 5)) ?? 1;    // Если путь в одной вершине - расстояние 1 метр
+
+                // Ограничение на беспроводную свзязь в худшем случае увличит расход кабелей до 4 метров на 1 метр расстояния
+                return Path?.Sum(q => 1 + q.WiredWeight / 10) ?? 1;     // Если путь в одной вершине - расстояние 1 метр
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("TopologyPath GetCost failed! {0}", ex.Message);
+                return TopologyFitness.UNACCEPTABLE;
+            }
+        }
+
+        /// <summary>
         /// Получить стоимость реализации данного пути.
         /// </summary>
         /// <param name="project">Свойства проекта.</param>
@@ -64,15 +86,8 @@ namespace TopologyModel.Graphs
         {
             try
             {
-                if (Path == null)           // Пути может не быть если источник и цель совпадают или путь не нашли
-                {
-                    if (Source == Target)   // Для случая, когда УСПД и КУ находятся в одной вершине, считаем путь только в ней
-                        return DataChannel.GetCost(project, Source);
-
-                    return TopologyFitness.UNACCEPTABLE;
-                }
-
-                return Path.Sum(edge => DataChannel.GetCost(project, edge));
+                // Если путь на одной вершине, то считаем стоимость только её
+                return Path?.Sum(edge => GetDistance() * DataChannel.GetCost(project, edge)) ?? DataChannel.GetCost(project, Source);
             }
             catch (Exception ex)
             {
