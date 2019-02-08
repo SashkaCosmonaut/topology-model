@@ -130,7 +130,6 @@ namespace TopologyModel.Graphs
                 var resultPath = new List<TopologyPath>();
                 var tryGetPath = graph.ShortestPathsDijkstra((edge) => { return edge.ChooseWeight(dataChannel); }, source);
 
-                // TODO: Пропускаем случаи, когда УСПД и КУ находятся в одной вершине
                 foreach (var target in targets)          // Для звезды находим пути из источника ко всем целям
                 {
                     tryGetPath(target, out var path);

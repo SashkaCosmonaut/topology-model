@@ -77,9 +77,9 @@ namespace TopologyModel.Graphs
         {
             var location = GetLocation(source, target);
 
-            return 0.4f * source.Region.GetUnavailabilityEstimate(location) +
-                   0.3f * source.Region.GetLaboriousnessEstimate(location) +
-                   0.3f * source.Region.GetAggressivenessEstimate(location);
+            return source.Region.GetUnavailabilityEstimate(location) +      // 0.4f * 
+                   source.Region.GetLaboriousnessEstimate(location) +       // 0.3f * 
+                   source.Region.GetAggressivenessEstimate(location);       // 0.3f * 
         }
 
         /// <summary>
