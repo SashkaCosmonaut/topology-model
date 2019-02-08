@@ -59,7 +59,7 @@ namespace TopologyModel.GA
                     fitness += dadGroup
                         .GroupBy(q => q.Channel)        // 2.3. Группируем группы секций по используемому КПД
                         .Sum(channelGroup =>            // 2.4. Просуммировать стоимости связий УСПД и КУ по каждому КПД, если они есть
-                            GetConnectionCost(topologyChromosome.CurrentProject.Graph, dadGroup.Key, channelGroup.Select(q => q.MCDPart).ToArray(), channelGroup.Key));  
+                            GetConnectionCost(topologyChromosome.CurrentProject, dadGroup.Key, channelGroup.Select(q => q.MCDPart).ToArray(), channelGroup.Key));  
                 }
 
                 return -fitness;     // Значение общей стоимости и будет результатом фитнес функции
@@ -74,15 +74,23 @@ namespace TopologyModel.GA
         /// <summary>
         /// Проверить, что КУ и УСПД могут связываться по данному КПД, найти путь от КПД до всех КУ и рассчитать его стоимость.
         /// </summary>
-        /// <param name="graph">Граф, на котором ищем пути.</param>
+        /// <param name="project">Свойства текущего проекта.</param>
         /// <param name="dadPart">Часть секции с УСПД.</param>
         /// <param name="dataChannel">Канал, соединяющий УСПД и КУ.</param>
         /// <param name="connectedMCDs">Соединяемые с УСПД КУ по КПД.</param>
         /// <returns>Стоимость путей от УСПД до КУ по КПД.</returns>
-        protected double GetConnectionCost(TopologyGraph graph, DataAcquisitionSectionPart dadPart, MeasurementAndControlSectionPart[] connectedMCDs, DataChannel dataChannel)
+        protected double GetConnectionCost(Project project, DataAcquisitionSectionPart dadPart, MeasurementAndControlSectionPart[] connectedMCDs, DataChannel dataChannel)
         {
             try
             {
+                // 1. Проверить количество подключаемых устройств в самом КПД
+                // 2. Проверить, что УСПД поддерживает количество подключенных устройств по КПД и КПД поддерживает количество передаваемых устройств
+                // 3. Проверить дальность пути и проходимость сквозь участки беспроводной связи 
+
+                // MaxRange
+
+                // MaxDevicesConnected
+
                 // Условие разбито на несколько для повышения производительности
                 if (!dadPart.DAD.ReceivingCommunications.Keys.Contains(dataChannel.Communication))              // Если УСПД не поддерживает данный канал, дальше можно не смотреть
                     return UNACCEPTABLE;
@@ -91,9 +99,9 @@ namespace TopologyModel.GA
                     return UNACCEPTABLE;
 
                 // Найти все пути, соединяющие УСПД и все КУ, присоединённые по данному КПД
-                var path = TopologyPathfinder.SectionShortestPath(graph, dadPart.Vertex, connectedMCDs.Select(q => q.Vertex), dataChannel);
+                var path = TopologyPathfinder.SectionShortestPath(project.Graph, dadPart.Vertex, connectedMCDs.Select(q => q.Vertex), dataChannel);
 
-                return path?.Sum(q => q.GetCost()) ?? UNACCEPTABLE;  // Вернуть сумму стоимостей всех составных частей пути, если путь не найден, то плохо - высокая стоимость
+                return path?.Sum(q => q.GetCost(project)) ?? UNACCEPTABLE;  // Вернуть сумму стоимостей всех составных частей пути, если путь не найден, то плохо - высокая стоимость
             }
             catch (Exception ex)
             {

@@ -44,14 +44,31 @@ namespace TopologyModel.Equipments
         /// </summary>
         /// <param name="project">Свойства проекта.</param>
         /// <param name="vertex">Вершина графа, в которой установлен инструмент.</param>
-        /// <returns>Значение выбранных затрат на данный инструмент.</returns>
+        /// <returns>Значение затрат на внедрение данного инструмента.</returns>
         public virtual double GetCost(Project project, TopologyVertex vertex)
         {
             try
             {
-                var cost = 0.0;
+                return GetCost(project, 1 + vertex.LaboriousnessWeight / 10);   // В худшем случае затраты могут возрасти в 4 раза
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("AbstractEquipment GetCost failed! {0}", ex.Message);
+                return TopologyFitness.UNACCEPTABLE;
+            }
+        }
 
-                var laboriousnessFactor = 1 + vertex.LaboriousnessWeight / 10;  // В худшем случае затраты могут возрасти в 4 раза
+        /// <summary>
+        /// Рассчитать стоимость в зависимости от коэффициента трудоемкости реализации.
+        /// </summary>
+        /// <param name="project">Свойства проекта.</param>
+        /// <param name="laboriousnessFactor">Коэффициент трудоемкости.</param>
+        /// <returns>Значение затрат на внедрение данного инструмента.</returns>
+        protected double GetCost(Project project, float laboriousnessFactor)
+        {
+            try
+            {
+                var cost = 0.0;
 
                 if (project.MinimizationGoal == CostType.Time || project.MinimizationGoal == CostType.All)
                 {

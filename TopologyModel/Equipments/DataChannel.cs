@@ -36,7 +36,7 @@ namespace TopologyModel.Equipments
         public uint MaxDevicesConnected { get; set; }
 
         /// <summary>
-        /// Рассчитать базовые затраты на использование данного КПД для формирования сети.
+        /// Рассчитать базовые затраты на использование данного КПД на одном узле для формирования сети.
         /// </summary>
         /// <param name="project">Свойства проекта.</param>
         /// <param name="vertex">Вершина графа, в которой установлен инструмент.</param>
@@ -52,6 +52,27 @@ namespace TopologyModel.Equipments
             {
                 Console.WriteLine("DataChannel GetCost failed! {0}", ex.Message);
                 return TopologyFitness.UNACCEPTABLE;
+            }
+        }
+
+        /// <summary>
+        /// Рассчитать затраты на проведение данного КПД по одной грани графа.
+        /// </summary>
+        /// <param name="project">Свойства проекта.</param>
+        /// <param name="edge">Грань, вдоль которой проведён данный КПД.</param>
+        /// <returns>Значение выбранных затрат на проведение КПД.</returns>
+        public double GetCost(Project project, TopologyEdge edge)
+        {
+            try
+            {
+                if (IsWireless) return 0;
+  
+                return GetCost(project, 1 + edge.WiredWeight / 10);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("DataChannel GetCost failed! {0}", ex.Message);
+                return 0;
             }
         }
     }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using TopologyModel.Equipments;
 using TopologyModel.GA;
 
@@ -57,27 +58,21 @@ namespace TopologyModel.Graphs
         /// <summary>
         /// Получить стоимость реализации данного пути.
         /// </summary>
+        /// <param name="project">Свойства проекта.</param>
         /// <returns>Стоимость реализации проведения данного пути.</returns>
-        public double GetCost()
+        public double GetCost(Project project)
         {
             try
             {
                 if (Path == null)           // Пути может не быть если источник и цель совпадают или путь не нашли
                 {
-                    if (Source == Target)
-                        return 0;
+                    if (Source == Target)   // Для случая, когда УСПД и КУ находятся в одной вершине, считаем путь только в ней
+                        return DataChannel.GetCost(project, Source);
 
                     return TopologyFitness.UNACCEPTABLE;
                 }
-                // TODO: нужно учитывать количество подключаемых устройств
 
-                // TODO: проверить дальность пути и проходимость сквозь участки беспроводной связи 
-
-                // TODO: проверить ещё те, у которых источник и приёмник находятся в одной вершине, для них пути не будет
-
-                // TODO: Проверить, что УСПД поддерживает количество подключенных устройств по КПД и КПД поддерживает количество передаваемых устройств
-
-                return 0;
+                return Path.Sum(edge => DataChannel.GetCost(project, edge));
             }
             catch (Exception ex)
             {
