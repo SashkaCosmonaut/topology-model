@@ -87,7 +87,7 @@ namespace TopologyModel
             try
             {
                 // Везде добавляем переносы строк для красоты
-                var graphLabel = topology == null 
+                var graphLabel = topology == null
                     ? ""
                     : PrepareJSONForGraphviz(topology.GetInfo() ?? "").Replace("{'DAD", "\r\n\r\n{'DAD");
 
@@ -202,6 +202,8 @@ namespace TopologyModel
                 {
                     Console.WriteLine("Generations: {0}", ga.Population.GenerationsNumber);
                     Console.WriteLine("Time: {0}", ga.TimeEvolving);
+
+                    // TODO: записать значения в csv файл и строить график фитнес-функции
 
                     var bc = ga.Population.BestChromosome as TopologyChromosome;
 
