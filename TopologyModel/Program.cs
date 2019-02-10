@@ -61,7 +61,7 @@ namespace TopologyModel
 
             try
             {
-                using (var sr = File.OpenText("./Configs/Config.json"))
+                using (var sr = File.OpenText("./Configs/Tests.json"))
                 {
                     var result = JsonConvert.DeserializeObject<Project>(sr.ReadToEnd());
 
@@ -191,11 +191,11 @@ namespace TopologyModel
                 var crossover = new UniformCrossover(0.5f);
                 var mutation = new UniformMutation(true);
                 var fitness = new TopologyFitness();
-                var population = new Population(50, 50, chromosome);
+                var population = new Population(100, 100, chromosome);
 
                 var ga = new GeneticAlgorithm(population, fitness, selection, crossover, mutation)
                 {
-                    Termination = new GenerationNumberTermination(100)
+                    Termination = new GenerationNumberTermination(200)
                 };
 
                 ga.GenerationRan += (c, e) =>

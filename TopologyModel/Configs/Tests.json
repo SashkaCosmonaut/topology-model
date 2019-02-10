@@ -1,0 +1,128 @@
+﻿{
+	"Goal": 0,
+	"Height": 5,
+	"Width": 5,
+	"Budget": 0.0,
+	"UsageMonths": 0,
+	"UseLocalServer": false,
+	"UseLocalEmployee": false,
+	"IsInternetAvailable": false,
+	"LocalServerMonthlyPayment": 0.0,
+	"RemoteServerMonthlyPayment": 0.0,
+	"GraphDotFilename": "graph.dot",
+	"CostPerHour": 0,
+	"MobileInternetMonthlyPayment": {
+		"_3G": 300.0,
+		"GPRS": 100.0,
+		"LTE": 500.0,
+		"Manual": 0
+	},
+	"Regions": [
+		{
+			"HasLan": true,
+			"HasWiFi": true,
+			"HasPower": true,
+			"BadMobileInternetSignal": 1,
+			"Aggressiveness": [ 1, 1, 1, 1, 1 ],
+			"Unavailability": [ 1, 1, 1, 1, 1 ],
+			"Laboriousness": [ 1, 1, 1, 1, 1 ],
+			"BadRadioTransmittance": [ 1, 1, 1, 1, 1 ],
+			"BadWiredTransmittance": [ 1, 1, 1, 1, 1 ],
+			"Name": "Простой тестовый участок",
+			"X": 1,
+			"Y": 1,
+			"Width": 5,
+			"Height": 5
+		}
+	],
+	"MCZs": [
+		{
+			"Priority": 1,
+			"Measurements": [ 0 ],
+			"Controls": null,
+			"IsDeviceReplacementAvailable": true,
+			"Name": "Тестовое МУ 1",
+			"X": 1,
+			"Y": 2,
+			"Width": 1,
+			"Height": 1
+		},
+		{
+			"Priority": 1,
+			"Measurements": [ 0 ],
+			"Controls": null,
+			"IsDeviceReplacementAvailable": true,
+			"Name": "Тестовое МУ 2",
+			"X": 4,
+			"Y": 1,
+			"Width": 1,
+			"Height": 1
+		},
+		{
+			"Priority": 1,
+			"Measurements": [ 0 ],
+			"Controls": null,
+			"IsDeviceReplacementAvailable": true,
+			"Name": "Тестовое МУ 3",
+			"X": 5,
+			"Y": 4,
+			"Width": 1,
+			"Height": 1
+		},
+		{
+			"Priority": 1,
+			"Measurements": [ 0 ],
+			"Controls": null,
+			"IsDeviceReplacementAvailable": true,
+			"Name": "Тестовое МУ 4",
+			"X": 2,
+			"Y": 5,
+			"Width": 1,
+			"Height": 1
+		}
+	],
+	"Equipments": {
+		"MCDs": [
+			{
+				"Measurements": [ 0 ],
+				"Controls": null,
+				"SendingCommunications": [ 1 ],
+				"IsPowerRequired": false,
+				"BatteryTime": "00:00:00",
+				"BatteryServicePrice": 0.0,
+				"Name": "Механический электрический счётчик",
+				"PurchasePrice": 1500.0,
+				"InstallationPrice": 500.0,
+				"InstallationTime": "01:00:00"
+			}
+		],
+		"DCs": [
+			{
+				"IsWireless": false,
+				"Communication": 1,
+				"Topology": 1,
+				"MaxRange": 100.0,
+				"Name": "Импульсный канал",
+				"PurchasePrice": 10.0,
+				"InstallationPrice": 100.0,
+				"InstallationTime": "00:10:00"
+			}
+		],
+		"DADs": [
+			{
+				"ReceivingCommunications": {
+					"Impulse": 10
+				},
+				"ServerConnections": [ 7 ],
+				"SendingCommunications": null,
+				"IsPowerRequired": false,
+				"BatteryTime": "00:00:00",
+				"BatteryServicePrice": 0.0,
+				"Name": "Простой тестовый УСПД - сервер, принимающий импульсы",
+				"PurchasePrice": 1000,
+				"InstallationPrice": 0,
+				"InstallationTime": "00:00:00"
+			}
+		]
+	}
+}
