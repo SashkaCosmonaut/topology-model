@@ -45,7 +45,7 @@ namespace TopologyModel.Equipments
                     // Берём самый дешёвый способ передачи данных
                     cost += availableConnections.Min(q => project.MobileInternetMonthlyPayment[q]) * project.UsageMonths;
 
-                    cost += PurchasePrice * (1 + vertex.Region.BadMobileInternetSignal / 10); // Учитываем затраты на плохую связь
+                    cost += PurchasePrice * (vertex.Region.BadMobileInternetSignal == 1 ? 0 : vertex.Region.BadMobileInternetSignal / 10); // Учитываем затраты на плохую связь
                 }   
             }
             catch (Exception ex)
