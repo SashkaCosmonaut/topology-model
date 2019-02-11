@@ -23,9 +23,9 @@
 			"HasWiFi": true,
 			"HasPower": true,
 			"BadMobileInternetSignal": 1,
-			"Aggressiveness": [ 1, 1, 1, 1, 1 ],
-			"Unavailability": [ 1, 1, 1, 1, 1 ],
-			"Laboriousness": [ 1, 1, 1, 1, 1 ],
+			"Aggressiveness": [ 10, 10, 10, 10, 1 ],
+			"Unavailability": [ 10, 10, 10, 10, 1 ],
+			"Laboriousness": [ 10, 10, 10, 10, 1 ],
 			"BadRadioTransmittance": [ 1, 1, 1, 1, 1 ],
 			"BadWiredTransmittance": [ 1, 1, 1, 1, 1 ],
 			"Name": "Простой тестовый участок",
@@ -93,47 +93,113 @@
 		}
 	],
 	"Equipments": {
-		"MCDs": [
-			{
-				"Measurements": [ 0 ],
-				"Controls": null,
-				"SendingCommunications": [ 4 ],
-				"IsPowerRequired": false,
-				"BatteryTime": "00:00:00",
-				"BatteryServicePrice": 0.0,
-				"Name": "Счётчик с RS485",
-				"PurchasePrice": 3500.0,
-				"InstallationPrice": 1000.0,
-				"InstallationTime": "01:00:00"
-			}
-		],
-		"DCs": [
-			{
-				"IsWireless": true,
-				"Communication": 4,
-				"Topology": 2,
-				"MaxRange": 1000.0,
-				"Name": "RS485",
-				"PurchasePrice": 20.0,
-				"InstallationPrice": 100.0,
-				"InstallationTime": "00:10:00"
-			}
-		],
-		"DADs": [
-			{
-				"ReceivingCommunications": {
-					"RS485": 30
+			"MCDs": [
+				{
+					"Measurements": [ 0 ],
+					"Controls": null,
+					"SendingCommunications": [ 4 ],
+					"IsPowerRequired": false,
+					"BatteryTime": "00:00:00",
+					"BatteryServicePrice": 0.0,
+					"Name": "Счётчик с RS485",
+					"PurchasePrice": 3500.0,
+					"InstallationPrice": 1000.0,
+					"InstallationTime": "01:00:00"
 				},
-				"ServerConnections": [ 7 ],
-				"SendingCommunications": null,
-				"IsPowerRequired": false,
-				"BatteryTime": "00:00:00",
-				"BatteryServicePrice": 0.0,
-				"Name": "УСПД c RS485",
-				"PurchasePrice": 5000,
-				"InstallationPrice": 1000,
-				"InstallationTime": "00:00:00"
-			}
-		]
+				{
+					"Measurements": [ 0 ],
+					"Controls": null,
+					"SendingCommunications": [ 12 ],
+					"IsPowerRequired": false,
+					"BatteryTime": "00:00:00",
+					"BatteryServicePrice": 0.0,
+					"Name": "Счётчик, который шлёт сразу в Интернет",
+					"PurchasePrice": 5000.0,
+					"InstallationPrice": 1000.0,
+					"InstallationTime": "01:00:00"
+				},
+				{
+					"Measurements": [ 0 ],
+					"Controls": null,
+					"SendingCommunications": [ 6 ],
+					"IsPowerRequired": false,
+					"BatteryTime": "00:00:00",
+					"BatteryServicePrice": 0.0,
+					"Name": "Счётчик c BlueTooth",
+					"PurchasePrice": 5000.0,
+					"InstallationPrice": 1000.0,
+					"InstallationTime": "01:00:00"
+				}
+			],
+			"DCs": [
+				{
+					"IsWireless": false,
+					"Communication": 4,
+					"Topology": 2,
+					"MaxRange": 1000.0,
+					"Name": "RS485",
+					"PurchasePrice": 20.0,
+					"InstallationPrice": 50.0,
+					"InstallationTime": "00:10:00"
+				},
+				{
+					"IsWireless": false,
+					"Communication": 12,
+					"Topology": 1,
+					"MaxRange": 0.0,
+					"Name": "Связь счётчика в Интернет",
+					"PurchasePrice": 0.0,
+					"InstallationPrice": 0.0,
+					"InstallationTime": "00:10:00"
+				},
+				{
+					"IsWireless": true,
+					"Communication": 6,
+					"Topology": 1,
+					"MaxRange": 10.0,
+					"Name": "BlueTooth",
+					"PurchasePrice": 0.0,
+					"InstallationPrice": 0.0,
+					"InstallationTime": "00:00:00"
+				}
+			],
+			"DADs": [
+				{
+					"ReceivingCommunications": { "RS485": 30 },
+					"ServerConnections": [ 7 ],
+					"SendingCommunications": null,
+					"IsPowerRequired": false,
+					"BatteryTime": "00:00:00",
+					"BatteryServicePrice": 0.0,
+					"Name": "УСПД c RS485",
+					"PurchasePrice": 10000,
+					"InstallationPrice": 1000,
+					"InstallationTime": "00:00:00"
+				},
+				{
+					"ReceivingCommunications": { "Electr_DAD_1": 1 },
+					"ServerConnections": [ 7 ],
+					"SendingCommunications": null,
+					"IsPowerRequired": false,
+					"BatteryTime": "00:00:00",
+					"BatteryServicePrice": 0.0,
+					"Name": "УСПД электрического счётчика",
+					"PurchasePrice": 0.0,
+					"InstallationPrice": 0.0,
+					"InstallationTime": "00:00:00"
+				},
+				{
+					"ReceivingCommunications": { "BlueTooth": 10 },
+					"ServerConnections": [ 7 ],
+					"SendingCommunications": null,
+					"IsPowerRequired": false,
+					"BatteryTime": "00:00:00",
+					"BatteryServicePrice": 0.0,
+					"Name": "УСПД c BlueTooth",
+					"PurchasePrice": 15000.0,
+					"InstallationPrice": 1000.0,
+					"InstallationTime": "00:00:00"
+				}
+			]
 	}
 }
