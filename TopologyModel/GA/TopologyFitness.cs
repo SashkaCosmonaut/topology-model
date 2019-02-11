@@ -20,11 +20,6 @@ namespace TopologyModel.GA
         public const double UNACCEPTABLE = 999_999_999_999;
 
         /// <summary>
-        /// Значение фитнес-функции для очень плохого случая.
-        /// </summary>
-        public const double VERY_BAD = 999_999_999;
-
-        /// <summary>
         /// Значение фитнес-функции для плохого случая.
         /// </summary>
         public const double BAD = 999_999;
@@ -94,10 +89,10 @@ namespace TopologyModel.GA
             {
                 // Условие разбито на несколько для повышения производительности
                 if (!dadPart.DAD.ReceivingCommunications.Keys.Contains(dataChannel.Communication))              // Если УСПД не поддерживает данный канал, дальше можно не смотреть
-                    cost += 2 * VERY_BAD;
+                    cost += UNACCEPTABLE;
     
                 if (connectedMCDs.Any(q => !q.MCD.SendingCommunications.Contains(dataChannel.Communication)))   // Если есть хоть одно КУ, которое не поддерживает канал, то дальше можно не смотреть
-                    cost += VERY_BAD;
+                    cost += UNACCEPTABLE;
 
                 if (dadPart.DAD.ReceivingCommunications.Any(q => q.Key == dataChannel.Communication))
                 {
