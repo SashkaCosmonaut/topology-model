@@ -89,10 +89,15 @@ namespace TopologyModel.GA
                 if (connectedMCDs.Any(q => !q.MCD.SendingCommunications.Contains(dataChannel.Communication)))   // Если есть хоть одно КУ, которое не поддерживает канал, то дальше можно не смотреть
                     cost += UNACCEPTABLE;
 
-                var dadUsedCommunication = dadPart.DAD.ReceivingCommunications.Single(q => q.Key == dataChannel.Communication);
+                if (dadPart.DAD.ReceivingCommunications.Any(q => q.Key == dataChannel.Communication))
+                {
+                    var dadUsedCommunication = dadPart.DAD.ReceivingCommunications.Single(q => q.Key == dataChannel.Communication);
 
-                // Проверить, что УСПД поддерживает количество подключенных устройств по КПД
-                if (connectedMCDs.Length > dadUsedCommunication.Value)
+                    // Проверить, что УСПД поддерживает количество подключенных устройств по КПД
+                    if (connectedMCDs.Length > dadUsedCommunication.Value)
+                        cost += UNACCEPTABLE;
+                }
+                else
                     cost += UNACCEPTABLE;
 
                 // Найти все пути, соединяющие УСПД и все КУ, присоединённые по данному КПД

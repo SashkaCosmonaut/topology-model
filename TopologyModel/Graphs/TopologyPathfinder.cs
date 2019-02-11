@@ -92,14 +92,14 @@ namespace TopologyModel.Graphs
                     mesh.Add(new TopologyPath
                     {
                         DataChannel = dataChannel,
-                        Path = shortestPath.Value,      
+                        Path = shortestPath.Value,
                         Source = shortestPathSource,
                         Target = shortestPathTarget
                     });
 
                     // Вершина-источник найденной части сети тоже теперь может являться источником, если ещё не является
-                    if (!meshPartSources.Contains(shortestPathSource))
-                        meshPartSources.Add(shortestPathSource);
+                    if (!meshPartSources.Contains(shortestPathTarget))
+                        meshPartSources.Add(shortestPathTarget);
 
                     remainedTargets.Remove(shortestPathTarget);     // Больше не рассматриваем целевую вершину из найденной части сети
                     meshPartCandidates.Clear();                     // Ищем кандидатов заново

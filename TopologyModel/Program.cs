@@ -195,7 +195,7 @@ namespace TopologyModel
 
                 var ga = new GeneticAlgorithm(population, fitness, selection, crossover, mutation)
                 {
-                    Termination = new GenerationNumberTermination(200)
+                    Termination = new GenerationNumberTermination(100)
                 };
 
                 ga.GenerationRan += (c, e) =>
