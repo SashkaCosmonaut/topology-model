@@ -17,7 +17,17 @@ namespace TopologyModel.GA
         /// <summary>
         /// Значение фитнес-функции для недопустимого случая.
         /// </summary>
-        public const double UNACCEPTABLE = 999999;
+        public const double UNACCEPTABLE = 999_999_999_999;
+
+        /// <summary>
+        /// Значение фитнес-функции для очень плохого случая.
+        /// </summary>
+        public const double VERY_BAD = 999_999_999;
+
+        /// <summary>
+        /// Значение фитнес-функции для плохого случая.
+        /// </summary>
+        public const double BAD = 999_999;
 
         /// <summary>
         /// Оценить приспособленность хромосомы топологии.
@@ -84,10 +94,10 @@ namespace TopologyModel.GA
             {
                 // Условие разбито на несколько для повышения производительности
                 if (!dadPart.DAD.ReceivingCommunications.Keys.Contains(dataChannel.Communication))              // Если УСПД не поддерживает данный канал, дальше можно не смотреть
-                    cost += UNACCEPTABLE;
+                    cost += 2 * VERY_BAD;
     
                 if (connectedMCDs.Any(q => !q.MCD.SendingCommunications.Contains(dataChannel.Communication)))   // Если есть хоть одно КУ, которое не поддерживает канал, то дальше можно не смотреть
-                    cost += UNACCEPTABLE;
+                    cost += VERY_BAD;
 
                 if (dadPart.DAD.ReceivingCommunications.Any(q => q.Key == dataChannel.Communication))
                 {
@@ -95,7 +105,7 @@ namespace TopologyModel.GA
 
                     // Проверить, что УСПД поддерживает количество подключенных устройств по КПД
                     if (connectedMCDs.Length > dadUsedCommunication.Value)
-                        cost += UNACCEPTABLE;
+                        cost += BAD * (connectedMCDs.Length - dadUsedCommunication.Value);
                 }
                 else
                     cost += UNACCEPTABLE;
@@ -103,11 +113,11 @@ namespace TopologyModel.GA
                 // Найти все пути, соединяющие УСПД и все КУ, присоединённые по данному КПД
                 var pathes = TopologyPathfinder.SectionShortestPath(project.Graph, dadPart.Vertex, connectedMCDs.Select(q => q.Vertex), dataChannel);
 
-                // Проверить дальность пути и проходимость сквозь участки беспроводной связи 
+                // Проверить длину пути и проходимость сквозь участки беспроводной связи 
                 var distance = GetDistance(pathes, dataChannel);
 
                 if (distance > dataChannel.MaxRange)
-                    cost += distance * UNACCEPTABLE;        // Чем дальше, тем хуже значение фитнес-функции  
+                    cost += distance * BAD;        // Чем дальше, тем хуже значение фитнес-функции  
 
                 cost += pathes?.Sum(q => q.GetCost(project)) ?? UNACCEPTABLE;  // Вернуть сумму стоимостей всех составных частей пути, если путь не найден, то плохо - высокая стоимость
             }
@@ -121,7 +131,7 @@ namespace TopologyModel.GA
         }
 
         /// <summary>
-        /// Максимальное расстояние данного пути (для звезды и mesh) или всего пути для шины, чтобы проверить,
+        /// Максимальное длину данного пути (для звезды и mesh) или всего пути для шины, чтобы проверить,
         /// что все пути, по которым соеденены устройства удовлетворяют требованию длины.
         /// </summary>
         /// <param name="pathes">Пути, по которым КУ соединены с УСПД.</param>
