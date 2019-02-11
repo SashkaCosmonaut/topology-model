@@ -12,7 +12,45 @@ namespace TopologyModel.Graphs
     /// </summary>
     public static class TopologyPathfinder
     {
-        // TODO: Сделать кэш уже найденных путей и брать из него, если можно не искать
+        /// <summary>
+        /// Кэш уже найденных путей в графе.
+        /// </summary>
+        private static List<TopologyPathesCacheItem> PathesCache = new List<TopologyPathesCacheItem>();
+
+        /// <summary>
+        /// Найти кратчайший путь из источника в цель в кеше или на графе.
+        /// </summary>
+        /// <param name="source">Вершина графа - источник пути.</param>
+        /// <param name="target">Вершина пути - цель пути.</param>
+        /// <param name="dataChannel">КПД, по которому строится путь.</param>
+        /// <returns>Найденный заново или взятый из кэша путь.</returns>
+        private static IEnumerable<TopologyEdge> GetPath(TopologyGraph graph, TopologyVertex source, TopologyVertex target, DataChannel dataChannel)
+        {
+            try
+            {
+                var cachedPath = PathesCache.SingleOrDefault(q =>       // Пытаемся найти такой прямой или обратный путь в кэше
+                    q.IsWireless == dataChannel.IsWireless &&
+                    ((q.Source == source && q.Target == target) || (q.Target == source && q.Source == target)));
+
+                if (cachedPath != null)
+                    return cachedPath.Path;
+
+                // Если не нашли, ищем путь в графе
+                var tryGetPath = graph.ShortestPathsDijkstra((edge) => { return edge.ChooseWeight(dataChannel); }, source);
+
+                tryGetPath(target, out var path);
+
+                // Сохраняем найденный путь в кэше и возвращаем
+                PathesCache.Add(new TopologyPathesCacheItem(source, target, dataChannel.IsWireless, path));
+
+                return path;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("GetPath failed! {0}", ex.Message);
+                return null;
+            }
+        }
 
         /// <summary>
         /// Найти кратчайший путь в секции от вершины источника - УСПД, через все целевые вершины КУ.
@@ -72,9 +110,7 @@ namespace TopologyModel.Graphs
                     {
                         foreach (var target in remainedTargets)     // Перебираем все оставшиеся целевые вершины
                         {
-                            var tryGetPath = graph.ShortestPathsDijkstra((edge) => { return edge.ChooseWeight(dataChannel); }, partSource);
-
-                            tryGetPath(target, out var path);       // Ищем кратчайший путь из источника в цель и сохраняем его как кандидат на кратчайший
+                            var path = GetPath(graph, partSource, target, dataChannel);    // Ищем кратчайший путь из источника в цель и сохраняем его как кандидат на кратчайший 
 
                             meshPartCandidates.Add(new KeyValuePair<TopologyVertex, TopologyVertex>(partSource, target), path);
                         }
@@ -128,11 +164,10 @@ namespace TopologyModel.Graphs
             {
                 // Задаём результирующий контейнер путей, источник и алгоритм расчёта весов   
                 var resultPath = new List<TopologyPath>();
-                var tryGetPath = graph.ShortestPathsDijkstra((edge) => { return edge.ChooseWeight(dataChannel); }, source);
 
                 foreach (var target in targets)          // Для звезды находим пути из источника ко всем целям
                 {
-                    tryGetPath(target, out var path);
+                    var path = GetPath(graph, source, target, dataChannel);
 
                     resultPath.Add(new TopologyPath
                     {
@@ -173,9 +208,7 @@ namespace TopologyModel.Graphs
                 {
                     foreach (var target in remainedTargets)     // Перебираем все оставшиеся целевые вершины
                     {
-                        var tryGetPath = graph.ShortestPathsDijkstra((edge) => { return edge.ChooseWeight(dataChannel); }, busPartSource);
-
-                        tryGetPath(target, out var path);       // Ищем кратчайший путь из источника в цель и сохраняем его как кандидат на кратчайший
+                        var path = GetPath(graph, busPartSource, target, dataChannel);       // Ищем кратчайший путь из источника в цель и сохраняем его как кандидат на кратчайший
 
                         busPartCandidates.Add(target, path);
                     }

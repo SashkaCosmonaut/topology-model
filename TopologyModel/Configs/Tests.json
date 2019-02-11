@@ -1,7 +1,7 @@
 ﻿{
 	"Goal": 0,
-	"Height": 5,
-	"Width": 5,
+	"Height": 6,
+	"Width": 6,
 	"Budget": 0.0,
 	"UsageMonths": 0,
 	"UseLocalServer": false,
@@ -31,8 +31,8 @@
 			"Name": "Простой тестовый участок",
 			"X": 1,
 			"Y": 1,
-			"Width": 5,
-			"Height": 5
+			"Width": 6,
+			"Height": 6
 		}
 	],
 	"MCZs": [
@@ -43,9 +43,9 @@
 			"IsDeviceReplacementAvailable": true,
 			"Name": "Тестовое МУ 1",
 			"X": 1,
-			"Y": 2,
-			"Width": 1,
-			"Height": 1
+			"Y": 1,
+			"Width": 2,
+			"Height": 2
 		},
 		{
 			"Priority": 1,
@@ -53,10 +53,10 @@
 			"Controls": null,
 			"IsDeviceReplacementAvailable": true,
 			"Name": "Тестовое МУ 2",
-			"X": 4,
+			"X": 5,
 			"Y": 1,
-			"Width": 1,
-			"Height": 1
+			"Width": 2,
+			"Height": 2
 		},
 		{
 			"Priority": 1,
@@ -64,10 +64,10 @@
 			"Controls": null,
 			"IsDeviceReplacementAvailable": true,
 			"Name": "Тестовое МУ 3",
-			"X": 5,
-			"Y": 4,
-			"Width": 1,
-			"Height": 1
+			"X": 1,
+			"Y": 5,
+			"Width": 2,
+			"Height": 2
 		},
 		{
 			"Priority": 1,
@@ -75,10 +75,21 @@
 			"Controls": null,
 			"IsDeviceReplacementAvailable": true,
 			"Name": "Тестовое МУ 4",
-			"X": 2,
+			"X": 5,
 			"Y": 5,
-			"Width": 1,
-			"Height": 1
+			"Width": 2,
+			"Height": 2
+		},
+		{
+			"Priority": 1,
+			"Measurements": [ 0 ],
+			"Controls": null,
+			"IsDeviceReplacementAvailable": true,
+			"Name": "Тестовое МУ 5",
+			"X": 3,
+			"Y": 3,
+			"Width": 2,
+			"Height": 2
 		}
 	],
 	"Equipments": {
@@ -86,24 +97,24 @@
 			{
 				"Measurements": [ 0 ],
 				"Controls": null,
-				"SendingCommunications": [ 1 ],
+				"SendingCommunications": [ 4 ],
 				"IsPowerRequired": false,
 				"BatteryTime": "00:00:00",
 				"BatteryServicePrice": 0.0,
-				"Name": "Механический электрический счётчик",
-				"PurchasePrice": 1500.0,
-				"InstallationPrice": 500.0,
+				"Name": "Счётчик с RS485",
+				"PurchasePrice": 3500.0,
+				"InstallationPrice": 1000.0,
 				"InstallationTime": "01:00:00"
 			}
 		],
 		"DCs": [
 			{
-				"IsWireless": false,
-				"Communication": 1,
-				"Topology": 1,
-				"MaxRange": 100.0,
-				"Name": "Импульсный канал",
-				"PurchasePrice": 10.0,
+				"IsWireless": true,
+				"Communication": 4,
+				"Topology": 2,
+				"MaxRange": 1000.0,
+				"Name": "RS485",
+				"PurchasePrice": 20.0,
 				"InstallationPrice": 100.0,
 				"InstallationTime": "00:10:00"
 			}
@@ -111,16 +122,16 @@
 		"DADs": [
 			{
 				"ReceivingCommunications": {
-					"Impulse": 10
+					"RS485": 30
 				},
 				"ServerConnections": [ 7 ],
 				"SendingCommunications": null,
 				"IsPowerRequired": false,
 				"BatteryTime": "00:00:00",
 				"BatteryServicePrice": 0.0,
-				"Name": "Простой тестовый УСПД - сервер, принимающий импульсы",
-				"PurchasePrice": 1000,
-				"InstallationPrice": 0,
+				"Name": "УСПД c RS485",
+				"PurchasePrice": 5000,
+				"InstallationPrice": 1000,
 				"InstallationTime": "00:00:00"
 			}
 		]

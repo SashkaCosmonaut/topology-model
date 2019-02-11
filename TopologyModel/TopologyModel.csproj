@@ -141,6 +141,7 @@
     <Compile Include="Graphs\TopologyEdge.cs" />
     <Compile Include="Graphs\TopologyGraph.cs" />
     <Compile Include="Graphs\TopologyPath.cs" />
+    <Compile Include="Graphs\TopologyPathesCacheItem.cs" />
     <Compile Include="Graphs\TopologyPathfinder.cs" />
     <Compile Include="Graphs\TopologyVertex.cs" />
     <Compile Include="Program.cs" />
