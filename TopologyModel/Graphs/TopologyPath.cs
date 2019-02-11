@@ -65,10 +65,10 @@ namespace TopologyModel.Graphs
             {
                 // Если ограничение на беспроводную связь больше 1, то каждое значение ограничения снижает дальность на 5 м.
                 if (DataChannel.IsWireless)
-                    return Path?.Sum(w => w.WirelessWeight * (w.WirelessWeight == 1 ? 1 : 5)) ?? 1;    // Если путь в одной вершине - расстояние 1 метр
+                    return Path?.Sum(w => w.WirelessWeight * (w.WirelessWeight == 1 ? 1 : 5)) ?? 0;    // Если путь в одной вершине - расстояние нулевое
 
                 // Ограничение на беспроводную свзязь в худшем случае увличит расход кабелей до 4 метров на 1 метр расстояния
-                return Path?.Sum(q => 1 + q.WiredWeight / 10) ?? 1;     // Если путь в одной вершине - расстояние 1 метр
+                return Path?.Sum(q => 1 + q.WiredWeight / 10) ?? 0;     // Если путь в одной вершине - расстояние нулевое
             }
             catch (Exception ex)
             {
