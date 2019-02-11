@@ -103,8 +103,11 @@ namespace TopologyModel.GA
                 // Найти все пути, соединяющие УСПД и все КУ, присоединённые по данному КПД
                 var pathes = TopologyPathfinder.SectionShortestPath(project.Graph, dadPart.Vertex, connectedMCDs.Select(q => q.Vertex), dataChannel);
 
-                if (!IsInRange(pathes, dataChannel))    // Проверить дальность пути и проходимость сквозь участки беспроводной связи 
-                    cost += UNACCEPTABLE;
+                // Проверить дальность пути и проходимость сквозь участки беспроводной связи 
+                var distance = GetDistance(pathes, dataChannel);
+
+                if (distance > dataChannel.MaxRange)
+                    cost += distance * UNACCEPTABLE;        // Чем дальше, тем хуже значение фитнес-функции  
 
                 cost += pathes?.Sum(q => q.GetCost(project)) ?? UNACCEPTABLE;  // Вернуть сумму стоимостей всех составных частей пути, если путь не найден, то плохо - высокая стоимость
             }
@@ -118,36 +121,37 @@ namespace TopologyModel.GA
         }
 
         /// <summary>
-        /// Проверить, что все пути, по которым соеденены устройства удовлетворяют требованию длины.
+        /// Максимальное расстояние данного пути (для звезды и mesh) или всего пути для шины, чтобы проверить,
+        /// что все пути, по которым соеденены устройства удовлетворяют требованию длины.
         /// </summary>
         /// <param name="pathes">Пути, по которым КУ соединены с УСПД.</param>
         /// <param name="dataChannel">КПД, которым соединены устройства.</param>
-        /// <returns>True, если удовлентворяют.</returns>
-        protected bool IsInRange(IEnumerable<TopologyPath> pathes, DataChannel dataChannel)
+        /// <returns>Значение расстояния.</returns>
+        protected double GetDistance(IEnumerable<TopologyPath> pathes, DataChannel dataChannel)
         {
             try
             {
-                if (pathes == null) return false;
+                if (pathes == null) return UNACCEPTABLE;
 
                 switch (dataChannel.Topology)
                 {
                     // Для звезды и меша проверяем, что длина максимального пути не больше требуемого
                     case DataChannelTopology.Mesh:
                     case DataChannelTopology.Star:
-                        return pathes.Max(q => q.GetDistance()) < dataChannel.MaxRange;
+                        return pathes.Max(q => q.GetDistance());
 
                     // Для шины проверяем, что суммарная длина не больше требуемой
                     case DataChannelTopology.Bus:
-                        return pathes.Sum(q => q.GetDistance()) < dataChannel.MaxRange;
+                        return pathes.Sum(q => q.GetDistance());
 
                     default:
-                        return false;
+                        return UNACCEPTABLE;
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("IsInRange failed! {0}", ex.Message);
-                return false;
+                return UNACCEPTABLE;
             }
         }
     }
