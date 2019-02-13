@@ -37,6 +37,8 @@ namespace TopologyModel
 
                 var topology = CalculateTopologyWithGA(project);
 
+                // TODO: добавить в файл ещё и значение фитнес функции и затраченное время 
+
                 GenerateGraphFile(project, topology);   // Сгенерировать результирующий граф с топологией
 
                 // если не достигли желаемых значений фитнес функции по деньгам или времени, то в зависимости от приоритета (с наименьшим, т.е. большим значением)
@@ -61,7 +63,7 @@ namespace TopologyModel
 
             try
             {
-                using (var sr = File.OpenText("./Configs/Tests.json"))
+                using (var sr = File.OpenText("./Configs/Tests huge.json"))
                 {
                     var result = JsonConvert.DeserializeObject<Project>(sr.ReadToEnd());
 
@@ -188,14 +190,14 @@ namespace TopologyModel
 
                 var chromosome = new TopologyChromosome(project);
                 var selection = new EliteSelection();
-                var crossover = new UniformCrossover(0.5f);
+                var crossover = new UniformCrossover(0.8f);
                 var mutation = new UniformMutation(true);
                 var fitness = new TopologyFitness();
-                var population = new Population(100, 100, chromosome);
+                var population = new Population(600, 600, chromosome);
 
                 var ga = new GeneticAlgorithm(population, fitness, selection, crossover, mutation)
                 {
-                    Termination = new GenerationNumberTermination(100)
+                    Termination = new GenerationNumberTermination(400)
                 };
 
                 ga.GenerationRan += (c, e) =>

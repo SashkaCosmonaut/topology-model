@@ -33,6 +33,8 @@
 
         Water_DAD_1,
 
+        Sensor_DAD_1,
+
         None
     }
 }

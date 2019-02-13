@@ -263,13 +263,344 @@
 	],
 	"Equipments": {
 		"MCDs": [
-
+			{
+				"Measurements": [ 0 ],
+				"Controls": null,
+				"SendingCommunications": [ 4 ],
+				"IsPowerRequired": false,
+				"BatteryTime": "00:00:00",
+				"BatteryServicePrice": 0.0,
+				"Name": "Электрический счётчик RS-485",
+				"PurchasePrice": 3500.0,
+				"InstallationPrice": 1000.0,
+				"InstallationTime": "01:00:00"
+			},
+			{
+				"Measurements": [ 0 ],
+				"Controls": null,
+				"SendingCommunications": [ 6 ],
+				"IsPowerRequired": false,
+				"BatteryTime": "00:00:00",
+				"BatteryServicePrice": 0.0,
+				"Name": "Электрический счётчик BlueTooth",
+				"PurchasePrice": 5000.0,
+				"InstallationPrice": 1000.0,
+				"InstallationTime": "01:00:00"
+			},
+			{
+				"Measurements": [ 0 ],
+				"Controls": null,
+				"SendingCommunications": [ 7 ],
+				"IsPowerRequired": false,
+				"BatteryTime": "00:00:00",
+				"BatteryServicePrice": 0.0,
+				"Name": "Электрический счётчик ZigBee",
+				"PurchasePrice": 7000.0,
+				"InstallationPrice": 1000.0,
+				"InstallationTime": "01:00:00"
+			},
+			{
+				"Measurements": [ 0 ],
+				"Controls": null,
+				"SendingCommunications": [ 12 ],
+				"IsPowerRequired": false,
+				"BatteryTime": "00:00:00",
+				"BatteryServicePrice": 0.0,
+				"Name": "Электрический счётчик Internet",
+				"PurchasePrice": 10000.0,
+				"InstallationPrice": 1500.0,
+				"InstallationTime": "01:00:00"
+			},
+			{
+				"Measurements": [ 1 ],
+				"Controls": null,
+				"SendingCommunications": [ 4 ],
+				"IsPowerRequired": false,
+				"BatteryTime": "00:00:00",
+				"BatteryServicePrice": 0.0,
+				"Name": "Водяной счётчик RS-485",
+				"PurchasePrice": 3500.0,
+				"InstallationPrice": 1000.0,
+				"InstallationTime": "01:00:00"
+			},
+			{
+				"Measurements": [ 1 ],
+				"Controls": null,
+				"SendingCommunications": [ 6 ],
+				"IsPowerRequired": false,
+				"BatteryTime": "00:00:00",
+				"BatteryServicePrice": 0.0,
+				"Name": "Водяной счётчик BlueTooth",
+				"PurchasePrice": 5000.0,
+				"InstallationPrice": 1000.0,
+				"InstallationTime": "01:00:00"
+			},
+			{
+				"Measurements": [ 1 ],
+				"Controls": null,
+				"SendingCommunications": [ 7 ],
+				"IsPowerRequired": false,
+				"BatteryTime": "00:00:00",
+				"BatteryServicePrice": 0.0,
+				"Name": "Водяной счётчик ZigBee",
+				"PurchasePrice": 7000.0,
+				"InstallationPrice": 1000.0,
+				"InstallationTime": "01:00:00"
+			},
+			{
+				"Measurements": [ 1 ],
+				"Controls": null,
+				"SendingCommunications": [ 13 ],
+				"IsPowerRequired": false,
+				"BatteryTime": "00:00:00",
+				"BatteryServicePrice": 0.0,
+				"Name": "Водяной счётчик Internet",
+				"PurchasePrice": 10000.0,
+				"InstallationPrice": 1500.0,
+				"InstallationTime": "01:00:00"
+			},
+			{
+				"Measurements": null,
+				"Controls": [ 0 ],
+				"SendingCommunications": [ 4 ],
+				"IsPowerRequired": false,
+				"BatteryTime": "00:00:00",
+				"BatteryServicePrice": 0.0,
+				"Name": "Датчик 1 RS-485",
+				"PurchasePrice": 3500.0,
+				"InstallationPrice": 1000.0,
+				"InstallationTime": "01:00:00"
+			},
+			{
+				"Measurements": null,
+				"Controls": [ 0 ],
+				"SendingCommunications": [ 6 ],
+				"IsPowerRequired": false,
+				"BatteryTime": "00:00:00",
+				"BatteryServicePrice": 0.0,
+				"Name": "Датчик 1 BlueTooth",
+				"PurchasePrice": 5000.0,
+				"InstallationPrice": 1000.0,
+				"InstallationTime": "01:00:00"
+			},
+			{
+				"Measurements": null,
+				"Controls": [ 0 ],
+				"SendingCommunications": [ 7 ],
+				"IsPowerRequired": false,
+				"BatteryTime": "00:00:00",
+				"BatteryServicePrice": 0.0,
+				"Name": "Датик 1 ZigBee",
+				"PurchasePrice": 7000.0,
+				"InstallationPrice": 1000.0,
+				"InstallationTime": "01:00:00"
+			},
+			{
+				"Measurements": null,
+				"Controls": [ 0 ],
+				"SendingCommunications": [ 14 ],
+				"IsPowerRequired": false,
+				"BatteryTime": "00:00:00",
+				"BatteryServicePrice": 0.0,
+				"Name": "Датчик 1 Internet",
+				"PurchasePrice": 10000.0,
+				"InstallationPrice": 1500.0,
+				"InstallationTime": "01:00:00"
+			},
+			{
+				"Measurements": [ 4 ],
+				"Controls": [ 2 ],
+				"SendingCommunications": [ 4 ],
+				"IsPowerRequired": false,
+				"BatteryTime": "00:00:00",
+				"BatteryServicePrice": 0.0,
+				"Name": "Датчик 2 RS-485",
+				"PurchasePrice": 3500.0,
+				"InstallationPrice": 1000.0,
+				"InstallationTime": "01:00:00"
+			},
+			{
+				"Measurements": [ 4 ],
+				"Controls": [ 2 ],
+				"SendingCommunications": [ 6 ],
+				"IsPowerRequired": false,
+				"BatteryTime": "00:00:00",
+				"BatteryServicePrice": 0.0,
+				"Name": "Датчик 2 BlueTooth",
+				"PurchasePrice": 5000.0,
+				"InstallationPrice": 1000.0,
+				"InstallationTime": "01:00:00"
+			},
+			{
+				"Measurements": [ 4 ],
+				"Controls": [ 2 ],
+				"SendingCommunications": [ 7 ],
+				"IsPowerRequired": false,
+				"BatteryTime": "00:00:00",
+				"BatteryServicePrice": 0.0,
+				"Name": "Датик 2 ZigBee",
+				"PurchasePrice": 7000.0,
+				"InstallationPrice": 1000.0,
+				"InstallationTime": "01:00:00"
+			},
+			{
+				"Measurements": [ 4 ],
+				"Controls": [ 2 ],
+				"SendingCommunications": [ 14 ],
+				"IsPowerRequired": false,
+				"BatteryTime": "00:00:00",
+				"BatteryServicePrice": 0.0,
+				"Name": "Датчик 2 Internet",
+				"PurchasePrice": 10000.0,
+				"InstallationPrice": 1500.0,
+				"InstallationTime": "01:00:00"
+			}
 		],
 		"DCs": [
-
+			{
+				"IsWireless": false,
+				"Communication": 4,
+				"Topology": 2,
+				"MaxRange": 1000.0,
+				"Name": "Кабель RS-485",
+				"PurchasePrice": 20.0,
+				"InstallationPrice": 100.0,
+				"InstallationTime": "00:10:00"
+			},
+			{
+				"IsWireless": false,
+				"Communication": 1,
+				"Topology": 1,
+				"MaxRange": 10.0,
+				"Name": "Импульсный канал",
+				"PurchasePrice": 20.0,
+				"InstallationPrice": 100.0,
+				"InstallationTime": "00:10:00"
+			},
+			{
+				"IsWireless": true,
+				"Communication": 6,
+				"Topology": 1,
+				"MaxRange": 30.0,
+				"Name": "BlueTooth",
+				"PurchasePrice": 0.0,
+				"InstallationPrice": 0.0,
+				"InstallationTime": "00:00:00"
+			},
+			{
+				"IsWireless": true,
+				"Communication": 7,
+				"Topology": 0,
+				"MaxRange": 50.0,
+				"Name": "ZigBee",
+				"PurchasePrice": 0.0,
+				"InstallationPrice": 0.0,
+				"InstallationTime": "00:00:00"
+			},
+			{
+				"IsWireless": false,
+				"Communication": 12,
+				"Topology": 1,
+				"MaxRange": 0.0,
+				"Name": "УСПД электрического счётчика",
+				"PurchasePrice": 0.0,
+				"InstallationPrice": 0.0,
+				"InstallationTime": "00:00:00"
+			},
+			{
+				"IsWireless": false,
+				"Communication": 13,
+				"Topology": 1,
+				"MaxRange": 0.0,
+				"Name": "УСПД водяного счётчика",
+				"PurchasePrice": 0.0,
+				"InstallationPrice": 0.0,
+				"InstallationTime": "00:00:00"
+			},
+			{
+				"IsWireless": false,
+				"Communication": 14,
+				"Topology": 1,
+				"MaxRange": 0.0,
+				"Name": "УСПД датчика",
+				"PurchasePrice": 0.0,
+				"InstallationPrice": 0.0,
+				"InstallationTime": "00:00:00"
+			}
 		],
 		"DADs": [
-
+			{
+				"ReceivingCommunications": { "RS485": 32 },
+				"ServerConnections": [ 7 ],
+				"SendingCommunications": null,
+				"IsPowerRequired": true,
+				"BatteryTime": "00:00:00",
+				"BatteryServicePrice": 0.0,
+				"Name": "УСПД RS-485",
+				"PurchasePrice": 6000.0,
+				"InstallationPrice": 1000.0,
+				"InstallationTime": "01:00:00"
+			},
+			{
+				"ReceivingCommunications": { "Bluetooth": 30 },
+				"ServerConnections": [ 7 ],
+				"SendingCommunications": null,
+				"IsPowerRequired": true,
+				"BatteryTime": "00:00:00",
+				"BatteryServicePrice": 0.0,
+				"Name": "УСПД, принимающий Bluetooth",
+				"PurchasePrice": 8000.0,
+				"InstallationPrice": 1000.0,
+				"InstallationTime": "00:00:00"
+			},
+			{
+				"ReceivingCommunications": { "ZigBee": 30 },
+				"ServerConnections": [ 7 ],
+				"SendingCommunications": null,
+				"IsPowerRequired": true,
+				"BatteryTime": "00:00:00",
+				"BatteryServicePrice": 0.0,
+				"Name": "УСПД, принимающий ZigBee",
+				"PurchasePrice": 10000.0,
+				"InstallationPrice": 1000.0,
+				"InstallationTime": "00:00:00"
+			},
+			{
+				"ReceivingCommunications": { "Electr_DAD_1": 1 },
+				"ServerConnections": [ 7 ],
+				"SendingCommunications": null,
+				"IsPowerRequired": true,
+				"BatteryTime": "00:00:00",
+				"BatteryServicePrice": 0.0,
+				"Name": "УСПД электрического счётчика",
+				"PurchasePrice": 0.0,
+				"InstallationPrice": 0.0,
+				"InstallationTime": "00:00:00"
+			},
+			{
+				"ReceivingCommunications": { "Water_DAD_1": 1 },
+				"ServerConnections": [ 7 ],
+				"SendingCommunications": null,
+				"IsPowerRequired": true,
+				"BatteryTime": "00:00:00",
+				"BatteryServicePrice": 0.0,
+				"Name": "УСПД водяного счётчика",
+				"PurchasePrice": 0.0,
+				"InstallationPrice": 0.0,
+				"InstallationTime": "00:00:00"
+			},
+			{
+				"ReceivingCommunications": { "Sensor_DAD_1": 1 },
+				"ServerConnections": [ 7 ],
+				"SendingCommunications": null,
+				"IsPowerRequired": true,
+				"BatteryTime": "00:00:00",
+				"BatteryServicePrice": 0.0,
+				"Name": "УСПД датчика",
+				"PurchasePrice": 0.0,
+				"InstallationPrice": 0.0,
+				"InstallationTime": "00:00:00"
+			}
 		]
 	}
 }
