@@ -37,8 +37,6 @@ namespace TopologyModel
 
                 var topology = CalculateTopologyWithGA(project);
 
-                // TODO: добавить в файл ещё и значение фитнес функции и затраченное время 
-
                 GenerateGraphFile(project, topology);   // Сгенерировать результирующий граф с топологией
 
                 // если не достигли желаемых значений фитнес функции по деньгам или времени, то в зависимости от приоритета (с наименьшим, т.е. большим значением)
@@ -193,28 +191,32 @@ namespace TopologyModel
                 var crossover = new UniformCrossover(0.8f);
                 var mutation = new UniformMutation(true);
                 var fitness = new TopologyFitness();
-                var population = new Population(600, 600, chromosome);
+                var population = new Population(2000, 2000, chromosome);
 
                 var ga = new GeneticAlgorithm(population, fitness, selection, crossover, mutation)
                 {
-                    Termination = new GenerationNumberTermination(400)
+                    Termination = new GenerationNumberTermination(600)
                 };
 
-                ga.GenerationRan += (c, e) =>
+                // Записать значения в csv файл и строить график фитнес-функции
+                using (StreamWriter streamwriter = File.AppendText($"fitness-{DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss")}.csv"))
                 {
-                    Console.WriteLine("Generations: {0}", ga.Population.GenerationsNumber);
-                    Console.WriteLine("Time: {0}", ga.TimeEvolving);
+                    ga.GenerationRan += (c, e) =>
+                    {
+                        Console.WriteLine("Generations: {0}", ga.Population.GenerationsNumber);
+                        Console.WriteLine("Time: {0}", ga.TimeEvolving);
 
-                    // TODO: записать значения в csv файл и строить график фитнес-функции
+                        var bc = ga.Population.BestChromosome as TopologyChromosome;
 
-                    var bc = ga.Population.BestChromosome as TopologyChromosome;
+                        streamwriter.WriteLine($"{ga.Population.GenerationsNumber};{ga.TimeEvolving:hh\\:mm\\:ss};{bc.Fitness:0.00};");
 
-                    Console.WriteLine("Best solution found with {0} fitness.", bc.Fitness);
-                };
+                        Console.WriteLine("Best solution found with {0} fitness.", bc.Fitness);
+                    };
 
-                Console.Write("Done!\nRun GA... ");
+                    Console.Write("Done!\nRun GA... ");
 
-                ga.Start();
+                    ga.Start();
+                }
 
                 Console.WriteLine("Done in {0} generations!", ga.GenerationsNumber);
 
