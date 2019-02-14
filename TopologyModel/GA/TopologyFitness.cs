@@ -20,6 +20,11 @@ namespace TopologyModel.GA
         public const double UNACCEPTABLE = 999_999_999_999;
 
         /// <summary>
+        /// Значение фитнес-функции для очень плохого случая.
+        /// </summary>
+        public const double VERY_BAD = 999_999_999;
+
+        /// <summary>
         /// Значение фитнес-функции для плохого случая.
         /// </summary>
         public const double BAD = 999_999;
@@ -83,28 +88,20 @@ namespace TopologyModel.GA
         /// <returns>Стоимость путей от УСПД до КУ по КПД.</returns>
         protected double GetConnectionCost(Project project, DataAcquisitionSectionPart dadPart, MeasurementAndControlSectionPart[] connectedMCDs, DataChannel dataChannel)
         {
-            var cost = 0.0;
-
             try
             {
-                // Условие разбито на несколько для повышения производительности
-                if (!dadPart.DAD.ReceivingCommunications.Keys.Contains(dataChannel.Communication))              // Если УСПД не поддерживает данный канал, дальше можно не смотреть
-                    cost += UNACCEPTABLE;
-    
                 if (connectedMCDs.Any(q => !q.MCD.SendingCommunications.Contains(dataChannel.Communication)))   // Если есть хоть одно КУ, которое не поддерживает канал, то дальше можно не смотреть
-                    cost += UNACCEPTABLE;
+                    return 2 * UNACCEPTABLE;
 
-                if (dadPart.DAD.ReceivingCommunications.Any(q => q.Key == dataChannel.Communication))
-                {
-                    var dadUsedCommunication = dadPart.DAD.ReceivingCommunications.Single(q => q.Key == dataChannel.Communication);
+                if (!dadPart.DAD.ReceivingCommunications.Keys.Contains(dataChannel.Communication))              // Если УСПД не поддерживает данный канал, дальше можно не смотреть
+                    return UNACCEPTABLE;
 
-                    // Проверить, что УСПД поддерживает количество подключенных устройств по КПД
-                    if (connectedMCDs.Length > dadUsedCommunication.Value)
-                        cost += BAD * (connectedMCDs.Length - dadUsedCommunication.Value);
-                }
-                else
-                    cost += UNACCEPTABLE;
+                var dadUsedCommunication = dadPart.DAD.ReceivingCommunications.Single(q => q.Key == dataChannel.Communication);
 
+                // Проверить, что УСПД поддерживает количество подключенных устройств по КПД
+                if (connectedMCDs.Length > dadUsedCommunication.Value)
+                    return VERY_BAD * (connectedMCDs.Length - dadUsedCommunication.Value);
+                
                 // Найти все пути, соединяющие УСПД и все КУ, присоединённые по данному КПД
                 var pathes = TopologyPathfinder.SectionShortestPath(project.Graph, dadPart.Vertex, connectedMCDs.Select(q => q.Vertex), dataChannel);
 
@@ -112,17 +109,15 @@ namespace TopologyModel.GA
                 var distance = GetDistance(pathes, dataChannel);
 
                 if (distance > dataChannel.MaxRange)
-                    cost += distance * BAD;        // Чем дальше, тем хуже значение фитнес-функции  
+                    return distance * BAD;        // Чем дальше, тем хуже значение фитнес-функции  
 
-                cost += pathes?.Sum(q => q.GetCost(project)) ?? UNACCEPTABLE;  // Вернуть сумму стоимостей всех составных частей пути, если путь не найден, то плохо - высокая стоимость
+                return pathes?.Sum(q => q.GetCost(project)) ?? UNACCEPTABLE;  // Вернуть сумму стоимостей всех составных частей пути, если путь не найден, то плохо - высокая стоимость
             }
             catch (Exception ex)
             {
                 Console.WriteLine("GetConnectionCost failed! {0}", ex.Message);
-                cost += UNACCEPTABLE;
+                return 10 * UNACCEPTABLE;
             }
-
-            return cost;
         }
 
         /// <summary>

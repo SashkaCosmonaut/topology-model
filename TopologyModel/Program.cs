@@ -191,11 +191,11 @@ namespace TopologyModel
                 var crossover = new UniformCrossover(0.8f);
                 var mutation = new UniformMutation(true);
                 var fitness = new TopologyFitness();
-                var population = new Population(2000, 2000, chromosome);
+                var population = new Population(1000, 1000, chromosome);
 
                 var ga = new GeneticAlgorithm(population, fitness, selection, crossover, mutation)
                 {
-                    Termination = new GenerationNumberTermination(600)
+                    Termination = new GenerationNumberTermination(500)
                 };
 
                 // Записать значения в csv файл и строить график фитнес-функции
