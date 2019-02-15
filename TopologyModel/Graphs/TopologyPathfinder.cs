@@ -24,7 +24,7 @@ namespace TopologyModel.Graphs
         /// <param name="target">Вершина пути - цель пути.</param>
         /// <param name="dataChannel">КПД, по которому строится путь.</param>
         /// <returns>Найденный заново или взятый из кэша путь.</returns>
-        private static IEnumerable<TopologyEdge> GetPath(TopologyGraph graph, TopologyVertex source, TopologyVertex target, DataChannel dataChannel)
+        public static IEnumerable<TopologyEdge> GetPath(TopologyGraph graph, TopologyVertex source, TopologyVertex target, DataChannel dataChannel = null)
         {
             try
             {
