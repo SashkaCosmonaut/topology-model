@@ -136,8 +136,10 @@ namespace TopologyModel.Graphs
         /// </summary>
         /// <param name="dataChannel">КПД, проложенный по грани.</param>
         /// <returns>Значение веса грани.</returns>
-        public double ChooseWeight(DataChannel dataChannel)
+        public double GetWeight(DataChannel dataChannel)
         {
+            if (dataChannel == null) return 1;  // Если КПД не задан, то возвращаем только расстояние между вершинами - одна грань
+
             return dataChannel.IsWireless ? WirelessWeight : WiredWeight;
         }
 
