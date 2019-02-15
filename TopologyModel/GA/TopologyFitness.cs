@@ -106,7 +106,7 @@ namespace TopologyModel.GA
                 var pathes = TopologyPathfinder.SectionShortestPath(project.Graph, dadPart.Vertex, connectedMCDs.Select(q => q.Vertex), dataChannel);
 
                 // Проверить длину пути и проходимость сквозь участки беспроводной связи 
-                var distance = GetDistance(pathes, dataChannel);
+                var distance = GetMinDistance(pathes, dataChannel);
 
                 if (distance > dataChannel.MaxRange)
                     return distance * BAD;        // Чем дальше, тем хуже значение фитнес-функции  
@@ -121,13 +121,12 @@ namespace TopologyModel.GA
         }
 
         /// <summary>
-        /// Максимальное длину данного пути (для звезды и mesh) или всего пути для шины, чтобы проверить,
-        /// что все пути, по которым соеденены устройства удовлетворяют требованию длины.
+        /// Получить минимальную длину пути (для звезды и mesh) или всего пути для шины.
         /// </summary>
         /// <param name="pathes">Пути, по которым КУ соединены с УСПД.</param>
         /// <param name="dataChannel">КПД, которым соединены устройства.</param>
         /// <returns>Значение расстояния.</returns>
-        protected double GetDistance(IEnumerable<TopologyPath> pathes, DataChannel dataChannel)
+        protected double GetMinDistance(IEnumerable<TopologyPath> pathes, DataChannel dataChannel)
         {
             try
             {
@@ -150,7 +149,7 @@ namespace TopologyModel.GA
             }
             catch (Exception ex)
             {
-                Console.WriteLine("IsInRange failed! {0}", ex.Message);
+                Console.WriteLine("GetDistance failed! {0}", ex.Message);
                 return UNACCEPTABLE;
             }
         }

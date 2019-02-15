@@ -61,7 +61,7 @@ namespace TopologyModel
 
             try
             {
-                using (var sr = File.OpenText("./Configs/Tests huge.json"))
+                using (var sr = File.OpenText("./Configs/Config.json"))
                 {
                     var result = JsonConvert.DeserializeObject<Project>(sr.ReadToEnd());
 
@@ -188,14 +188,14 @@ namespace TopologyModel
 
                 var chromosome = new TopologyChromosome(project);
                 var selection = new EliteSelection();
-                var crossover = new UniformCrossover(0.8f);
+                var crossover = new UniformCrossover(0.5f);
                 var mutation = new UniformMutation(true);
                 var fitness = new TopologyFitness();
-                var population = new Population(1000, 1000, chromosome);
+                var population = new Population(400, 400, chromosome);
 
                 var ga = new GeneticAlgorithm(population, fitness, selection, crossover, mutation)
                 {
-                    Termination = new GenerationNumberTermination(500)
+                    Termination = new GenerationNumberTermination(400)
                 };
 
                 // Записать значения в csv файл и строить график фитнес-функции
