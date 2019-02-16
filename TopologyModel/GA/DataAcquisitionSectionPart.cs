@@ -1,6 +1,7 @@
 ﻿using GeneticSharp.Domain.Randomizations;
 using System;
 using TopologyModel.Equipments;
+using TopologyModel.Graphs;
 
 namespace TopologyModel.GA
 {
@@ -102,6 +103,15 @@ namespace TopologyModel.GA
         public override double GetCost(Project project)
         {
             return DAD.GetCost(project, Vertex);
+        }
+
+        /// <summary>
+        /// Переместить данную часть секции с УСПД в другую вершину.
+        /// </summary>
+        /// <param name="newVertex">Вершина графа, в которую осуществляется перемещение.</param>
+        public void Move(TopologyVertex newVertex)
+        {
+            Vertex = newVertex;
         }
     }
 }

@@ -4,6 +4,8 @@ using System.Linq;
 using TopologyModel.Graphs;
 using TopologyModel.Equipments;
 using Newtonsoft.Json;
+using GeneticSharp.Domain.Randomizations;
+using TopologyModel.Enumerations;
 
 namespace TopologyModel.GA
 {
@@ -34,6 +36,7 @@ namespace TopologyModel.GA
                 Pathes = new Dictionary<DataAcquisitionSectionPart, IEnumerable<TopologyPath>>();
 
                 DecodeSections(chromosome);
+                GroupDADs(chromosome);
                 DecodePathes(chromosome);
             }
             catch (Exception ex)
@@ -61,6 +64,79 @@ namespace TopologyModel.GA
             catch (Exception ex)
             {
                 Console.WriteLine("DecodeSections failed! {0}", ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Сгруппировать УСПД одной модели, расположенные на одном участке.
+        /// </summary>
+        /// <param name="chromosome">Декодириуемая хромосома.</param>
+        protected void GroupDADs(TopologyChromosome chromosome)
+        {
+            try
+            {
+                var dadSectionPartGroups = Sections
+                    .Select((section, Index) => new { Part = section.DADPart, Index })  // Запоминаем и индекс секции
+                    .GroupBy(q => q.Part.DAD)                                           // Группируем секции с одинаковым УСПД
+                    .Where(q => q.Count() > 1);                                         // Берём те группы, если хоть какие-то УСПД сгруппировали
+
+                foreach (var dadSectionPartGroup in dadSectionPartGroups)                            
+                {
+                    // Далее группируем по участкам и берём те группы, где их больше 1 и где они ещё не на одной вершине
+                    var regionSectionPartGroups = dadSectionPartGroup
+                        .GroupBy(q => q.Part.Vertex.Region)
+                        .Where(q => q.Count() > 1);
+
+                    foreach (var regionSectionPartGroup in regionSectionPartGroups)
+                    {
+                        // Если все устройства и так уже в одной вершине, пропускаем эту группу
+                        var firstVertex = dadSectionPartGroup.FirstOrDefault()?.Part.Vertex;
+
+                        if (firstVertex == null || regionSectionPartGroup.All(q => q.Part.Vertex == firstVertex))
+                            continue;
+
+                        // Берём все вершины текущего региона
+                        var regionVertices = chromosome.CurrentProject.Graph.VerticesArray
+                            .Select((Vertex, Index) => new { Vertex, Index })
+                            .Where(q => q.Vertex.Region == regionSectionPartGroup.Key);
+
+                        var minVertexWeight = regionVertices.Min(q => q.Vertex.LaboriousnessWeight);    // Определяем самый малый вес вершины
+
+                        // Находим все вершины с наименьшим весом
+                        var minWeightVertices = regionVertices.Where(q => q.Vertex.LaboriousnessWeight == minVertexWeight);
+
+                        // Можно выбирать из вершин с наименьшим весом те, которые ближе всего ко всем текущим вершинам УСПД, но это долго
+                        //var minWeightVertexSumOfDistances = minWeightVertices
+                        //    .Select(indexedVertex =>
+                        //    new
+                        //    {
+                        //        IndexedVertex = indexedVertex,
+                        //        SumOfDistances = dadSectionPartGroup.Sum(section =>
+                        //            TopologyPathfinder.GetPath(chromosome.CurrentProject.Graph, indexedVertex.Vertex, section.Part.Vertex, ConnectionType.None)?.Count() ?? 0)
+                        //    });
+
+                        //var minSumOfDistance = minWeightVertexSumOfDistances.Min(q => q.SumOfDistances);
+
+                        //var optimalVertices = minWeightVertexSumOfDistances.Where(q => q.SumOfDistances == minSumOfDistance);
+
+                        //if (!optimalVertices.Any()) continue;
+
+                        // Выбираем случайно одну вершину из тех, что с наименьшим весом 
+                        var randomOptimalVertex = minWeightVertices.ElementAt(RandomizationProvider.Current.GetInt(0, minWeightVertices.Count()));
+
+                        foreach (var sectionPart in regionSectionPartGroup)     // Перемещаем все УСПД в эту вершину, чтобы они стали одним УСПД
+                        {
+                            sectionPart.Part.Move(randomOptimalVertex.Vertex);
+
+                            // Модифицируем хромосому тоже, находим ген позиции УСПД и обновляем индекс новой вершины
+                            chromosome.ReplaceGene(sectionPart.Index * TopologyChromosome.GENES_IN_SECTION + 3, new GeneticSharp.Domain.Chromosomes.Gene(randomOptimalVertex.Index));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("GroupDADs failed! {0}", ex.Message);
             }
         }
 
