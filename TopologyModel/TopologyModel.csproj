@@ -127,6 +127,7 @@
     <Compile Include="Enumerations\Control.cs" />
     <Compile Include="Enumerations\CostType.cs" />
     <Compile Include="Enumerations\DataChannelTopology.cs" />
+    <Compile Include="Enumerations\ConnectionType.cs" />
     <Compile Include="Enumerations\InternetConnection.cs" />
     <Compile Include="Enumerations\LocationInRegion.cs" />
     <Compile Include="Enumerations\Measurement.cs" />
