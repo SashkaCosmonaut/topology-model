@@ -32,7 +32,7 @@ namespace TopologyModel.Graphs
         /// <summary>
         /// Вес вершины для расчёта трудоемкости проведения на ней работ.
         /// </summary>
-        public float LaboriousnessWeight { get; }
+        public double LaboriousnessWeight { get; }
 
         /// <summary>
         /// Создать вершину графа, которая находится на определённом участке предприятия.
@@ -57,7 +57,7 @@ namespace TopologyModel.Graphs
         /// Рассчитать вес трудоемкости проведения работ в вершине.
         /// </summary>
         /// <returns>Значение веса вершины.</returns>
-        protected float GetLaboriousnessWeight()
+        protected double GetLaboriousnessWeight()
         {
             try
             {
