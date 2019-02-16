@@ -24,7 +24,7 @@ namespace TopologyModel.Graphs
         /// <param name="target">Вершина пути - цель пути.</param>
         /// <param name="connectionType">Тип связи.</param>
         /// <returns>Найденный заново или взятый из кэша путь.</returns>
-        public static IEnumerable<TopologyEdge> GetPath(TopologyGraph graph, TopologyVertex source, TopologyVertex target, ConnectionType connectionType)
+        public static IEnumerable<TopologyEdge> GetShortestPath(TopologyGraph graph, TopologyVertex source, TopologyVertex target, ConnectionType connectionType)
         {
             try
             {
@@ -60,7 +60,7 @@ namespace TopologyModel.Graphs
         /// <param name="targets">Вершины КУ, которые нужно соединить кратчайшим путём.</param>
         /// <param name="dataChannel">Канал передачи данных, по которому соеденяются КУ и УСПД.</param>
         /// <returns>Перечисление путей в графе.</returns>
-        public static IEnumerable<TopologyPath> SectionShortestPath(TopologyGraph graph, TopologyVertex source, IEnumerable<TopologyVertex> targets, DataChannel dataChannel)
+        public static IEnumerable<TopologyPath> GetShortestPath(TopologyGraph graph, TopologyVertex source, IEnumerable<TopologyVertex> targets, DataChannel dataChannel)
         {
             try
             {
@@ -110,7 +110,7 @@ namespace TopologyModel.Graphs
                     {
                         foreach (var target in remainedTargets)     // Перебираем все оставшиеся целевые вершины
                         {
-                            var path = GetPath(graph, partSource, target, dataChannel.ConnectionType);    // Ищем кратчайший путь из источника в цель и сохраняем его как кандидат на кратчайший 
+                            var path = GetShortestPath(graph, partSource, target, dataChannel.ConnectionType);    // Ищем кратчайший путь из источника в цель и сохраняем его как кандидат на кратчайший 
 
                             meshPartCandidates.Add(new KeyValuePair<TopologyVertex, TopologyVertex>(partSource, target), path);
                         }
@@ -145,7 +145,7 @@ namespace TopologyModel.Graphs
             }
             catch (Exception ex)
             {
-                Console.WriteLine("BusShortestPath failed! {0}", ex.Message);
+                Console.WriteLine("MeshShortestPath failed! {0}", ex.Message);
                 return null;
             }
         }
@@ -167,7 +167,7 @@ namespace TopologyModel.Graphs
 
                 foreach (var target in targets)          // Для звезды находим пути из источника ко всем целям
                 {
-                    var path = GetPath(graph, source, target, dataChannel.ConnectionType);
+                    var path = GetShortestPath(graph, source, target, dataChannel.ConnectionType);
 
                     resultPath.Add(new TopologyPath
                     {
@@ -208,7 +208,7 @@ namespace TopologyModel.Graphs
                 {
                     foreach (var target in remainedTargets)     // Перебираем все оставшиеся целевые вершины
                     {
-                        var path = GetPath(graph, busPartSource, target, dataChannel.ConnectionType);   // Ищем кратчайший путь из источника в цель и сохраняем его как кандидат на кратчайший
+                        var path = GetShortestPath(graph, busPartSource, target, dataChannel.ConnectionType);   // Ищем кратчайший путь из источника в цель и сохраняем его как кандидат на кратчайший
 
                         busPartCandidates.Add(target, path);
                     }

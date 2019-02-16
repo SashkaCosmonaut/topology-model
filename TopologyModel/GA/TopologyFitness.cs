@@ -103,7 +103,7 @@ namespace TopologyModel.GA
                     return VERY_BAD * (connectedMCDs.Length - dadUsedCommunication.Value);
                 
                 // Найти все пути, соединяющие УСПД и все КУ, присоединённые по данному КПД
-                var pathes = TopologyPathfinder.SectionShortestPath(project.Graph, dadPart.Vertex, connectedMCDs.Select(q => q.Vertex), dataChannel);
+                var pathes = TopologyPathfinder.GetShortestPath(project.Graph, dadPart.Vertex, connectedMCDs.Select(q => q.Vertex), dataChannel);
 
                 // Проверить длину пути и проходимость сквозь участки беспроводной связи 
                 var distance = GetMinDistance(pathes, dataChannel);
