@@ -29,19 +29,19 @@ namespace TopologyModel.Graphs
             try
             {
                 var cachedPath = PathesCache.SingleOrDefault(q =>       // Пытаемся найти такой прямой или обратный путь в кэше
-                    q.IsWireless == dataChannel.IsWireless &&
+                    q.ConnectionType == dataChannel.ConnectionType &&
                     ((q.Source == source && q.Target == target) || (q.Target == source && q.Source == target)));
 
                 if (cachedPath != null)
                     return cachedPath.Path;
 
                 // Если не нашли, ищем путь в графе
-                var tryGetPath = graph.ShortestPathsDijkstra((edge) => { return edge.GetWeight(dataChannel); }, source);
+                var tryGetPath = graph.ShortestPathsDijkstra((edge) => { return edge.Weights[dataChannel.ConnectionType]; }, source);
 
                 tryGetPath(target, out var path);
 
                 // Сохраняем найденный путь в кэше и возвращаем
-                PathesCache.Add(new TopologyPathesCacheItem(source, target, dataChannel.IsWireless, path));
+                PathesCache.Add(new TopologyPathesCacheItem(source, target, dataChannel.ConnectionType, path));
 
                 return path;
             }
@@ -117,10 +117,10 @@ namespace TopologyModel.Graphs
                     }
 
                     // Находим минимальный вес среди кандидатов, причём, если источник и цель в одной вершине - вес нулевой
-                    var minWeight = meshPartCandidates.Min(candidate => candidate.Value?.Sum(edge => edge.GetWeight(dataChannel)) ?? 0);
+                    var minWeight = meshPartCandidates.Min(candidate => candidate.Value?.Sum(edge => edge.Weights[dataChannel.ConnectionType]) ?? 0);
 
                     // Определяем путь с минимальным весом и добавляем в шину
-                    var shortestPath = meshPartCandidates.FirstOrDefault(candidate => (candidate.Value?.Sum(edge => edge.GetWeight(dataChannel)) ?? 0) == minWeight);
+                    var shortestPath = meshPartCandidates.FirstOrDefault(candidate => (candidate.Value?.Sum(edge => edge.Weights[dataChannel.ConnectionType]) ?? 0) == minWeight);
 
                     var shortestPathSource = shortestPath.Key.Key;      // Источник находится в ключе пары найденного пути, где сам является ключем
                     var shortestPathTarget = shortestPath.Key.Value;    // Целевая вершина находится в ключе пары найденного пути, где является значением
@@ -214,10 +214,10 @@ namespace TopologyModel.Graphs
                     }
 
                     // Находим минимальный вес среди кандидатов, причём, если источник и цель в одной вершине - вес нулевой
-                    var minWeight = busPartCandidates.Min(candidate => candidate.Value?.Sum(edge => edge.GetWeight(dataChannel)) ?? 0);
+                    var minWeight = busPartCandidates.Min(candidate => candidate.Value?.Sum(edge => edge.Weights[dataChannel.ConnectionType]) ?? 0);
 
                     // Определяем путь с минимальным весом и добавляем в шину
-                    var shortestPath = busPartCandidates.FirstOrDefault(candidate => (candidate.Value?.Sum(edge => edge.GetWeight(dataChannel)) ?? 0) == minWeight);
+                    var shortestPath = busPartCandidates.FirstOrDefault(candidate => (candidate.Value?.Sum(edge => edge.Weights[dataChannel.ConnectionType]) ?? 0) == minWeight);
                     var shortestPathTarget = shortestPath.Key;    // Целевая вершина находится в ключе найденной пары пути
 
                     bus.Add(new TopologyPath

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TopologyModel.Enumerations;
 
 namespace TopologyModel.Graphs
 {
@@ -18,9 +19,9 @@ namespace TopologyModel.Graphs
         public TopologyVertex Target { get; set; }
 
         /// <summary>
-        /// Является ли путь беспроводным.
+        /// Тип связи в данном пути.
         /// </summary>
-        public bool IsWireless { get; set; }
+        public ConnectionType ConnectionType { get; set; }
 
         /// <summary>
         /// Перечисление граней графа, составляющих путь.
@@ -32,13 +33,13 @@ namespace TopologyModel.Graphs
         /// </summary>
         /// <param name="source">Вершина графа - источник пути.</param>
         /// <param name="target">Вершина пути - цель пути.</param>
-        /// <param name="isWireless">Является ли путь беспроводным.</param>
+        /// <param name="connectionType">Тип связи в данном пути.</param>
         /// <param name="path">Перечисление граней графа, составляющих путь.</param>
-        public TopologyPathesCacheItem(TopologyVertex source, TopologyVertex target, bool isWireless, IEnumerable<TopologyEdge> path)
+        public TopologyPathesCacheItem(TopologyVertex source, TopologyVertex target, ConnectionType connectionType, IEnumerable<TopologyEdge> path)
         {
             Source = source;
             Target = target;
-            IsWireless = isWireless;
+            ConnectionType = connectionType;
             Path = path;
         }
     }

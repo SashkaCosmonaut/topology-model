@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using TopologyModel.Enumerations;
 using TopologyModel.Equipments;
 using TopologyModel.GA;
 
@@ -63,12 +64,24 @@ namespace TopologyModel.Graphs
         {
             try
             {
-                // Если ограничение на беспроводную связь больше 1, то каждое значение ограничения снижает дальность на 5 м.
-                if (DataChannel.IsWireless)
-                    return Path?.Sum(w => w.WirelessWeight * (w.WirelessWeight == 1 ? 1 : 5)) ?? 0;    // Если путь в одной вершине - расстояние нулевое
+                if (Path == null) return 0; // Если путь в одной вершине - расстояние нулевое
 
-                // Ограничение на беспроводную свзязь в худшем случае увличит расход кабелей до 4 метров на 1 метр расстояния
-                return Path?.Sum(q => 1 + q.WiredWeight / 10) ?? 0;     // Если путь в одной вершине - расстояние нулевое
+                switch (DataChannel.ConnectionType)
+                {
+                    // Ограничение на проводную свзязь в худшем случае увличит расход кабелей до 4 метров на 1 метр расстояния
+                    case ConnectionType.Wired:
+                        return Path.Sum(edge => 1 + edge.Weights[DataChannel.ConnectionType] / 10);
+
+                    // Если ограничение на беспроводную связь больше 1, то каждое значение ограничения снижает дальность на 5 м
+                    case ConnectionType.Wireless:
+                        return Path.Sum(edge => edge.Weights[DataChannel.ConnectionType] * (edge.Weights[DataChannel.ConnectionType] == 1 ? 1 : 5));
+
+                    case ConnectionType.None:
+                        return Path.Sum(edge => edge.Weights[DataChannel.ConnectionType]);    // Без связи просто считаем расстояние
+
+                    default:
+                        return TopologyFitness.UNACCEPTABLE;
+                }
             }
             catch (Exception ex)
             {

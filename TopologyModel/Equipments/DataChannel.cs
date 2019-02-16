@@ -11,9 +11,9 @@ namespace TopologyModel.Equipments
     public class DataChannel : AbstractEquipment
     {
         /// <summary>
-        /// Является ли канал передачи данных беспроводным 
+        /// Тип канала передачи данных
         /// </summary>
-        public bool IsWireless { get; set; }
+        public ConnectionType ConnectionType { get; set; }
 
         /// <summary>
         /// Стандарт передачи данных, используемый в данном КПД
@@ -40,8 +40,20 @@ namespace TopologyModel.Equipments
         {
             try
             {
-                // Для беспроводной связи метр проведения ничего не стоит
-                return IsWireless ? 0 : base.GetCost(project, vertex);
+                switch (ConnectionType)
+                {
+                    case ConnectionType.Wired:
+                        return base.GetCost(project, vertex);
+
+                    case ConnectionType.Wireless:
+                        return 0;        // Для беспроводной связи метр проведения ничего не стоит
+
+                    case ConnectionType.None:
+                        return 1;       // TODO: Добавить в свойства участка расстояние между вершинами и возвращать его для NONE
+
+                    default:
+                        return TopologyFitness.UNACCEPTABLE;
+                }
             }
             catch (Exception ex)
             {
@@ -60,14 +72,25 @@ namespace TopologyModel.Equipments
         {
             try
             {
-                if (IsWireless) return 0;
-  
-                return GetCost(project, 1 + edge.WiredWeight / 10);
+                switch (ConnectionType)
+                {
+                    case ConnectionType.Wired:
+                        return GetCost(project, 1 + edge.Weights[ConnectionType] / 10);
+
+                    case ConnectionType.Wireless:
+                        return 0;
+
+                    case ConnectionType.None:
+                        return 1;
+
+                    default:
+                        return TopologyFitness.UNACCEPTABLE;
+                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("DataChannel GetCost failed! {0}", ex.Message);
-                return 0;
+                return TopologyFitness.UNACCEPTABLE;
             }
         }
     }

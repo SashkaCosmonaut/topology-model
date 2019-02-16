@@ -1,6 +1,7 @@
 ﻿using QuickGraph;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TopologyModel.Enumerations;
 using TopologyModel.Equipments;
 
@@ -12,14 +13,9 @@ namespace TopologyModel.Graphs
     public class TopologyEdge : UndirectedEdge<TopologyVertex>
     {
         /// <summary>
-        /// Вес грани для проводной связи, строящийся на основе пераметров смежных участков.
+        /// Словарь весов разных типов для данной грани.
         /// </summary>
-        public float WiredWeight { get; }
-
-        /// <summary>
-        /// Вес грани для беспроводной связи, строящийся на основе пераметров смежных участков.
-        /// </summary>
-        public float WirelessWeight { get; }
+        public Dictionary<ConnectionType, double> Weights { get; } = new Dictionary<ConnectionType, double>();
 
         /// <summary>
         /// Отображать ли метку данной грани.
@@ -33,21 +29,25 @@ namespace TopologyModel.Graphs
         /// <param name="target">Вершина графа - приемник грани.</param>
         /// <param name="weightCoefficients">Весовые коэффициенты для рассчётов весов граней.</param>
         /// <param name="labeled">Отображать ли метку данной грани.</param>
-        public TopologyEdge(TopologyVertex source, TopologyVertex target, Dictionary<string, float> weightCoefficients = null, bool labeled = true) : base(source, target)
+        public TopologyEdge(TopologyVertex source, TopologyVertex target, Dictionary<string, double> weightCoefficients = null, bool labeled = true) : base(source, target)
         {
             try
             {
                 Labeled = labeled;
 
                 // Если связь между участками, берётся среднее от значений границ смежных участков
-                WirelessWeight = IsAcrossTheBorder()
+                var wirelessWeight = IsAcrossTheBorder()
                     ? (Source.Region.GetBadRadioTransmittanceEstimate(GetLocation(Source, Target)) +
                        Target.Region.GetBadRadioTransmittanceEstimate(GetLocation(Target, Source))) / 2
                     : Source.Region.GetBadRadioTransmittanceEstimate(LocationInRegion.Inside);          // Иначе берётся оценка внутри участка
 
-                WiredWeight = IsAcrossTheBorder()
+                var wiredWeight = IsAcrossTheBorder()
                     ? (GetWiredWeightAcrossTheBorder(Source, Target) + GetWiredWeightAcrossTheBorder(Target, Source)) / 2
                     : GetWiredWeight(Source, Target);
+
+                Weights.Add(ConnectionType.Wireless, wirelessWeight);
+                Weights.Add(ConnectionType.Wired, wiredWeight);
+                Weights.Add(ConnectionType.None, 1);    // TODO: Добавить в свойства участка расстояние между вершинами и возвращать его для NONE
             }
             catch (Exception ex)
             {
@@ -62,7 +62,7 @@ namespace TopologyModel.Graphs
         /// <param name="source">Исходный участок.</param>
         /// <param name="target">Целевой участок.</param>
         /// <returns>Дробное значение веса грани.</returns>
-        protected static float GetWiredWeightAcrossTheBorder(TopologyVertex source, TopologyVertex target)
+        protected static double GetWiredWeightAcrossTheBorder(TopologyVertex source, TopologyVertex target)
         {
             return source.Region.GetBadWiredTransmittanceEstimate(GetLocation(source, target)) + GetWiredWeight(source, target);
         }
@@ -73,7 +73,7 @@ namespace TopologyModel.Graphs
         /// <param name="source">Исходный узел грани.</param>
         /// <param name="target">Целевой узел грани.</param>
         /// <returns>Значение проводного веса.</returns>
-        protected static float GetWiredWeight(TopologyVertex source, TopologyVertex target)
+        protected static double GetWiredWeight(TopologyVertex source, TopologyVertex target)
         {
             var location = GetLocation(source, target);
 
@@ -101,7 +101,9 @@ namespace TopologyModel.Graphs
         /// <returns>Строка с весами грани через запятую, округлёнными до одного знака после запятой.</returns>
         public override string ToString()
         {
-            return Labeled ? $"{WiredWeight:0.0}; {WirelessWeight:0.0}" : "";
+            return Labeled 
+                ? Weights.Values.Select(weight => weight.ToString("0.0")).Aggregate((current, next) => current + "; " + next) 
+                : "";
         }
 
         /// <summary>
@@ -129,18 +131,6 @@ namespace TopologyModel.Graphs
         public bool IsInside()
         {
             return !IsAcrossTheBorder(Source, Target) && GetInRegionLocation(Source, Target) == LocationInRegion.Inside;
-        }
-
-        /// <summary>
-        /// Выбрать вес грани в соответствии с КПД, который по ней проложен.
-        /// </summary>
-        /// <param name="dataChannel">КПД, проложенный по грани.</param>
-        /// <returns>Значение веса грани.</returns>
-        public double GetWeight(DataChannel dataChannel)
-        {
-            if (dataChannel == null) return 1;  // Если КПД не задан, то возвращаем только расстояние между вершинами - одна грань
-
-            return dataChannel.IsWireless ? WirelessWeight : WiredWeight;
         }
 
         /// <summary>

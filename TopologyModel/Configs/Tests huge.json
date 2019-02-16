@@ -458,7 +458,7 @@
 		],
 		"DCs": [
 			{
-				"IsWireless": false,
+				"ConnectionType": 0,
 				"Communication": 4,
 				"Topology": 2,
 				"MaxRange": 1000.0,
@@ -468,7 +468,7 @@
 				"InstallationTime": "00:10:00"
 			},
 			{
-				"IsWireless": false,
+				"ConnectionType": 0,
 				"Communication": 1,
 				"Topology": 1,
 				"MaxRange": 10.0,
@@ -478,7 +478,7 @@
 				"InstallationTime": "00:10:00"
 			},
 			{
-				"IsWireless": true,
+				"ConnectionType": 1,
 				"Communication": 6,
 				"Topology": 1,
 				"MaxRange": 30.0,
@@ -488,7 +488,7 @@
 				"InstallationTime": "00:00:00"
 			},
 			{
-				"IsWireless": true,
+				"ConnectionType": 1,
 				"Communication": 7,
 				"Topology": 0,
 				"MaxRange": 50.0,
@@ -498,7 +498,7 @@
 				"InstallationTime": "00:00:00"
 			},
 			{
-				"IsWireless": false,
+				"ConnectionType": 0,
 				"Communication": 12,
 				"Topology": 1,
 				"MaxRange": 0.0,
@@ -508,7 +508,7 @@
 				"InstallationTime": "00:00:00"
 			},
 			{
-				"IsWireless": false,
+				"ConnectionType": 0,
 				"Communication": 13,
 				"Topology": 1,
 				"MaxRange": 0.0,
@@ -518,7 +518,7 @@
 				"InstallationTime": "00:00:00"
 			},
 			{
-				"IsWireless": false,
+				"ConnectionType": 0,
 				"Communication": 14,
 				"Topology": 1,
 				"MaxRange": 0.0,
