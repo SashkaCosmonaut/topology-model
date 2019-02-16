@@ -22,26 +22,26 @@ namespace TopologyModel.Graphs
         /// </summary>
         /// <param name="source">Вершина графа - источник пути.</param>
         /// <param name="target">Вершина пути - цель пути.</param>
-        /// <param name="dataChannel">КПД, по которому строится путь.</param>
+        /// <param name="connectionType">Тип связи.</param>
         /// <returns>Найденный заново или взятый из кэша путь.</returns>
-        public static IEnumerable<TopologyEdge> GetPath(TopologyGraph graph, TopologyVertex source, TopologyVertex target, DataChannel dataChannel)
+        public static IEnumerable<TopologyEdge> GetPath(TopologyGraph graph, TopologyVertex source, TopologyVertex target, ConnectionType connectionType)
         {
             try
             {
                 var cachedPath = PathesCache.SingleOrDefault(q =>       // Пытаемся найти такой прямой или обратный путь в кэше
-                    q.ConnectionType == dataChannel.ConnectionType &&
+                    q.ConnectionType == connectionType &&
                     ((q.Source == source && q.Target == target) || (q.Target == source && q.Source == target)));
 
                 if (cachedPath != null)
                     return cachedPath.Path;
 
                 // Если не нашли, ищем путь в графе
-                var tryGetPath = graph.ShortestPathsDijkstra((edge) => { return edge.Weights[dataChannel.ConnectionType]; }, source);
+                var tryGetPath = graph.ShortestPathsDijkstra((edge) => { return edge.Weights[connectionType]; }, source);
 
                 tryGetPath(target, out var path);
 
                 // Сохраняем найденный путь в кэше и возвращаем
-                PathesCache.Add(new TopologyPathesCacheItem(source, target, dataChannel.ConnectionType, path));
+                PathesCache.Add(new TopologyPathesCacheItem(source, target, connectionType, path));
 
                 return path;
             }
@@ -110,7 +110,7 @@ namespace TopologyModel.Graphs
                     {
                         foreach (var target in remainedTargets)     // Перебираем все оставшиеся целевые вершины
                         {
-                            var path = GetPath(graph, partSource, target, dataChannel);    // Ищем кратчайший путь из источника в цель и сохраняем его как кандидат на кратчайший 
+                            var path = GetPath(graph, partSource, target, dataChannel.ConnectionType);    // Ищем кратчайший путь из источника в цель и сохраняем его как кандидат на кратчайший 
 
                             meshPartCandidates.Add(new KeyValuePair<TopologyVertex, TopologyVertex>(partSource, target), path);
                         }
@@ -167,7 +167,7 @@ namespace TopologyModel.Graphs
 
                 foreach (var target in targets)          // Для звезды находим пути из источника ко всем целям
                 {
-                    var path = GetPath(graph, source, target, dataChannel);
+                    var path = GetPath(graph, source, target, dataChannel.ConnectionType);
 
                     resultPath.Add(new TopologyPath
                     {
@@ -208,7 +208,7 @@ namespace TopologyModel.Graphs
                 {
                     foreach (var target in remainedTargets)     // Перебираем все оставшиеся целевые вершины
                     {
-                        var path = GetPath(graph, busPartSource, target, dataChannel);       // Ищем кратчайший путь из источника в цель и сохраняем его как кандидат на кратчайший
+                        var path = GetPath(graph, busPartSource, target, dataChannel.ConnectionType);   // Ищем кратчайший путь из источника в цель и сохраняем его как кандидат на кратчайший
 
                         busPartCandidates.Add(target, path);
                     }
