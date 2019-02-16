@@ -126,7 +126,7 @@ namespace TopologyModel.Regions
         /// </summary>
         /// <param name="location">Расположение внутри участка.</param>
         /// <returns>Значение оценки.</returns>
-        public float GetAggressivenessEstimate(LocationInRegion location)
+        public double GetAggressivenessEstimate(LocationInRegion location)
         {
             return GetEstimate(Aggressiveness, location);
         }
@@ -136,7 +136,7 @@ namespace TopologyModel.Regions
         /// </summary>
         /// <param name="location">Расположение внутри участка.</param>
         /// <returns>Значение оценки.</returns>
-        public float GetUnavailabilityEstimate(LocationInRegion location)
+        public double GetUnavailabilityEstimate(LocationInRegion location)
         {
             return GetEstimate(Unavailability, location);
         }
@@ -146,7 +146,7 @@ namespace TopologyModel.Regions
         /// </summary>
         /// <param name="location">Расположение внутри участка.</param>
         /// <returns>Значение оценки.</returns>
-        public float GetLaboriousnessEstimate(LocationInRegion location)
+        public double GetLaboriousnessEstimate(LocationInRegion location)
         {
             return GetEstimate(Laboriousness, location);
         }
@@ -156,7 +156,7 @@ namespace TopologyModel.Regions
         /// </summary>
         /// <param name="location">Расположение внутри участка.</param>
         /// <returns>Значение оценки.</returns>
-        public float GetBadRadioTransmittanceEstimate(LocationInRegion location)
+        public double GetBadRadioTransmittanceEstimate(LocationInRegion location)
         {
             return GetEstimate(BadRadioTransmittance, location);
         }
@@ -166,7 +166,7 @@ namespace TopologyModel.Regions
         /// </summary>
         /// <param name="location">Расположение внутри участка.</param>
         /// <returns>Значение оценки.</returns>
-        public float GetBadWiredTransmittanceEstimate(LocationInRegion location)
+        public double GetBadWiredTransmittanceEstimate(LocationInRegion location)
         {
             return GetEstimate(BadWiredTransmittance, location);
         }
@@ -177,7 +177,7 @@ namespace TopologyModel.Regions
         /// <param name="estimates">Массив экспертных оценок для участка.</param>
         /// <param name="location">Расположение внутри участка.</param>
         /// <returns>Значение оценки.</returns>
-        protected static float GetEstimate(ushort[] estimates, LocationInRegion location)
+        protected static double GetEstimate(ushort[] estimates, LocationInRegion location)
         {
             try
             {
@@ -193,20 +193,20 @@ namespace TopologyModel.Regions
                 switch (location)       // Для угловых месторасположений считаем среднее по двум границам
                 {
                     case LocationInRegion.LeftTopCorder:
-                        return (float)(GetEstimateFromArray(estimates, (int)LocationInRegion.LeftBorder) +
-                                       GetEstimateFromArray(estimates, (int)LocationInRegion.TopBorder)) / 2;
+                        return (GetEstimateFromArray(estimates, (int)LocationInRegion.LeftBorder) + 
+                                GetEstimateFromArray(estimates, (int)LocationInRegion.TopBorder)) / 2;
 
                     case LocationInRegion.RightTopCorner:
-                        return (float)(GetEstimateFromArray(estimates, (int)LocationInRegion.RightBorder) +
-                                       GetEstimateFromArray(estimates, (int)LocationInRegion.TopBorder)) / 2;
+                        return (GetEstimateFromArray(estimates, (int)LocationInRegion.RightBorder) + 
+                                GetEstimateFromArray(estimates, (int)LocationInRegion.TopBorder)) / 2;
 
                     case LocationInRegion.RightBottomCorner:
-                        return (float)(GetEstimateFromArray(estimates, (int)LocationInRegion.RightBorder) +
-                                       GetEstimateFromArray(estimates, (int)LocationInRegion.BottomBorder)) / 2;
+                        return (GetEstimateFromArray(estimates, (int)LocationInRegion.RightBorder) + 
+                                GetEstimateFromArray(estimates, (int)LocationInRegion.BottomBorder)) / 2;
 
                     case LocationInRegion.LeftBottomCorner:
-                        return (float)(GetEstimateFromArray(estimates, (int)LocationInRegion.LeftBorder) +
-                                       GetEstimateFromArray(estimates, (int)LocationInRegion.BottomBorder)) / 2;
+                        return (GetEstimateFromArray(estimates, (int)LocationInRegion.LeftBorder) + 
+                                GetEstimateFromArray(estimates, (int)LocationInRegion.BottomBorder)) / 2;
                 }
             }
             catch (Exception ex)
@@ -222,8 +222,8 @@ namespace TopologyModel.Regions
         /// </summary>
         /// <param name="estimates">Массив экспертных оценок для участка.</param>
         /// <param name="intLocation">Расположение внутри участка в виде целого числа.</param>
-        /// <returns>Значение оценки из массива.</returns>
-        protected static ushort GetEstimateFromArray(ushort[] estimates, int intLocation)
+        /// <returns>Значение оценки из массива в виде дробного числа для упрощения дальнейших расчетов.</returns>
+        protected static double GetEstimateFromArray(ushort[] estimates, int intLocation)
         {
             if (intLocation >= ESTIMATES_ARRAY_LENGTH) return 0;    // Проверяем, что локация адекватна
 
