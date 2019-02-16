@@ -64,7 +64,7 @@ namespace TopologyModel.Equipments
         /// <param name="project">Свойства проекта.</param>
         /// <param name="laboriousnessFactor">Коэффициент трудоемкости.</param>
         /// <returns>Значение затрат на внедрение данного инструмента.</returns>
-        protected double GetCost(Project project, float laboriousnessFactor)
+        protected double GetCost(Project project, double laboriousnessFactor)
         {
             try
             {

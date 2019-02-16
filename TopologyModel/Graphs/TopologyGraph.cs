@@ -27,7 +27,7 @@ namespace TopologyModel.Graphs
         /// <param name="verticesMatrix">Матрица с вершинами участков предприятия.</param>
         /// <param name="weightCoefficients"></param>
         /// <returns>Успешно ли инициализирован граф.</returns>
-        public TopologyGraph(TopologyVertex[,] verticesMatrix, Dictionary<string, float> weightCoefficients)
+        public TopologyGraph(TopologyVertex[,] verticesMatrix, Dictionary<string, double> weightCoefficients)
         {
             Console.Write("Create regions graph... ");
 
@@ -56,7 +56,7 @@ namespace TopologyModel.Graphs
         /// <param name="x">Координата по Х текущей веершины.</param>
         /// <param name="y">Координата по Y текущей веершины.</param>
         /// <param name="verticesMatrix">Матрица всех вершин графа</param>
-        protected void AddEdges(int x, int y, TopologyVertex[,] verticesMatrix, Dictionary<string, float> weightCoefficients)
+        protected void AddEdges(int x, int y, TopologyVertex[,] verticesMatrix, Dictionary<string, double> weightCoefficients)
         {
             try
             {
