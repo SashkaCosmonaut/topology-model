@@ -70,7 +70,7 @@ namespace TopologyModel
         /// <summary>
         /// Словарь весовых коэффициентов параметров проекта, где ключ - это наименование параметра, а значение - вес.
         /// </summary>
-        public Dictionary<string, float> WeightCoefficients { get; set; }
+        public Dictionary<string, double> WeightCoefficients { get; set; }
 
         /// <summary>
         /// Множество стоимостей в месяц абонентского обслуживания технологий мобильной передачи данных на сервер.
