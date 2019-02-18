@@ -27,19 +27,11 @@ namespace TopologyModel
 
             try
             {
-                var project = ReadProject();
+                MultipleRuns("./Configs/Config.json");
 
-                if (project == null) return;
+                MultipleRuns("./Configs/Tests huge.json");
 
-                if (!project.InitializeGraph()) return;
-
-                GenerateGraphFile(project);             // Сгенерировать исходный граф без отрисовки топологии
-
-                var topology = CalculateTopologyWithGA(project);
-
-                GenerateGraphFile(project, topology);   // Сгенерировать результирующий граф с топологией
-
-                // если не достигли желаемых значений фитнес функции по деньгам или времени, то в зависимости от приоритета (с наименьшим, т.е. большим значением)
+                // TODO: если не достигли желаемых значений фитнес функции по деньгам или времени, то в зависимости от приоритета (с наименьшим, т.е. большим значением)
                 // удаляем одно из мест учёта из проекта (просто обнуляем), и говорим какое, и запускаем повторно алгоритм 
                 // Но граф всё равно надо сгенерировать и показать, что получилось, а с новым рассчётом просто меняем имя на 1, 2 и т.д. когда удаляем места учета
             }
@@ -52,16 +44,43 @@ namespace TopologyModel
         }
 
         /// <summary>
+        /// Выполнить множество запусков ГА для генерации нескольких результрующих топологий.
+        /// </summary>
+        /// <param name="configFilename">Имя конфигурационного файла проекта.</param>
+        protected static void MultipleRuns(string configFilename)
+        {
+            var project = ReadProject(configFilename);
+
+            if (project == null) return;
+
+            if (!project.InitializeGraph()) return;
+
+            Console.WriteLine($"Run {configFilename}...");
+
+            for (int i = 0; i < 10; i++)
+            {
+                Console.WriteLine($"Now running {i} of 10...");
+
+                GenerateGraphFile(project, CalculateTopologyWithGA(project));
+
+                Console.WriteLine("Done!");
+            }
+
+            Console.WriteLine($"{configFilename} done!");
+        }
+
+        /// <summary>
         /// Считать параметры всего проекта из JSON-файла.
         /// </summary>
+        /// <param name="configFilename">Имя конфигурационного файла проекта.</param>
         /// <returns>Считанный новый объект проекта.</returns>
-        public static Project ReadProject()
+        public static Project ReadProject(string configFilename)
         {
             Console.Write("Reading the project config... ");
 
             try
             {
-                using (var sr = File.OpenText("./Configs/Config.json"))
+                using (var sr = File.OpenText(configFilename))
                 {
                     var result = JsonConvert.DeserializeObject<Project>(sr.ReadToEnd());
 
@@ -143,7 +162,8 @@ namespace TopologyModel
         {
             try
             {
-                return sourceFilename.Insert(sourceFilename.IndexOf('.'), "-topology");
+                return sourceFilename.Insert(sourceFilename.IndexOf('.'), 
+                    $"-topology-{DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss")}");
             }
             catch (Exception ex)
             {
@@ -191,11 +211,11 @@ namespace TopologyModel
                 var crossover = new UniformCrossover(0.5f);
                 var mutation = new UniformMutation(true);
                 var fitness = new TopologyFitness();
-                var population = new Population(400, 400, chromosome);
+                var population = new Population(2000, 2000, chromosome);
 
                 var ga = new GeneticAlgorithm(population, fitness, selection, crossover, mutation)
                 {
-                    Termination = new GenerationNumberTermination(400)
+                    Termination = new GenerationNumberTermination(1000)
                 };
 
                 // Записать значения в csv файл и строить график фитнес-функции
