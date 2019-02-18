@@ -91,10 +91,10 @@ namespace TopologyModel.GA
             try
             {
                 if (connectedMCDs.Any(q => !q.MCD.SendingCommunications.Contains(dataChannel.Communication)))   // Если есть хоть одно КУ, которое не поддерживает канал, то дальше можно не смотреть
-                    return 2 * UNACCEPTABLE;
+                    return 3 * UNACCEPTABLE;
 
                 if (!dadPart.DAD.ReceivingCommunications.Keys.Contains(dataChannel.Communication))              // Если УСПД не поддерживает данный канал, дальше можно не смотреть
-                    return UNACCEPTABLE;
+                    return 2 * UNACCEPTABLE;
 
                 var dadUsedCommunication = dadPart.DAD.ReceivingCommunications.Single(q => q.Key == dataChannel.Communication);
 
