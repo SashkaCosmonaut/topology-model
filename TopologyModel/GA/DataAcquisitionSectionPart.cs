@@ -81,7 +81,21 @@ namespace TopologyModel.GA
         {
             try
             {
-                return RandomizationProvider.Current.GetInt(0, chromosome.CurrentProject.Graph.VerticesArray.Length);
+                // Выбираем случайный участок
+                var randomRegionIndex = RandomizationProvider.Current.GetInt(0, chromosome.CurrentProject.Regions.Length);
+
+                var randomRegion = chromosome.CurrentProject.Regions[randomRegionIndex];
+
+                // Берём все вершины участка
+                var regionVertices = chromosome.CurrentProject.Graph.Vertices.Where(q => q.Region == randomRegion);
+
+                var minVertexWeight = regionVertices.Min(q => q.LaboriousnessWeight);    // Определяем самый малый вес у вершин участка
+
+                // Находим все вершины с наименьшим весом
+                var minWeightVertices = regionVertices.Where(q => q.LaboriousnessWeight == minVertexWeight);
+
+                // Выбираем случайно одну вершину из тех, что с наименьшим весом 
+                return RandomizationProvider.Current.GetInt(0, minWeightVertices.Count());
             }
             catch (Exception ex)
             {
