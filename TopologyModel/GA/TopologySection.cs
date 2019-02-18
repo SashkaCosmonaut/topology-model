@@ -105,7 +105,27 @@ namespace TopologyModel.GA
         {
             try
             {
-                return RandomizationProvider.Current.GetInt(0, chromosome.CurrentProject.Equipments.DCs.Length);
+                // Декодируем КУ из гена, которое выбрано в данной секции (оно идёт первым в хромосоме)
+                var mcd = chromosome.CurrentProject.Equipments.MCDs[(int)chromosome.GetGene(sectionIndex * TopologyChromosome.GENES_IN_SECTION).Value];
+
+                // Декодируем УСПД из гена, которое выбрано в данной секции (оно идёт третьим в хромосоме)
+                var dad = chromosome.CurrentProject.Equipments.DADs[(int)chromosome.GetGene(sectionIndex * TopologyChromosome.GENES_IN_SECTION + 2).Value];
+
+                // Выбираем те КПД, которые совместимы и с выбранным КУ, и с выбранным УСПД
+                var suitableDataChannels = chromosome.CurrentProject.Equipments.DCs
+                    .Select((dataChannel, index) => new { DataChannel = dataChannel, Index = index })
+                    .Where(indexedChannel => mcd.SendingCommunications.Contains(indexedChannel.DataChannel.Communication) &&
+                                             dad.ReceivingCommunications.Keys.Contains(indexedChannel.DataChannel.Communication))
+                    .ToArray();
+
+                // Если не нашли подходящего УСПД, то выбираем случайный
+                if (!suitableDataChannels.Any())
+                    return RandomizationProvider.Current.GetInt(0, chromosome.CurrentProject.Equipments.DCs.Length);
+
+                // Иначе берём случайный КПД из подходящих
+                var randomIndex = RandomizationProvider.Current.GetInt(0, suitableDataChannels.Count());
+
+                return suitableDataChannels[randomIndex].Index;
             }
             catch (Exception ex)
             {
