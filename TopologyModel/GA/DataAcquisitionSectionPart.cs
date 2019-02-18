@@ -1,5 +1,6 @@
 ﻿using GeneticSharp.Domain.Randomizations;
 using System;
+using System.Linq;
 using TopologyModel.Equipments;
 using TopologyModel.Graphs;
 
@@ -45,7 +46,23 @@ namespace TopologyModel.GA
         {
             try
             {
-                return RandomizationProvider.Current.GetInt(0, chromosome.CurrentProject.Equipments.DADs.Length);
+                // Декодируем КУ из гена, которое выбрано в данной секции (оно идёт первым в хромосоме)
+                var mcd = chromosome.CurrentProject.Equipments.MCDs[(int)chromosome.GetGene(sectionIndex * TopologyChromosome.GENES_IN_SECTION).Value];
+
+                // Выбираем только те УСПД, которые подходят для КУ
+                var suitableDADs = chromosome.CurrentProject.Equipments.DADs
+                    .Select((dad, index) => new { DAD = dad, Index = index })
+                    .Where(indexedDAD => indexedDAD.DAD.ReceivingCommunications.Keys.Any(communiction => mcd.SendingCommunications.Contains(communiction)))
+                    .ToArray();
+
+                // Если не нашли подходящего УСПД, берём просто случайный
+                if (!suitableDADs.Any())
+                    return  RandomizationProvider.Current.GetInt(0, chromosome.CurrentProject.Equipments.DADs.Length);
+
+                // Иначе берём случайный из подходящих
+                var randomIndex = RandomizationProvider.Current.GetInt(0, suitableDADs.Count());
+
+                return suitableDADs[randomIndex].Index;
             }
             catch (Exception ex)
             {
