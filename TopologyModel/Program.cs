@@ -33,6 +33,16 @@ namespace TopologyModel
         public const int NUMBER_OF_GENERATIONS = 100;
 
         /// <summary>
+        /// Имя папки с конфигурационными файлами.
+        /// </summary>
+        public const string CONFIG_DIR_NAME = "Configs";
+
+        /// <summary>
+        /// Имя папки для выходных файлов.
+        /// </summary>
+        public const string OUTPUT_DIR_NAME = "Output";
+
+        /// <summary>
         /// Главная функция программы.
         /// </summary>
         /// <param name="args">Параметры командной строки.</param>
@@ -42,11 +52,11 @@ namespace TopologyModel
 
             try
             {
-                MultipleRuns("./Configs/Config.json");
+                MultipleRuns(Path.Combine(CONFIG_DIR_NAME, "Config.json"));
 
-                MultipleRuns("./Configs/Tests huge.json");
+                MultipleRuns(Path.Combine(CONFIG_DIR_NAME, "Tests huge.json"));
 
-                MultipleRuns("./Configs/Tests.json");
+                MultipleRuns(Path.Combine(CONFIG_DIR_NAME, "Tests.json"));
 
                 // TODO: если не достигли желаемых значений фитнес функции по деньгам или времени, то в зависимости от приоритета (с наименьшим, т.е. большим значением)
                 // удаляем одно из мест учёта из проекта (просто обнуляем), и говорим какое, и запускаем повторно алгоритм 
@@ -71,6 +81,8 @@ namespace TopologyModel
             if (project == null) return;
 
             if (!project.InitializeGraph()) return;
+
+            GenerateGraphFile(project);
 
             Console.WriteLine($"Run {configFilename}...");
 
@@ -137,9 +149,7 @@ namespace TopologyModel
                     .Aggregate("", (current, next) => current + "\r\n\r\n" + next)
                     .Replace("},'", "},\r\n'");
 
-                var filename = topology == null         // Если генерируем файл с отображением топологии, то изменяем имя
-                    ? project.GraphDotFilename
-                    : GetFilenameWithTopology(project.GraphDotFilename);
+                var filename = GenerateFilename(project.GraphDotFilename, topology);
 
                 if (project.Graph.GenerateDotFile(filename, graphLabel, topology))
                     GeneratePDFFile(filename);
@@ -174,13 +184,15 @@ namespace TopologyModel
         /// Сгенерировать изменённое имя файла для графа с топологией.
         /// </summary>
         /// <param name="sourceFilename">Исходное имя файла.</param>
+        /// <param name="topology">Сгенерированная топология.</param>
         /// <returns>Имя файла с суффиксом "-topology".</returns>
-        public static string GetFilenameWithTopology(string sourceFilename)
+        public static string GenerateFilename(string sourceFilename, Topology topology)
         {
             try
             {
-                return sourceFilename.Insert(sourceFilename.IndexOf('.'), 
-                    $"-topology-{DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss")}");
+                return Path.Combine(OUTPUT_DIR_NAME,
+                    sourceFilename.Insert(sourceFilename.IndexOf('.'),
+                        $"{(topology != null ? "-topology" : "")}-{DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss")}"));
             }
             catch (Exception ex)
             {
@@ -236,7 +248,7 @@ namespace TopologyModel
                 };
 
                 // Записать значения в csv файл и строить график фитнес-функции
-                using (StreamWriter streamwriter = File.AppendText($"fitness-{DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss")}.csv"))
+                using (StreamWriter streamwriter = File.AppendText(Path.Combine(OUTPUT_DIR_NAME, $"fitness-{DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss")}.csv")))
                 {
                     ga.GenerationRan += (c, e) =>
                     {

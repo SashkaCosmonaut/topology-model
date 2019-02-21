@@ -572,7 +572,7 @@
 				"ConnectionType": 1,
 				"Communication": 7,
 				"Topology": 0,
-				"MaxRange": 100.0,
+				"MaxRange": 60.0,
 				"Name": "ZigBee",
 				"PurchasePrice": 0.0,
 				"InstallationPrice": 0.0,
@@ -608,16 +608,16 @@
 				"InstallationPrice": 150.0,
 				"InstallationTime": "00:10:00"
 			},
-			{
-				"ConnectionType": 2,
-				"Communication": 0,
-				"Topology": 1,
-				"MaxRange": 1000.0,
-				"Name": "Ручной сбор",
-				"PurchasePrice": 0.0,
-				"InstallationPrice": 0.0,
-				"InstallationTime": "00:00:00"
-			},
+			//{
+			//	"ConnectionType": 2,
+			//	"Communication": 0,
+			//	"Topology": 1,
+			//	"MaxRange": 1000.0,
+			//	"Name": "Ручной сбор",
+			//	"PurchasePrice": 0.0,
+			//	"InstallationPrice": 0.0,
+			//	"InstallationTime": "00:00:00"
+			//},
 			{
 				"ConnectionType": 0,
 				"Communication": 12,
