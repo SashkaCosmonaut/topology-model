@@ -21,18 +21,25 @@ namespace TopologyModel.Graphs
         public TopologyVertex[] VerticesArray { get; }
 
         /// <summary>
+        /// Длина грани в метрах.
+        /// </summary>
+        public double EdgeDistance { get; set; }
+
+        /// <summary>
         /// Инициализировать граф всего предприятия на основе матрицы участков предприятия, перебирая каждый её элемент, 
         /// создавая на его основе вершину и генерируя связи в соответствии с имеющимися вершинами.
         /// </summary>
         /// <param name="verticesMatrix">Матрица с вершинами участков предприятия.</param>
         /// <param name="weightCoefficients"></param>
         /// <returns>Успешно ли инициализирован граф.</returns>
-        public TopologyGraph(TopologyVertex[,] verticesMatrix, Dictionary<string, double> weightCoefficients)
+        public TopologyGraph(TopologyVertex[,] verticesMatrix, double edgeDistance, Dictionary<string, double> weightCoefficients)
         {
             Console.Write("Create regions graph... ");
 
             try
             {
+                EdgeDistance = edgeDistance;
+
                 var height = verticesMatrix.GetLength(0);
                 var width = verticesMatrix.GetLength(1);
 
@@ -89,11 +96,11 @@ namespace TopologyModel.Graphs
 
                         // Если соседняя вершина не диагональная, то гарантировано добавляем к ней грань
                         if (neighborX == x || neighborY == y)
-                            AddEdge(new TopologyEdge(vertex, neighborVertex, weightCoefficients));
+                            AddEdge(new TopologyEdge(vertex, neighborVertex, EdgeDistance, weightCoefficients));
 
                         // Добавляем диагональную грань между вершинами, только если вершины ссылаются на один участок
                         else if (neighborVertex.Region == vertex.Region)
-                            AddEdge(new TopologyEdge(vertex, neighborVertex, weightCoefficients));
+                            AddEdge(new TopologyEdge(vertex, neighborVertex, EdgeDistance, weightCoefficients));
                     }
             }
             catch (Exception ex)
@@ -165,7 +172,7 @@ namespace TopologyModel.Graphs
                 return topology.Pathes
                     .SelectMany(q => q.Value)
                     .SelectMany(q =>
-                        q.Path?.ToDictionary(w => new TopologyEdge(w.Source, w.Target, labeled: false), w => q.Color)
+                        q.Path?.ToDictionary(w => new TopologyEdge(w.Source, w.Target, EdgeDistance, labeled: false), w => q.Color)
                         ?? new Dictionary<TopologyEdge, Color>())
                     .ToDictionary(q => q.Key, q => q.Value);
             }

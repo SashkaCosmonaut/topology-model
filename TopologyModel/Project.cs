@@ -88,6 +88,11 @@ namespace TopologyModel
         /// </summary>
         public double CostPerHour { get; set; }
 
+        /// <summary>
+        /// Длина грани на графе в метрах.
+        /// </summary>
+        public double EdgeDistance { get; set; }
+
         #endregion
 
         /// <summary>
@@ -122,7 +127,7 @@ namespace TopologyModel
 
                 if (verticesMatrix == null || verticesMatrix.Length == 0) return false;
 
-                Graph = new TopologyGraph(verticesMatrix, WeightCoefficients);
+                Graph = new TopologyGraph(verticesMatrix, EdgeDistance, WeightCoefficients);
 
                 Console.WriteLine("Initialize the graph... Done!");
 

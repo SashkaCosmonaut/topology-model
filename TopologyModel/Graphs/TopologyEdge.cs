@@ -27,9 +27,10 @@ namespace TopologyModel.Graphs
         /// </summary>
         /// <param name="source">Вершина графа - источник грани.</param>
         /// <param name="target">Вершина графа - приемник грани.</param>
+        /// <param name="distance">Длина грани на графе в метрах.</param>
         /// <param name="weightCoefficients">Весовые коэффициенты для рассчётов весов граней.</param>
         /// <param name="labeled">Отображать ли метку данной грани.</param>
-        public TopologyEdge(TopologyVertex source, TopologyVertex target, Dictionary<string, double> weightCoefficients = null, bool labeled = true) : base(source, target)
+        public TopologyEdge(TopologyVertex source, TopologyVertex target, double distance, Dictionary<string, double> weightCoefficients = null, bool labeled = true) : base(source, target)
         {
             try
             {
@@ -47,7 +48,7 @@ namespace TopologyModel.Graphs
 
                 Weights.Add(ConnectionType.Wireless, wirelessWeight);
                 Weights.Add(ConnectionType.Wired, wiredWeight);
-                Weights.Add(ConnectionType.None, 1);    // TODO: Добавить в свойства участка расстояние между вершинами и возвращать его для NONE
+                Weights.Add(ConnectionType.None, distance > 0 ? distance : 1);
             }
             catch (Exception ex)
             {

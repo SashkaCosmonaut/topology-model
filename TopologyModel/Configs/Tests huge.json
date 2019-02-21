@@ -11,6 +11,7 @@
 	"RemoteServerMonthlyPayment": 0.0,
 	"GraphDotFilename": "graph.dot",
 	"CostPerHour": 0,
+	"EdgeDistance": 2,
 	"MobileInternetMonthlyPayment": {
 		"GPRS": 100.0,
 		"_3G": 300.0,

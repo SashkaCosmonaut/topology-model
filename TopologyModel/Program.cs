@@ -18,6 +18,21 @@ namespace TopologyModel
     public class Program
     {
         /// <summary>
+        /// Количеств повторений запусков генерации топологий.
+        /// </summary>
+        public const int NUMBER_OF_RUNS = 1;
+
+        /// <summary>
+        /// Размер популяции в ГА.
+        /// </summary>
+        public const int POPULATION_SIZE = 100;
+
+        /// <summary>
+        /// Количество поколений, генерируемых ГА.
+        /// </summary>
+        public const int NUMBER_OF_GENERATIONS = 100;
+
+        /// <summary>
         /// Главная функция программы.
         /// </summary>
         /// <param name="args">Параметры командной строки.</param>
@@ -59,7 +74,7 @@ namespace TopologyModel
 
             Console.WriteLine($"Run {configFilename}...");
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < NUMBER_OF_RUNS; i++)
             {
                 Console.WriteLine($"Now running {i} of 10...");
 
@@ -213,11 +228,11 @@ namespace TopologyModel
                 var crossover = new UniformCrossover(0.5f);
                 var mutation = new UniformMutation(true);
                 var fitness = new TopologyFitness();
-                var population = new Population(2000, 2000, chromosome);
+                var population = new Population(POPULATION_SIZE, POPULATION_SIZE, chromosome);
 
                 var ga = new GeneticAlgorithm(population, fitness, selection, crossover, mutation)
                 {
-                    Termination = new GenerationNumberTermination(1000)
+                    Termination = new GenerationNumberTermination(NUMBER_OF_GENERATIONS)
                 };
 
                 // Записать значения в csv файл и строить график фитнес-функции

@@ -46,10 +46,10 @@ namespace TopologyModel.Equipments
                         return base.GetCost(project, vertex);
 
                     case ConnectionType.Wireless:
-                        return 0;        // Для беспроводной связи метр проведения ничего не стоит
+                        return 0;        // Для беспроводной связи проведение в вершине ничего не стоит
 
                     case ConnectionType.None:
-                        return 1;       // TODO: Добавить в свойства участка расстояние между вершинами и возвращать его для NONE
+                        return 1;
 
                     default:
                         return TopologyFitness.UNACCEPTABLE;
@@ -81,7 +81,7 @@ namespace TopologyModel.Equipments
                         return 0;
 
                     case ConnectionType.None:
-                        return 1;
+                        return edge.Weights[ConnectionType];
 
                     default:
                         return TopologyFitness.UNACCEPTABLE;
