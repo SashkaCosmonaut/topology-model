@@ -88,7 +88,7 @@ namespace TopologyModel
 
             for (int i = 0; i < NUMBER_OF_RUNS; i++)
             {
-                Console.WriteLine($"Now running {i} of 10...");
+                Console.WriteLine($"Now running {i} of {NUMBER_OF_RUNS}...");
 
                 GenerateGraphFile(project, CalculateTopologyWithGA(project));
 
