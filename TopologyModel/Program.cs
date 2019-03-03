@@ -20,17 +20,17 @@ namespace TopologyModel
         /// <summary>
         /// Количеств повторений запусков генерации топологий.
         /// </summary>
-        public const int NUMBER_OF_RUNS = 1;
+        public const int NUMBER_OF_RUNS = 3;
 
         /// <summary>
         /// Размер популяции в ГА.
         /// </summary>
-        public const int POPULATION_SIZE = 100;
+        public const int POPULATION_SIZE = 3000;
 
         /// <summary>
         /// Количество поколений, генерируемых ГА.
         /// </summary>
-        public const int NUMBER_OF_GENERATIONS = 100;
+        public const int NUMBER_OF_GENERATIONS = 1000;
 
         /// <summary>
         /// Имя папки с конфигурационными файлами.
@@ -61,6 +61,7 @@ namespace TopologyModel
                 // TODO: если не достигли желаемых значений фитнес функции по деньгам или времени, то в зависимости от приоритета (с наименьшим, т.е. большим значением)
                 // удаляем одно из мест учёта из проекта (просто обнуляем), и говорим какое, и запускаем повторно алгоритм 
                 // Но граф всё равно надо сгенерировать и показать, что получилось, а с новым рассчётом просто меняем имя на 1, 2 и т.д. когда удаляем места учета
+                // dot.exe -Tpdf C:\Users\Zimnu\Documents\topology-model\TopologyModel\bin\Debug\test.dot -o C:\Users\Zimnu\Documents\topology-model\TopologyModel\bin\Debug\test.pdf
             }
             catch (Exception ex)
             {
@@ -88,7 +89,7 @@ namespace TopologyModel
 
             for (int i = 0; i < NUMBER_OF_RUNS; i++)
             {
-                Console.WriteLine($"Now running {i} of {NUMBER_OF_RUNS}...");
+                Console.WriteLine($"Now running {i+1} of {NUMBER_OF_RUNS}...");
 
                 GenerateGraphFile(project, CalculateTopologyWithGA(project));
 
@@ -248,7 +249,7 @@ namespace TopologyModel
                 };
 
                 // Записать значения в csv файл и строить график фитнес-функции
-                using (StreamWriter streamwriter = File.AppendText(Path.Combine(OUTPUT_DIR_NAME, $"fitness-{DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss")}.csv")))
+                using (var streamwriter = File.AppendText(Path.Combine(OUTPUT_DIR_NAME, $"fitness-{DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss")}.csv")))
                 {
                     ga.GenerationRan += (c, e) =>
                     {
