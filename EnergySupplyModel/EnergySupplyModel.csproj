@@ -46,6 +46,7 @@
     <Compile Include="Enumerations\TimeInterval.cs" />
     <Compile Include="Facilities\ComplexFacility.cs" />
     <Compile Include="DatabaseModel.cs" />
+    <Compile Include="InputParameters.cs" />
     <Compile Include="Materials\EnergyResourceCost.cs" />
     <Compile Include="Materials\EnergyResourceConsumption.cs" />
     <Compile Include="Enumerations\EnergyResourceType.cs" />
