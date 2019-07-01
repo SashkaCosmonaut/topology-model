@@ -94,16 +94,20 @@ namespace EnergySupplyModel
         /// <param name="facility">Проверяемый объект предприятия.</param>
         protected static void CheckEffectDiff(Facility facility)
         {
-            if (facility.GetExpectedConsumption == null || facility.GetPotentialConsumption == null)
+            if (facility.GetExpectedConsumption == null || facility.GetPotentialConsumption == null || Params.Penalty == null)
                 return;
 
             var expectedConsumption = facility.GetExpectedConsumption.Invoke();
 
             var potentialConsumption = facility.GetPotentialConsumption.Invoke();
 
-            var effectDiff = Params.EnergyResourceCost * (expectedConsumption - potentialConsumption) - Params.ActivityCost;
+            var expectedCost = Params.EnergyResourceCost * expectedConsumption + Params.Penalty.Invoke(expectedConsumption);
+                
+            var potentialCost = Params.EnergyResourceCost * potentialConsumption + Params.ActivityCost + Params.Penalty.Invoke(potentialConsumption);
 
-            Console.WriteLine($"Expected: {expectedConsumption}, Potential: {potentialConsumption}, EffectDiff: {effectDiff}, Result: {effectDiff <= Params.EpsilonC}");
+            var effectDiff = expectedCost - potentialCost;
+
+            Console.WriteLine($"Expected cost: {expectedCost}, Potential cost: {potentialCost}, EffectDiff: {effectDiff}, Result: {effectDiff <= Params.EpsilonC}");
         }
     }
 }

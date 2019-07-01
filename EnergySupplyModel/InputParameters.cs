@@ -47,5 +47,16 @@ namespace EnergySupplyModel
         /// Шаг разбиения периода времени.
         /// </summary>
         public TimeInterval Step { get; set; } = TimeInterval.Hour1;
+
+        /// <summary>
+        /// Функция расчета штрафа за превышение объема потребления ресурса.
+        /// </summary>
+        public Func<double, double> Penalty { get; set; } = (consumption) =>
+        {
+            if (consumption >= 100)
+                return 100;
+
+            return 0;
+        };
     }
 }
