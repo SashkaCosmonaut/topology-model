@@ -1,28 +1,34 @@
-﻿using EnergySupplyModel.Enumerations;
-using EnergySupplyModel.Materials;
+﻿using EnergySupplyModel.Facilities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace EnergySupplyModel
 {
     public class Program
     {
         /// <summary>
-        /// Производство продукции осуществляется предприятием, в которое входят объекты.
+        /// Порог выявления проблемы.
         /// </summary>
-        public static Manufacturing Factory { get; set; }
+        public const double EPSILON_P = 10;
 
         /// <summary>
-        /// Для каждого энергоресурса задан тариф - стоимость его потребления в определенные моменты времени
+        /// Порог выявления утечки.
         /// </summary>
-        public static EnergyResourceCost[] EnergyResourceCosts { get; set; }
+        public const double EPSILON_S = 10;
 
         /// <summary>
-        /// Для предприятия задаётся план производства - в какое время в каких объемах нужно производить какую продукцию.
-        /// TODO: добавить, каким объектом
+        /// Порог выявления рентабельности меропритий.
         /// </summary>
-        public static ManufacturedProduction[] ProductionPlan { get; set; }
+        public const double EPSILON_C = 80;
+
+        /// <summary>
+        /// Стоимость энергоресурса в текущий момент времени.
+        /// </summary>
+        public static double Cost { get; set; } = 8;
+
+        /// <summary>
+        /// Затраты на мероприятия по оптимизации данного объекта.
+        /// </summary>
+        public static double ActivityCost { get; set; } = 10;
 
         /// <summary>
         /// Главная функция программы.
@@ -30,63 +36,93 @@ namespace EnergySupplyModel
         /// <param name="args">Аргументы командной строки.</param>
         public static void Main(string[] args)
         {
-            Init();
+            var factory = new Manufacturing();
 
-            var totalConsumption = Factory.Manufacture(ProductionPlan);
-
-            var totalCost = 0.0;
-
-            foreach (var totalConsumptionGroup in totalConsumption.GroupBy(q => q.Type))
-            {
-                var typeCosts = EnergyResourceCosts.SingleOrDefault(q => q.EnergyResourceType == totalConsumptionGroup.Key).Costs;
-
-                var consumptions = totalConsumptionGroup.Select(q => q.ConsumedVolumes);
-
-                foreach (var consumption in consumptions)
-                {
-
-                }
-            }
-
+            Check(factory);
         }
 
         /// <summary>
-        /// Инициализация параметров программы.
+        /// Выполнить функцию проверки объектов.
         /// </summary>
-        public static void Init()
+        protected static void Check(Facility facility)
         {
-            Factory = new Manufacturing
-            {
-                Name = "Тестовый завод",
-                Subfacilities = new Facility[]
-                {
+            Console.WriteLine(facility.Name);
 
-                }
-            };
+            CheckExprectedDiff(facility);
 
-            EnergyResourceCosts = new EnergyResourceCost[]
-            {
-                new EnergyResourceCost
-                {
-                    EnergyResourceType = EnergyResourceType.Test,
-                    Costs = new Dictionary<TimeSpan, int>
-                    {
-                        { new TimeSpan(0, 0, 0), 0 }
-                    }
-                }
-            };
+            CheckLeakDiff(facility);
 
-            ProductionPlan = new ManufacturedProduction[]
+            CheckEffectDiff(facility);
+
+            Console.WriteLine("--------------------");
+
+            if (facility is ComplexFacility complexFacility && complexFacility.Subfacilities != null)
             {
-                new ManufacturedProduction
+                foreach (var subFacility in complexFacility.Subfacilities)
                 {
-                    Type = ProductType.Test,
-                    PlannedVolumes = new Dictionary<TimeSpan, int>
-                    {
-                        { new TimeSpan(0, 0, 0), 0 }
-                    }
+                    Check(subFacility);
                 }
-            };
+            }
+        }
+
+        /// <summary>
+        /// Проверить, что ожидаемые значения сответствуют действительным.
+        /// </summary>
+        /// <param name="facility">Проверяемый объект предприятия.</param>
+        protected static void CheckExprectedDiff(Facility facility)
+        {
+            var measuredConsumption = facility.GetMeasuredConsumption();
+
+            if (!measuredConsumption.HasValue || facility.GetExpectedConsumption == null)
+                return;
+
+            var expectedConsumption = facility.GetExpectedConsumption.Invoke();
+
+            var exprectedDiff = Math.Abs(measuredConsumption.Value - expectedConsumption);
+
+            Console.WriteLine($"Expected: {expectedConsumption}, Measured: {measuredConsumption.Value}, ExpectedDiff: {exprectedDiff}, Result: {exprectedDiff <= EPSILON_P}");
+        }
+
+        /// <summary>
+        /// Проверить, что суммарные значения подобъектов соответствуют действительному значению объекта.
+        /// </summary>
+        /// <param name="facility">Проверяемый объект предприятия.</param>
+        protected static void CheckLeakDiff(Facility facility)
+        {
+            var measuredConsumption = facility.GetMeasuredConsumption();
+
+            if (!measuredConsumption.HasValue)
+                return;
+
+            if (facility is ComplexFacility complexFacility)
+            {
+                var summaryConsumption = complexFacility.GetSummaryConsumption();
+
+                if (!summaryConsumption.HasValue)
+                    return;
+
+                var leakDiff = Math.Abs(measuredConsumption.Value - summaryConsumption.Value);
+
+                Console.WriteLine($"Summary: {summaryConsumption.Value}, Measured: {measuredConsumption.Value}, LeakDiff: {leakDiff}, Result: {leakDiff <= EPSILON_S}");
+            }
+        }
+
+        /// <summary>
+        /// Проверить, что применяемые меры являются рентабельными.
+        /// </summary>
+        /// <param name="facility">Проверяемый объект предприятия.</param>
+        protected static void CheckEffectDiff(Facility facility)
+        {
+            if (facility.GetExpectedConsumption == null || facility.GetPotentialConsumption == null)
+                return;
+
+            var expectedConsumption = facility.GetExpectedConsumption.Invoke();
+
+            var potentialConsumption = facility.GetPotentialConsumption.Invoke();
+
+            var effectDiff = Cost * (expectedConsumption - potentialConsumption) - ActivityCost;
+
+            Console.WriteLine($"Expected: {expectedConsumption}, Potential: {potentialConsumption}, EffectDiff: {effectDiff}, Result: {effectDiff <= EPSILON_C}");
         }
     }
 }

@@ -43,12 +43,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Facilities\ComplexFacility.cs" />
+    <Compile Include="DatabaseModel.cs" />
     <Compile Include="Materials\EnergyResourceCost.cs" />
     <Compile Include="Materials\EnergyResourceConsumption.cs" />
     <Compile Include="Enumerations\EnergyResourceType.cs" />
-    <Compile Include="Facility.cs" />
+    <Compile Include="Facilities\Facility.cs" />
     <Compile Include="Materials\ManufacturedProduction.cs" />
-    <Compile Include="Manufacturing.cs" />
+    <Compile Include="Facilities\Manufacturing.cs" />
     <Compile Include="Enumerations\ProductType.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
