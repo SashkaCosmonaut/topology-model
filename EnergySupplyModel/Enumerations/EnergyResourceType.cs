@@ -5,9 +5,8 @@
     /// </summary>
     public enum EnergyResourceType
     {
-        /// <summary>
-        /// Тестовый энергоресурс.
-        /// </summary>
-        Test
+        Electricity,
+
+        ColdWater
     }
 }

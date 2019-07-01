@@ -5,9 +5,8 @@
     /// </summary>
     public enum ProductType
     {
-        /// <summary>
-        /// Тестовая продукция.
-        /// </summary>
-        Test
+        Bolt,
+
+        Nut
     }
 }
