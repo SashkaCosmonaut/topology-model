@@ -15,7 +15,7 @@ namespace EnergySupplyModel.Materials
         public EnergyResourceType Type { get; set; }
 
         /// <summary>
-        /// Потреблённые объемы энергоресурса в моменты времени (по 1 часу).
+        /// Потреблённые объемы энергоресурса в моменты времени (единиц в час).
         /// </summary>
         public Dictionary<DateTime, double> ConsumedVolumes { get; set; }
     }

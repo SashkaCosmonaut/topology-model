@@ -15,7 +15,7 @@ namespace EnergySupplyModel.Materials
         public ProductType Type { get; set; }
 
         /// <summary>
-        /// Требуемые объемы производимой продукции в соответствии с планом, штук.
+        /// Требуемые объемы производимой продукции в соответствии с планом, штук в час.
         /// </summary>
         public Dictionary<TimeSpan, int> PlannedVolumes { get; set; }
     }

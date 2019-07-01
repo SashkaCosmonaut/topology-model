@@ -12,10 +12,10 @@ namespace EnergySupplyModel.Materials
         /// <summary>
         /// Тип потребляемого энергоресурса.
         /// </summary>
-        public EnergyResourceType EnergyResourceType { get; set; }
+        public EnergyResourceType Type { get; set; }
 
         /// <summary>
-        /// Словарь, где ключ - время дня, а значение - стоимость энергоресурса (тариф).
+        /// Словарь, где ключ - время дня, а значение - стоимость энергоресурса (тариф на указанный час).
         /// </summary>
         public Dictionary<TimeSpan, int> Costs { get; set; }
     }
