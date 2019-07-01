@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enumerations\TimeInterval.cs" />
     <Compile Include="Facilities\ComplexFacility.cs" />
     <Compile Include="DatabaseModel.cs" />
     <Compile Include="Materials\EnergyResourceCost.cs" />
