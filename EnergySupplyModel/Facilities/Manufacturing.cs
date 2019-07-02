@@ -9,32 +9,7 @@
     {
         public Manufacturing()
         {
-            Name = "Всё предприятие";
-
-            Subfacilities = new Facility[]
-            {
-                new Facility
-                {
-                    Name = "Тестовое здание",
-                    GetExpectedConsumption = () =>
-                    {
-                        return 100;
-                    },
-                    GetPotentialConsumption = () => 
-                    {
-                        return 90;    
-                    }
-                }
-            };
-            GetExpectedConsumption = () =>
-            {
-                return 100;
-            };
-
-            GetPotentialConsumption = () =>
-            {
-                return 90;
-            };
+            Name = "Workshop1";
         }
     }
 }
