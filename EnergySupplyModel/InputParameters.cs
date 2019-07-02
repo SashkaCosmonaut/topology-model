@@ -1,5 +1,7 @@
 ﻿using EnergySupplyModel.Enumerations;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EnergySupplyModel
 {
@@ -36,12 +38,12 @@ namespace EnergySupplyModel
         /// <summary>
         /// Начало периода анализа.
         /// </summary>
-        public DateTime Start { get; set; } = new DateTime(2010, 10, 10);
+        public DateTime Start { get; set; } = new DateTime(2010, 01, 10);
 
         /// <summary>
         /// Конец периода анализа.
         /// </summary>
-        public DateTime End { get; set; } = new DateTime(2010, 10, 11);
+        public DateTime End { get; set; } = new DateTime(2010, 01, 11);
 
         /// <summary>
         /// Шаг разбиения периода времени.
@@ -51,12 +53,9 @@ namespace EnergySupplyModel
         /// <summary>
         /// Функция расчета штрафа за превышение объема потребления ресурса.
         /// </summary>
-        public Func<double, double> Penalty { get; set; } = (consumption) =>
+        public Func<Dictionary<DateTime, double>, double> Penalty { get; set; } = (consumption) =>
         {
-            if (consumption >= 100)
-                return 100;
-
-            return 0;
+            return consumption.Values.Select(q => q > 100 ? 100 : 0).Sum();
         };
     }
 }
