@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace EnergySupplyModel.Facilities
@@ -13,17 +14,25 @@ namespace EnergySupplyModel.Facilities
         /// <summary>
         /// Суммарное значение потребления энергоресурса вложенными подобъектами данного объекта.
         /// </summary>
-        public double? GetSummaryConsumption()
+        /// <param name="start">Начало периода измерения.</param>
+        /// <param name="end">Конец периода измерения.</param>
+        /// <returns>Словарь данных потребления.</returns>
+        public Dictionary<DateTime, double> GetSummaryConsumption(DateTime start, DateTime end)
         {
+            var result = new Dictionary<DateTime, double>();
+
             if (Subfacilities == null)
-                return null;
+                return result;
 
-            var measuredConsumptions = Subfacilities.Select(q => q.GetMeasuredConsumption());
+            var measuredConsumptions = Subfacilities.Select(q => q.GetMeasuredConsumption(start, end));
 
-            if (measuredConsumptions.Count() == 0 || measuredConsumptions.Any(q => !q.HasValue))
-                return null;
+            if (!measuredConsumptions.Any())
+                return result;
 
-            return measuredConsumptions.Sum(q => q.Value);
+            foreach (var dataItem in measuredConsumptions.First())
+                result.Add(dataItem.Key, measuredConsumptions.Sum(q => q[dataItem.Key]));
+
+            return result;
         }
     }
 }

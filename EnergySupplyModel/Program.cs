@@ -1,6 +1,7 @@
 ﻿using EnergySupplyModel.Enumerations;
 using EnergySupplyModel.Facilities;
 using System;
+using System.Linq;
 
 namespace EnergySupplyModel
 {
@@ -52,16 +53,13 @@ namespace EnergySupplyModel
         /// <param name="facility">Проверяемый объект предприятия.</param>
         protected static void CheckExprectedDiff(Facility facility)
         {
-            var measuredConsumption = facility.GetMeasuredConsumption();
+            var measuredConsumption = facility.GetMeasuredConsumption(Params.Start, Params.End).Sum(q => q.Value);
 
-            if (!measuredConsumption.HasValue || facility.GetExpectedConsumption == null)
-                return;
+            var expectedConsumption = facility.GetExpectedConsumption(Params.Start, Params.End).Sum(q => q.Value);
 
-            var expectedConsumption = facility.GetExpectedConsumption.Invoke();
+            var exprectedDiff = Math.Abs(measuredConsumption- expectedConsumption);
 
-            var exprectedDiff = Math.Abs(measuredConsumption.Value - expectedConsumption);
-
-            Console.WriteLine($"Expected: {expectedConsumption}, Measured: {measuredConsumption.Value}, ExpectedDiff: {exprectedDiff}, Result: {exprectedDiff <= Params.EpsilonP}");
+            Console.WriteLine($"Expected: {expectedConsumption}, Measured: {measuredConsumption}, ExpectedDiff: {exprectedDiff}, Result: {exprectedDiff <= Params.EpsilonP}");
         }
 
         /// <summary>
@@ -70,21 +68,15 @@ namespace EnergySupplyModel
         /// <param name="facility">Проверяемый объект предприятия.</param>
         protected static void CheckLeakDiff(Facility facility)
         {
-            var measuredConsumption = facility.GetMeasuredConsumption();
-
-            if (!measuredConsumption.HasValue)
-                return;
+            var measuredConsumption = facility.GetMeasuredConsumption(Params.Start, Params.End).Sum(q => q.Value);
 
             if (facility is ComplexFacility complexFacility)
             {
-                var summaryConsumption = complexFacility.GetSummaryConsumption();
+                var summaryConsumption = complexFacility.GetSummaryConsumption(Params.Start, Params.End).Sum(q => q.Value);
 
-                if (!summaryConsumption.HasValue)
-                    return;
+                var leakDiff = Math.Abs(measuredConsumption - summaryConsumption);
 
-                var leakDiff = Math.Abs(measuredConsumption.Value - summaryConsumption.Value);
-
-                Console.WriteLine($"Summary: {summaryConsumption.Value}, Measured: {measuredConsumption.Value}, LeakDiff: {leakDiff}, Result: {leakDiff <= Params.EpsilonS}");
+                Console.WriteLine($"Summary: {summaryConsumption}, Measured: {measuredConsumption}, LeakDiff: {leakDiff}, Result: {leakDiff <= Params.EpsilonS}");
             }
         }
 
@@ -94,16 +86,13 @@ namespace EnergySupplyModel
         /// <param name="facility">Проверяемый объект предприятия.</param>
         protected static void CheckEffectDiff(Facility facility)
         {
-            if (facility.GetExpectedConsumption == null || facility.GetPotentialConsumption == null || Params.Penalty == null)
-                return;
+            var expectedConsumption = facility.GetExpectedConsumption(Params.Start, Params.End);
 
-            var expectedConsumption = facility.GetExpectedConsumption.Invoke();
+            var potentialConsumption = facility.GetPotentialConsumption(Params.Start, Params.End);
 
-            var potentialConsumption = facility.GetPotentialConsumption.Invoke();
-
-            var expectedCost = Params.EnergyResourceCost * expectedConsumption + Params.Penalty.Invoke(expectedConsumption);
+            var expectedCost = Params.EnergyResourceCost * expectedConsumption.Sum(q => q.Value) + Params.Penalty.Invoke(expectedConsumption);
                 
-            var potentialCost = Params.EnergyResourceCost * potentialConsumption + Params.ActivityCost + Params.Penalty.Invoke(potentialConsumption);
+            var potentialCost = Params.EnergyResourceCost * potentialConsumption.Sum(q => q.Value) + Params.ActivityCost + Params.Penalty.Invoke(potentialConsumption);
 
             var effectDiff = expectedCost - potentialCost;
 
