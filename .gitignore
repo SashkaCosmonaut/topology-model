@@ -5,3 +5,4 @@ packages/
 .vs/
 EnergySupplyModel/obj/
 EnergySupplyModel/bin/
+EnergySupplyModel/Data/
