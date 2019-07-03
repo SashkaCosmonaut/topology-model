@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EnergySupplyModel.Materials;
+using System;
 using System.Collections.Generic;
 
 namespace EnergySupplyModel.Facilities
@@ -18,10 +19,10 @@ namespace EnergySupplyModel.Facilities
         /// </summary>
         /// <param name="start">Начало периода измерения.</param>
         /// <param name="end">Конец периода измерения.</param>
-        /// <returns>Словарь данных потребления.</returns>
-        public Dictionary<DateTime, double> GetExpectedConsumption(DateTime start, DateTime end)
+        /// <returns>Данные потребления.</returns>
+        public Data GetExpectedConsumption(DateTime start, DateTime end)
         {
-            return DatabaseModel.GetExpectedData(Name, start, end);
+            return null;
         }
 
         /// <summary>
@@ -29,10 +30,10 @@ namespace EnergySupplyModel.Facilities
         /// </summary>
         /// <param name="start">Начало периода измерения.</param>
         /// <param name="end">Конец периода измерения.</param>
-        /// <returns>Словарь данных потребления.</returns>
-        public Dictionary<DateTime, double> GetPotentialConsumption(DateTime start, DateTime end)
+        /// <returns>Данные потребления.</returns>
+        public Data GetPotentialConsumption(DateTime start, DateTime end)
         {
-            return DatabaseModel.GetPotentialData(Name, start, end);
+            return null;
         }
 
         /// <summary>
@@ -40,10 +41,10 @@ namespace EnergySupplyModel.Facilities
         /// </summary>
         /// <param name="start">Начало периода измерения.</param>
         /// <param name="end">Конец периода измерения.</param>
-        /// <returns>Словарь данных потребления.</returns>
-        public Dictionary<DateTime, double> GetMeasuredConsumption(DateTime start, DateTime end)
+        /// <returns>Данные потребления.</returns>
+        public Data GetMeasuredConsumption(DateTime start, DateTime end)
         {
-            return DatabaseModel.GetMeasuredData(Name, start, end);
+            return null;
         }
     }
 }

@@ -17,7 +17,7 @@ namespace EnergySupplyModel
         /// <param name="args">Аргументы командной строки.</param>
         public static void Main(string[] args)
         {
-            Check(Params.Fctory);
+            Check(Params.Factory);
         }
 
         /// <summary>
@@ -50,9 +50,9 @@ namespace EnergySupplyModel
         /// <param name="facility">Проверяемый объект предприятия.</param>
         protected static void CheckExprectedDiff(Facility facility)
         {
-            var measuredConsumption = facility.GetMeasuredConsumption(Params.Start, Params.End).Sum(q => q.Value);
+            var measuredConsumption = facility.GetMeasuredConsumption(Params.Start, Params.End).Sum(q => q.Value.ItemValue);
 
-            var expectedConsumption = facility.GetExpectedConsumption(Params.Start, Params.End).Sum(q => q.Value);
+            var expectedConsumption = facility.GetExpectedConsumption(Params.Start, Params.End).Sum(q => q.Value.ItemValue);
 
             var exprectedDiff = measuredConsumption - expectedConsumption;
 
@@ -65,7 +65,7 @@ namespace EnergySupplyModel
         /// <param name="facility">Проверяемый объект предприятия.</param>
         protected static void CheckLeakDiff(Facility facility)
         {
-            var measuredConsumption = facility.GetMeasuredConsumption(Params.Start, Params.End).Sum(q => q.Value);
+            var measuredConsumption = facility.GetMeasuredConsumption(Params.Start, Params.End).Sum(q => q.Value.ItemValue);
 
             if (facility is ComplexFacility complexFacility)
             {
@@ -87,11 +87,11 @@ namespace EnergySupplyModel
 
             var potentialConsumption = facility.GetPotentialConsumption(Params.Start, Params.End);
 
-            var expectedCost = expectedConsumption.Select(q => Params.EnergyResourceCost.Invoke(q)).Sum() +
-                               expectedConsumption.Select(q => Params.Penalty.Invoke(q)).Sum();
+            var expectedCost = expectedConsumption.Select(q => Params.EnergyResourceCost.Invoke(q.Value)).Sum() +
+                               expectedConsumption.Select(q => Params.Penalty.Invoke(q.Value)).Sum();
 
-            var potentialCost = potentialConsumption.Select(q => Params.EnergyResourceCost.Invoke(q)).Sum() +
-                                potentialConsumption.Select(q => Params.Penalty.Invoke(q)).Sum() +
+            var potentialCost = potentialConsumption.Select(q => Params.EnergyResourceCost.Invoke(q.Value)).Sum() +
+                                potentialConsumption.Select(q => Params.Penalty.Invoke(q.Value)).Sum() +
                                 Params.ActivityCost;
 
             var effectDiff = expectedCost - potentialCost;

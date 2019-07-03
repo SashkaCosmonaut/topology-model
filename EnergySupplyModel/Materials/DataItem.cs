@@ -16,7 +16,7 @@ namespace EnergySupplyModel.Materials
         /// <summary>
         /// Значение элемента данных.
         /// </summary>
-        public double Value { get; set; }
+        public double ItemValue { get; set; }
 
         /// <summary>
         /// Метаданные данного элемента данных.

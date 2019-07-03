@@ -1,5 +1,6 @@
 ﻿using EnergySupplyModel.Enumerations;
 using EnergySupplyModel.Facilities;
+using EnergySupplyModel.Materials;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,22 +28,6 @@ namespace EnergySupplyModel
         public double EpsilonC = 800;
 
         /// <summary>
-        /// Функция расчета стоимости энергоресурса в текущий момент времени.
-        /// </summary>
-        public Func<KeyValuePair<DateTime, double>, double> EnergyResourceCost { get; set; } = (dataItem) =>
-        {
-            var result = dataItem.Value;
-
-            if (dataItem.Key.DayOfWeek == DayOfWeek.Saturday || dataItem.Key.DayOfWeek == DayOfWeek.Sunday)
-                return result * 5;
-
-            if (dataItem.Key.TimeOfDay.Hours < 6 || dataItem.Key.TimeOfDay.Hours > 20)
-                return result * 5;
-
-            return result * 10;
-        };
-
-        /// <summary>
         /// Затраты на мероприятия по оптимизации данного объекта.
         /// </summary>
         public double ActivityCost { get; set; } = 1000;
@@ -63,11 +48,27 @@ namespace EnergySupplyModel
         public TimeInterval Step { get; set; } = TimeInterval.Hour1;
 
         /// <summary>
+        /// Функция расчета стоимости энергоресурса в текущий момент времени.
+        /// </summary>
+        public Func<DataItem, double> EnergyResourceCost { get; set; } = (dataItem) =>
+        {
+            var result = dataItem.ItemValue;
+
+            if (dataItem.TimeStamp.DayOfWeek == DayOfWeek.Saturday || dataItem.TimeStamp.DayOfWeek == DayOfWeek.Sunday)
+                return result * 5;
+
+            if (dataItem.TimeStamp.TimeOfDay.Hours < 6 || dataItem.TimeStamp.TimeOfDay.Hours > 20)
+                return result * 5;
+
+            return result * 10;
+        };
+
+        /// <summary>
         /// Функция расчета штрафа за превышение объема потребления ресурса.
         /// </summary>
-        public Func<KeyValuePair<DateTime, double>, double> Penalty { get; set; } = (dataItem) =>
+        public Func<DataItem, double> Penalty { get; set; } = (dataItem) =>
         {
-            return dataItem.Value > 100 ? 100 : 0;
+            return dataItem.ItemValue > 100 ? 100 : 0;
         };
 
         /// <summary>
@@ -75,7 +76,7 @@ namespace EnergySupplyModel
         /// На самом верхнем уровне в качестве объекта рассматривается всё предприятие в целом, которое разбивается на совокупность подобъектов: 
         /// территории, здания, цеха, участки, вплоть до отдельного станка или единицы оборудования.
         /// </summary>
-        public ComplexFacility Fctory { get; set; } = new ComplexFacility
+        public ComplexFacility Factory { get; set; } = new ComplexFacility
         {
             Name = "Factory",
             Subfacilities = new[]

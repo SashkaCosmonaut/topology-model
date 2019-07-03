@@ -30,7 +30,7 @@ namespace EnergySupplyModel.Facilities
                 return result;
 
             foreach (var dataItem in measuredConsumptions.First())
-                result.Add(dataItem.Key, measuredConsumptions.Sum(q => q[dataItem.Key]));
+                result.Add(dataItem.Key, measuredConsumptions.Sum(q => q[dataItem.Key].ItemValue));
 
             return result;
         }
