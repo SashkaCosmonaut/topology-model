@@ -15,17 +15,17 @@ namespace EnergySupplyModel
         /// <summary>
         /// Имя файла для чтения измеренных данных.
         /// </summary>
-        private static string _measuredDataFilename { get; set; } = Path.Combine("Data", "electricityMeasured.csv");
+        private static string _measuredDataFilename { get; set; } = Path.Combine("Data", "ElectricityMeasured.csv");
 
         /// <summary>
         /// Имя файла для чтения ожидаемых данных.
         /// </summary>
-        private static string _expectedDataFilename { get; set; } = Path.Combine("Data", "electricityExpected.csv");
+        private static string _expectedDataFilename { get; set; } = Path.Combine("Data", "ElectricityExpected.csv");
 
         /// <summary>
         /// Имя файла для чтения потенциальных данных.
         /// </summary>
-        private static string _potentialDataFilename { get; set; } = Path.Combine("Data", "electricityPotential.csv");
+        private static string _potentialDataFilename { get; set; } = Path.Combine("Data", "ElectricityPotential.csv");
 
         /// <summary>
         /// Закэшированыне измеренные данные для всех объектов.
