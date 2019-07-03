@@ -4,13 +4,13 @@ using System.Collections.Generic;
 namespace EnergySupplyModel.Materials
 {
     /// <summary>
-    /// Класс данных о потреблении энергоресурсов.
+    /// Класс данных о потреблении энергоресурсов, который содержит в себе элементы данных этого блока данных.
     /// </summary>
-    public class Data
+    public class Data : Dictionary<DateTime, DataItem>
     {
         /// <summary>
-        /// Элементы данных этого блока данных.
+        /// Характеристики источника данных.
         /// </summary>
-        public Dictionary<DateTime, DataItem> DataItems { get; set; }
+        public DataSource DataSource { get; set; }
     }
 }

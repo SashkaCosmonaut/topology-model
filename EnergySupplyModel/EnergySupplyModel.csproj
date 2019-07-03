@@ -50,6 +50,7 @@
     <Compile Include="InputParameters.cs" />
     <Compile Include="Materials\Data.cs" />
     <Compile Include="Materials\DataItem.cs" />
+    <Compile Include="Materials\DataSource.cs" />
     <Compile Include="Materials\EnergyResourceCost.cs" />
     <Compile Include="Materials\EnergyResourceConsumption.cs" />
     <Compile Include="Enumerations\EnergyResourceType.cs" />
