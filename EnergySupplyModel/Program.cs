@@ -57,7 +57,7 @@ namespace EnergySupplyModel
 
             var expectedConsumption = facility.GetExpectedConsumption(Params.Start, Params.End).Sum(q => q.Value);
 
-            var exprectedDiff = Math.Abs(measuredConsumption- expectedConsumption);
+            var exprectedDiff = measuredConsumption - expectedConsumption;
 
             Console.WriteLine($"Expected: {expectedConsumption}, Measured: {measuredConsumption}, ExpectedDiff: {exprectedDiff}, Result: {exprectedDiff <= Params.EpsilonP}");
         }
@@ -74,7 +74,7 @@ namespace EnergySupplyModel
             {
                 var summaryConsumption = complexFacility.GetSummaryConsumption(Params.Start, Params.End).Sum(q => q.Value);
 
-                var leakDiff = Math.Abs(measuredConsumption - summaryConsumption);
+                var leakDiff = measuredConsumption - summaryConsumption;
 
                 Console.WriteLine($"Summary: {summaryConsumption}, Measured: {measuredConsumption}, LeakDiff: {leakDiff}, Result: {leakDiff <= Params.EpsilonS}");
             }
@@ -96,7 +96,7 @@ namespace EnergySupplyModel
 
             var effectDiff = expectedCost - potentialCost;
 
-            Console.WriteLine($"Expected cost: {expectedCost}, Potential cost: {potentialCost}, EffectDiff: {effectDiff}, Result: {effectDiff <= Params.EpsilonC}");
+            Console.WriteLine($"Expected cost: {expectedCost}, Potential cost: {potentialCost}, EffectDiff: {effectDiff}, Result: {effectDiff > Params.EpsilonC}");
         }
     }
 }

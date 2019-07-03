@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace EnergySupplyModel.Facilities
 {
-    public abstract class ComplexFacility : Facility
+    public class ComplexFacility : Facility
     {
         /// <summary>
         /// Совокупность вложенных в него таких же подобъектов-потребителей.

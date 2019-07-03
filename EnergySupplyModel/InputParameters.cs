@@ -33,7 +33,7 @@ namespace EnergySupplyModel
         /// <summary>
         /// Затраты на мероприятия по оптимизации данного объекта.
         /// </summary>
-        public double ActivityCost { get; set; } = 10;
+        public double ActivityCost { get; set; } = 1000;
 
         /// <summary>
         /// Начало периода анализа.
