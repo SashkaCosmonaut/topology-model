@@ -9,7 +9,31 @@
     {
         public Manufacturing()
         {
-            Name = "Workshop1";
+            Name = "Factory";
+
+            Subfacilities = new []
+            {
+                new ComplexFacility
+                {
+                    Name = "Workshop1",
+                    Subfacilities = new []
+                    {
+                        new Facility { Name = "Area1.1" },
+                        new Facility { Name = "Area1.2" },
+                        new Facility { Name = "Area1.3" },
+                    }
+                },
+                new ComplexFacility
+                {
+                    Name = "Workshop2",
+                    Subfacilities = new []
+                    {
+                        new Facility { Name = "Area2.1" },
+                        new Facility { Name = "Area2.2" },
+                        new Facility { Name = "Area2.3" },
+                    }
+                },
+            };
         }
     }
 }
