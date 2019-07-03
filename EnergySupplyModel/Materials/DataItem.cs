@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace EnergySupplyModel.Materials
 {
@@ -7,6 +8,11 @@ namespace EnergySupplyModel.Materials
     /// </summary>
     public class DataItem
     {
+        /// <summary>
+        /// Отметка даты времени данного элемента данных.
+        /// </summary>
+        public DateTime TimeStamp { get; set; }
+
         /// <summary>
         /// Значение элемента данных.
         /// </summary>
