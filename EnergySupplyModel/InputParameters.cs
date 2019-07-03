@@ -14,22 +14,33 @@ namespace EnergySupplyModel
         /// <summary>
         /// Порог выявления проблемы.
         /// </summary>
-        public double EpsilonP = 10;
+        public double EpsilonP = 100;
 
         /// <summary>
         /// Порог выявления утечки.
         /// </summary>
-        public double EpsilonS = 10;
+        public double EpsilonS = 100;
 
         /// <summary>
         /// Порог выявления рентабельности меропритий.
         /// </summary>
-        public double EpsilonC = 80;
+        public double EpsilonC = 800;
 
         /// <summary>
-        /// Стоимость энергоресурса в текущий момент времени.
+        /// Функция расчета стоимости энергоресурса в текущий момент времени.
         /// </summary>
-        public double EnergyResourceCost { get; set; } = 8;
+        public Func<KeyValuePair<DateTime, double>, double> EnergyResourceCost { get; set; } = (dataItem) =>
+        {
+            var result = dataItem.Value;
+
+            if (dataItem.Key.DayOfWeek == DayOfWeek.Saturday || dataItem.Key.DayOfWeek == DayOfWeek.Sunday)
+                return result * 5;
+
+            if (dataItem.Key.TimeOfDay.Hours < 6 || dataItem.Key.TimeOfDay.Hours > 20)
+                return result * 5;
+
+            return result * 10;
+        };
 
         /// <summary>
         /// Затраты на мероприятия по оптимизации данного объекта.
@@ -54,9 +65,9 @@ namespace EnergySupplyModel
         /// <summary>
         /// Функция расчета штрафа за превышение объема потребления ресурса.
         /// </summary>
-        public Func<Dictionary<DateTime, double>, double> Penalty { get; set; } = (consumption) =>
+        public Func<KeyValuePair<DateTime, double>, double> Penalty { get; set; } = (dataItem) =>
         {
-            return consumption.Values.Select(q => q > 100 ? 100 : 0).Sum();
+            return dataItem.Value > 100 ? 100 : 0;
         };
 
         /// <summary>

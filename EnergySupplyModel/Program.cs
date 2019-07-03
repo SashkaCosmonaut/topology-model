@@ -1,5 +1,4 @@
-﻿using EnergySupplyModel.Enumerations;
-using EnergySupplyModel.Facilities;
+﻿using EnergySupplyModel.Facilities;
 using System;
 using System.Linq;
 
@@ -88,9 +87,12 @@ namespace EnergySupplyModel
 
             var potentialConsumption = facility.GetPotentialConsumption(Params.Start, Params.End);
 
-            var expectedCost = Params.EnergyResourceCost * expectedConsumption.Sum(q => q.Value) + Params.Penalty.Invoke(expectedConsumption);
-                
-            var potentialCost = Params.EnergyResourceCost * potentialConsumption.Sum(q => q.Value) + Params.ActivityCost + Params.Penalty.Invoke(potentialConsumption);
+            var expectedCost = expectedConsumption.Select(q => Params.EnergyResourceCost.Invoke(q)).Sum() +
+                               expectedConsumption.Select(q => Params.Penalty.Invoke(q)).Sum();
+
+            var potentialCost = potentialConsumption.Select(q => Params.EnergyResourceCost.Invoke(q)).Sum() +
+                                potentialConsumption.Select(q => Params.Penalty.Invoke(q)).Sum() +
+                                Params.ActivityCost;
 
             var effectDiff = expectedCost - potentialCost;
 
