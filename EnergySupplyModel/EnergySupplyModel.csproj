@@ -53,7 +53,6 @@
     <Compile Include="Enumerations\EnergyResourceType.cs" />
     <Compile Include="Facilities\Facility.cs" />
     <Compile Include="Materials\ManufacturedProduction.cs" />
-    <Compile Include="Facilities\Manufacturing.cs" />
     <Compile Include="Enumerations\ProductType.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

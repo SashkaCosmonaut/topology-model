@@ -18,9 +18,7 @@ namespace EnergySupplyModel
         /// <param name="args">Аргументы командной строки.</param>
         public static void Main(string[] args)
         {
-            var factory = new Manufacturing();
-
-            Check(factory);
+            Check(Params.Fctory);
         }
 
         /// <summary>

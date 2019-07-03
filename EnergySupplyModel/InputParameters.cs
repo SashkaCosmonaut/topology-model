@@ -1,4 +1,5 @@
 ﻿using EnergySupplyModel.Enumerations;
+using EnergySupplyModel.Facilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,6 +57,39 @@ namespace EnergySupplyModel
         public Func<Dictionary<DateTime, double>, double> Penalty { get; set; } = (consumption) =>
         {
             return consumption.Values.Select(q => q > 100 ? 100 : 0).Sum();
+        };
+
+        /// <summary>
+        /// Производство продукции осуществляется целевой системой - системой производства. В систему производства входят объекты предприятия.
+        /// На самом верхнем уровне в качестве объекта рассматривается всё предприятие в целом, которое разбивается на совокупность подобъектов: 
+        /// территории, здания, цеха, участки, вплоть до отдельного станка или единицы оборудования.
+        /// </summary>
+        public ComplexFacility Fctory { get; set; } = new ComplexFacility
+        {
+            Name = "Factory",
+            Subfacilities = new[]
+            {
+                new ComplexFacility
+                {
+                    Name = "Workshop1",
+                    Subfacilities = new []
+                    {
+                        new Facility { Name = "Area1.1" },
+                        new Facility { Name = "Area1.2" },
+                        new Facility { Name = "Area1.3" },
+                    }
+                },
+                new ComplexFacility
+                {
+                    Name = "Workshop2",
+                    Subfacilities = new []
+                    {
+                        new Facility { Name = "Area2.1" },
+                        new Facility { Name = "Area2.2" },
+                        new Facility { Name = "Area2.3" },
+                    }
+                },
+            }
         };
     }
 }
