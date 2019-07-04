@@ -9,6 +9,8 @@
 
         Expected,
 
-        Potential
+        Potential,
+
+        Summarized
     }
 }
