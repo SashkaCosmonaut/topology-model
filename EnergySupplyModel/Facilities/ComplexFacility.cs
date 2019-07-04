@@ -1,4 +1,6 @@
-﻿using System;
+﻿using EnergySupplyModel.Enumerations;
+using EnergySupplyModel.Materials;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,20 +19,43 @@ namespace EnergySupplyModel.Facilities
         /// <param name="start">Начало периода измерения.</param>
         /// <param name="end">Конец периода измерения.</param>
         /// <returns>Словарь данных потребления.</returns>
-        public Dictionary<DateTime, double> GetSummaryConsumption(DateTime start, DateTime end)
+        public IEnumerable<Data> GetSummaryConsumption(DateTime start, DateTime end)
         {
-            var result = new Dictionary<DateTime, double>();
+            var result = new List<Data>();
 
             if (Subfacilities == null)
                 return result;
 
-            var measuredConsumptions = Subfacilities.Select(q => q.GetMeasuredConsumption(start, end));
+            var measuredConsumptions = Subfacilities.SelectMany(q => q.GetMeasuredConsumption(start, end));
 
             if (!measuredConsumptions.Any())
                 return result;
 
-            foreach (var dataItem in measuredConsumptions.First())
-                result.Add(dataItem.Key, measuredConsumptions.Sum(q => q[dataItem.Key].ItemValue));
+            var energyResourceGroups = measuredConsumptions.GroupBy(q => q.DataSource.EnergyResourceType);
+
+            foreach (var energyResourceGroup in energyResourceGroups)
+            {
+                var newData = new Data
+                {
+                    DataSource = new DataSource
+                    {
+                        DataSourceType = DataSourceType.Summarized,
+                        EnergyResourceType = energyResourceGroup.Key,
+                        FacilityName = Name,
+                        TimeInterval = energyResourceGroup.First().DataSource.TimeInterval  // Здесь должно быть приведение данных к одному интервалу
+                    }
+                };
+
+                foreach (var dataItem in energyResourceGroup.First())
+                    newData.Add(dataItem.Key, new DataItem
+                    {
+                        // Здесь также должно быть объединение метаданных и расчёт общих оценок качества данных
+                        ItemValue = energyResourceGroup.Sum(q => q[dataItem.Key].ItemValue),
+                        TimeStamp = dataItem.Key
+                    });
+
+                result.Add(newData);
+            }
 
             return result;
         }
