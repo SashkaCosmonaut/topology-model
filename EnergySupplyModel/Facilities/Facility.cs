@@ -19,10 +19,10 @@ namespace EnergySupplyModel.Facilities
         /// </summary>
         /// <param name="start">Начало периода измерения.</param>
         /// <param name="end">Конец периода измерения.</param>
-        /// <returns>Данные потребления.</returns>
-        public Data GetExpectedConsumption(DateTime start, DateTime end)
+        /// <returns>Множество данных различного потребления.</returns>
+        public IEnumerable<Data> GetExpectedConsumption(DateTime start, DateTime end)
         {
-            return null;
+            return new Data[] { };
         }
 
         /// <summary>
@@ -31,9 +31,9 @@ namespace EnergySupplyModel.Facilities
         /// <param name="start">Начало периода измерения.</param>
         /// <param name="end">Конец периода измерения.</param>
         /// <returns>Данные потребления.</returns>
-        public Data GetPotentialConsumption(DateTime start, DateTime end)
+        public IEnumerable<Data> GetPotentialConsumption(DateTime start, DateTime end)
         {
-            return null;
+            return new Data[] { };
         }
 
         /// <summary>
@@ -42,9 +42,9 @@ namespace EnergySupplyModel.Facilities
         /// <param name="start">Начало периода измерения.</param>
         /// <param name="end">Конец периода измерения.</param>
         /// <returns>Данные потребления.</returns>
-        public Data GetMeasuredConsumption(DateTime start, DateTime end)
+        public IEnumerable<Data> GetMeasuredConsumption(DateTime start, DateTime end)
         {
-            return null;
+            return new Data[] { };
         }
     }
 }
