@@ -93,6 +93,9 @@ namespace EnergySupplyModel
                     // Берём суммируемые данные того же типа
                     var summaryEnergyResourceData = summaryConsumption.SingleOrDefault(q => q.Key == measuredEnergyResourceData.Key);
 
+                    if (summaryEnergyResourceData == null)
+                        continue;
+
                     // Поскольку данные по каждому типу данных в одном экземпляре, берём их все вместе и суммируем значения
                     var measuredSum = measuredEnergyResourceData.SelectMany(q => q).Sum(q => q.Value.ItemValue);
                     var summarySum = summaryEnergyResourceData.SelectMany(q => q).Sum(q => q.Value.ItemValue);
@@ -120,6 +123,9 @@ namespace EnergySupplyModel
 
                 // Берём потенциальные данные того же типа
                 var potentialEnergyResourceData = potentialConsumption.SingleOrDefault(q => q.Key == expectedEnergyResourceData.Key);
+
+                if (potentialEnergyResourceData == null)
+                    continue;
 
                 // Рассчитываем ожидаемую и потенциальную стоимости
                 var expectedCost = expectedEnergyResourceData.SelectMany(q => q).Sum(q => Params.EnergyResourceCost.Invoke(q.Value)) +
