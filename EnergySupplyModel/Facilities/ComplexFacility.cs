@@ -39,7 +39,6 @@ namespace EnergySupplyModel.Facilities
                 {
                     DataSource = new DataSource
                     {
-                        DataSourceType = DataSourceType.Summarized,
                         EnergyResourceType = energyResourceGroup.Key,
                         FacilityName = Name,
                         TimeInterval = energyResourceGroup.First().DataSource.TimeInterval  // Здесь должно быть приведение данных к одному интервалу

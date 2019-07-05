@@ -18,16 +18,6 @@ namespace EnergySupplyModel.Materials
         public TimeInterval TimeInterval { get; set; }
 
         /// <summary>
-        /// Путь к файлу с данными.
-        /// </summary>
-        public string DataFilePath { get; set; }
-
-        /// <summary>
-        /// Тип источника данных.
-        /// </summary>
-        public DataSourceType DataSourceType { get; set; }
-
-        /// <summary>
         /// Наименование объекта.
         /// </summary>
         public string FacilityName { get; set; }
@@ -42,9 +32,7 @@ namespace EnergySupplyModel.Materials
             return obj is DataSource source &&
                    EnergyResourceType == source.EnergyResourceType &&
                    FacilityName == source.FacilityName &&
-                   TimeInterval == source.TimeInterval &&
-                   DataFilePath == source.DataFilePath &&
-                   DataSourceType == source.DataSourceType;
+                   TimeInterval == source.TimeInterval;
         }
     }
 }
