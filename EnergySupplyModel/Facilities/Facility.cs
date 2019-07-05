@@ -1,6 +1,8 @@
-﻿using EnergySupplyModel.Materials;
+﻿using EnergySupplyModel.Enumerations;
+using EnergySupplyModel.Materials;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EnergySupplyModel.Facilities
 {
@@ -41,10 +43,27 @@ namespace EnergySupplyModel.Facilities
         /// </summary>
         /// <param name="start">Начало периода измерения.</param>
         /// <param name="end">Конец периода измерения.</param>
+        /// <param name="timeInterval">Требуемый интервал сбора данных.</param>
         /// <returns>Данные потребления.</returns>
-        public IEnumerable<Data> GetMeasuredConsumption(DateTime start, DateTime end)
+        public IEnumerable<Data> GetMeasuredConsumption(DateTime start, DateTime end, TimeInterval timeInterval)
         {
-            return new Data[] { };
+            var dataSources = new DataSource[]
+            {
+                new DataSource
+                {
+                    EnergyResourceType = EnergyResourceType.ColdWater,
+                    FacilityName = Name,
+                    TimeInterval = timeInterval
+                },
+                new DataSource
+                {
+                    EnergyResourceType = EnergyResourceType.Electricity,
+                    FacilityName = Name,
+                    TimeInterval = timeInterval
+                }
+            };
+
+            return dataSources.Select(dataSource => DatabaseModel.GetMeasuredData(dataSource, start, end));
         }
     }
 }

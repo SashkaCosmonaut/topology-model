@@ -18,15 +18,16 @@ namespace EnergySupplyModel.Facilities
         /// </summary>
         /// <param name="start">Начало периода измерения.</param>
         /// <param name="end">Конец периода измерения.</param>
+        /// <param name="timeInterval">Требуемый интервал сбора данных.</param>
         /// <returns>Словарь данных потребления.</returns>
-        public IEnumerable<Data> GetSummaryConsumption(DateTime start, DateTime end)
+        public IEnumerable<Data> GetSummaryConsumption(DateTime start, DateTime end, TimeInterval timeInterval)
         {
             var result = new List<Data>();
 
             if (Subfacilities == null)
                 return result;
 
-            var measuredConsumptions = Subfacilities.SelectMany(q => q.GetMeasuredConsumption(start, end));
+            var measuredConsumptions = Subfacilities.SelectMany(q => q.GetMeasuredConsumption(start, end, timeInterval));
 
             if (!measuredConsumptions.Any())
                 return result;
