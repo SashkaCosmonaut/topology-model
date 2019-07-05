@@ -50,13 +50,28 @@ namespace EnergySupplyModel
         /// <param name="facility">Проверяемый объект предприятия.</param>
         protected static void CheckExprectedDiff(Facility facility)
         {
-            var measuredConsumption = facility.GetMeasuredConsumption(Params.Start, Params.End).Sum(q => q.Value.ItemValue);
+            // Получаем измеренное и ожидаемое значения потребления и группируем их по типам энергоресурсов
+            var measuredConsumption = facility.GetMeasuredConsumption(Params.Start, Params.End).GroupBy(q => q.DataSource.EnergyResourceType);
+            var expectedConsumption = facility.GetExpectedConsumption(Params.Start, Params.End).GroupBy(q => q.DataSource.EnergyResourceType);
 
-            var expectedConsumption = facility.GetExpectedConsumption(Params.Start, Params.End).Sum(q => q.Value.ItemValue);
+            foreach (var measuredEnergyResourceData in measuredConsumption)     // Перебираем данные по типам энергоресурсов
+            {
+                Console.WriteLine(measuredEnergyResourceData.Key.ToString() + ":");
 
-            var exprectedDiff = measuredConsumption - expectedConsumption;
+                // Берём ожидаемые данные того же типа
+                var expectedEnergyResourceData = expectedConsumption.SingleOrDefault(q => q.Key == measuredEnergyResourceData.Key);
 
-            Console.WriteLine($"Expected: {expectedConsumption}, Measured: {measuredConsumption}, ExpectedDiff: {exprectedDiff}, Result: {exprectedDiff <= Params.EpsilonP}");
+                if (expectedEnergyResourceData == null)
+                    continue;
+
+                // Поскольку данные по каждому типу данных в одном экземпляре, берём их все вместе и суммируем значения
+                var mesuredSum = measuredEnergyResourceData.SelectMany(q => q).Sum(q => q.Value.ItemValue);
+                var expectedSum = expectedEnergyResourceData.SelectMany(q => q).Sum(q => q.Value.ItemValue);
+
+                var exprectedDiff = mesuredSum - expectedSum;
+
+                Console.WriteLine($"Expected: {expectedConsumption}, Measured: {measuredConsumption}, ExpectedDiff: {exprectedDiff}, Result: {exprectedDiff <= Params.EpsilonP}");
+            }
         }
 
         /// <summary>
@@ -65,15 +80,27 @@ namespace EnergySupplyModel
         /// <param name="facility">Проверяемый объект предприятия.</param>
         protected static void CheckLeakDiff(Facility facility)
         {
-            var measuredConsumption = facility.GetMeasuredConsumption(Params.Start, Params.End).Sum(q => q.Value.ItemValue);
-
-            if (facility is ComplexFacility complexFacility)
+            if (facility is ComplexFacility complexFacility)    // Проверяем только если объект является комплексным 
             {
-                var summaryConsumption = complexFacility.GetSummaryConsumption(Params.Start, Params.End).Sum(q => q.Value);
+                // Получаем измеренное и суммарное значения потребления и группируем их по типам энергоресурсов
+                var measuredConsumption = facility.GetMeasuredConsumption(Params.Start, Params.End).GroupBy(q => q.DataSource.EnergyResourceType);
+                var summaryConsumption = complexFacility.GetSummaryConsumption(Params.Start, Params.End).GroupBy(q => q.DataSource.EnergyResourceType);
 
-                var leakDiff = measuredConsumption - summaryConsumption;
+                foreach (var measuredEnergyResourceData in measuredConsumption)     // Перебираем данные по типам энергоресурсов
+                {
+                    Console.WriteLine(measuredEnergyResourceData.Key.ToString() + ":");
 
-                Console.WriteLine($"Summary: {summaryConsumption}, Measured: {measuredConsumption}, LeakDiff: {leakDiff}, Result: {leakDiff <= Params.EpsilonS}");
+                    // Берём суммируемые данные того же типа
+                    var summaryEnergyResourceData = summaryConsumption.SingleOrDefault(q => q.Key == measuredEnergyResourceData.Key);
+
+                    // Поскольку данные по каждому типу данных в одном экземпляре, берём их все вместе и суммируем значения
+                    var measuredSum = measuredEnergyResourceData.SelectMany(q => q).Sum(q => q.Value.ItemValue);
+                    var summarySum = summaryEnergyResourceData.SelectMany(q => q).Sum(q => q.Value.ItemValue);
+
+                    var leakDiff = measuredSum - summarySum;
+
+                    Console.WriteLine($"Summary: {summarySum}, Measured: {measuredSum}, LeakDiff: {leakDiff}, Result: {leakDiff <= Params.EpsilonS}");
+                }
             }
         }
 
@@ -83,20 +110,29 @@ namespace EnergySupplyModel
         /// <param name="facility">Проверяемый объект предприятия.</param>
         protected static void CheckEffectDiff(Facility facility)
         {
-            var expectedConsumption = facility.GetExpectedConsumption(Params.Start, Params.End);
+            // Получаем ожидаемое и потенциальное значения потребления и группируем их по типам энергоресурсов
+            var expectedConsumption = facility.GetExpectedConsumption(Params.Start, Params.End).GroupBy(q => q.DataSource.EnergyResourceType);
+            var potentialConsumption = facility.GetPotentialConsumption(Params.Start, Params.End).GroupBy(q => q.DataSource.EnergyResourceType);
 
-            var potentialConsumption = facility.GetPotentialConsumption(Params.Start, Params.End);
+            foreach (var expectedEnergyResourceData in expectedConsumption)         // Перебираем данные по типам энергоресурсов
+            {
+                Console.WriteLine(expectedEnergyResourceData.Key.ToString() + ":");
 
-            var expectedCost = expectedConsumption.Select(q => Params.EnergyResourceCost.Invoke(q.Value)).Sum() +
-                               expectedConsumption.Select(q => Params.Penalty.Invoke(q.Value)).Sum();
+                // Берём потенциальные данные того же типа
+                var potentialEnergyResourceData = potentialConsumption.SingleOrDefault(q => q.Key == expectedEnergyResourceData.Key);
 
-            var potentialCost = potentialConsumption.Select(q => Params.EnergyResourceCost.Invoke(q.Value)).Sum() +
-                                potentialConsumption.Select(q => Params.Penalty.Invoke(q.Value)).Sum() +
-                                Params.ActivityCost;
+                // Рассчитываем ожидаемую и потенциальную стоимости
+                var expectedCost = expectedEnergyResourceData.SelectMany(q => q).Sum(q => Params.EnergyResourceCost.Invoke(q.Value)) +
+                                   expectedEnergyResourceData.SelectMany(q => q).Sum(q => Params.Penalty.Invoke(q.Value));
 
-            var effectDiff = expectedCost - potentialCost;
+                var potentialCost = potentialEnergyResourceData.SelectMany(q => q).Sum(q => Params.EnergyResourceCost.Invoke(q.Value)) +
+                                    potentialEnergyResourceData.SelectMany(q => q).Sum(q => Params.Penalty.Invoke(q.Value)) +
+                                    Params.ActivityCost;
 
-            Console.WriteLine($"Expected cost: {expectedCost}, Potential cost: {potentialCost}, EffectDiff: {effectDiff}, Result: {effectDiff > Params.EpsilonC}");
+                var effectDiff = expectedCost - potentialCost;
+
+                Console.WriteLine($"Expected cost: {expectedCost}, Potential cost: {potentialCost}, EffectDiff: {effectDiff}, Result: {effectDiff > Params.EpsilonC}");
+            }
         }
     }
 }
