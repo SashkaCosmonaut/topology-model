@@ -1,11 +1,8 @@
-﻿using EnergySupplyModel.Enumerations;
-using EnergySupplyModel.Facilities;
+﻿using EnergySupplyModel.Facilities;
 using EnergySupplyModel.Materials;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace EnergySupplyModel
+namespace EnergySupplyModel.Input
 {
     /// <summary>
     /// Класс входных параметров для модели.

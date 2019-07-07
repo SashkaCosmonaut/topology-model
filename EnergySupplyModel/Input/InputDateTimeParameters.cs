@@ -1,7 +1,7 @@
 ﻿using EnergySupplyModel.Enumerations;
 using System;
 
-namespace EnergySupplyModel
+namespace EnergySupplyModel.Input
 {
     /// <summary>
     /// Класс временных параметров запроса данных.

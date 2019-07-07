@@ -1,4 +1,5 @@
-﻿using EnergySupplyModel.Materials;
+﻿using EnergySupplyModel.Input;
+using EnergySupplyModel.Materials;
 using System.Collections.Generic;
 using System.Linq;
 

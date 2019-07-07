@@ -44,12 +44,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="InputDateTimeParameters.cs" />
+    <Compile Include="Input\InputDateTimeParameters.cs" />
     <Compile Include="Enumerations\DataSourceType.cs" />
     <Compile Include="Enumerations\TimeInterval.cs" />
     <Compile Include="Facilities\ComplexFacility.cs" />
     <Compile Include="DatabaseModel.cs" />
-    <Compile Include="InputParameters.cs" />
+    <Compile Include="Input\InputParameters.cs" />
     <Compile Include="Materials\Data.cs" />
     <Compile Include="Materials\DataItem.cs" />
     <Compile Include="Materials\DataSource.cs" />

@@ -1,4 +1,5 @@
 ﻿using EnergySupplyModel.Enumerations;
+using EnergySupplyModel.Input;
 using EnergySupplyModel.Materials;
 using System;
 using System.Collections.Generic;

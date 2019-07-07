@@ -1,4 +1,5 @@
 ﻿using EnergySupplyModel.Facilities;
+using EnergySupplyModel.Input;
 using System;
 using System.Linq;
 
