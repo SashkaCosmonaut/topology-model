@@ -81,29 +81,29 @@ namespace EnergySupplyModel.Input
             Factory = new ComplexFacility
             {
                 Name = "Factory",
-                СonstantСonsumption = constantСonsumption,
+                ConstantConsumption = constantСonsumption,
                 Subfacilities = new[]
                 {
                     new ComplexFacility
                     {
                         Name = "Workshop1",
-                        СonstantСonsumption = constantСonsumption,
+                        ConstantConsumption = constantСonsumption,
                         Subfacilities = new []
                         {
-                            new Facility { Name = "Area1.1", СonstantСonsumption = constantСonsumption },
-                            new Facility { Name = "Area1.2", СonstantСonsumption = constantСonsumption },
-                            new Facility { Name = "Area1.3", СonstantСonsumption = constantСonsumption },
+                            new Facility { Name = "Area1.1", ConstantConsumption = constantСonsumption },
+                            new Facility { Name = "Area1.2", ConstantConsumption = constantСonsumption },
+                            new Facility { Name = "Area1.3", ConstantConsumption = constantСonsumption },
                         }
                     },
                     new ComplexFacility
                     {
                         Name = "Workshop2",
-                        СonstantСonsumption = constantСonsumption,
+                        ConstantConsumption = constantСonsumption,
                         Subfacilities = new []
                         {
-                            new Facility { Name = "Area2.1", СonstantСonsumption = constantСonsumption },
-                            new Facility { Name = "Area2.2", СonstantСonsumption = constantСonsumption },
-                            new Facility { Name = "Area2.3", СonstantСonsumption = constantСonsumption },
+                            new Facility { Name = "Area2.1", ConstantConsumption = constantСonsumption },
+                            new Facility { Name = "Area2.2", ConstantConsumption = constantСonsumption },
+                            new Facility { Name = "Area2.3", ConstantConsumption = constantСonsumption },
                         }
                     },
                 }

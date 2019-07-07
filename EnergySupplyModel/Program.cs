@@ -71,7 +71,7 @@ namespace EnergySupplyModel
 
                 var exprectedDiff = mesuredSum - expectedSum;
 
-                Console.WriteLine($"Expected: {expectedConsumption}, Measured: {measuredConsumption}, ExpectedDiff: {exprectedDiff}, Result: {exprectedDiff <= Params.EpsilonP}");
+                Console.WriteLine($"Expected: {expectedSum}, Measured: {mesuredSum}, ExpectedDiff: {exprectedDiff}, Result: {exprectedDiff <= Params.EpsilonP}");
             }
         }
 

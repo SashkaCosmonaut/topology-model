@@ -20,7 +20,7 @@ namespace EnergySupplyModel.Facilities
         /// <summary>
         /// Постоянное потребление данного объекте в виде словаря, где ключ - тип энергоресурса, а значение - объем потребления.
         /// </summary>
-        public Dictionary<EnergyResourceType, double> СonstantСonsumption { get; set; }
+        public Dictionary<EnergyResourceType, double> ConstantConsumption { get; set; }
 
         /// <summary>
         /// Функция рассчета ожидаемоего значения потребления энергоресурса с текущими характеристиками данного объекта.
@@ -29,7 +29,29 @@ namespace EnergySupplyModel.Facilities
         /// <returns>Множество данных различного потребления.</returns>
         public IEnumerable<DataSet> GetExpectedConsumption(InputDateTimeParameters parameters)
         {
-            return new DataSet[] { };
+            // Для каждого типа постоянного потребления энергоресрсов создаём датасет
+            var dataSets = ConstantConsumption.Keys.Select(energyResourceType => new DataSet
+            {
+                DataSource = new DataSource
+                {
+                    EnergyResourceType = energyResourceType,
+                    FacilityName = Name,
+                    TimeInterval = parameters.Interval
+                }
+            }).ToArray();
+
+            // Считаем количество элементов в датасете
+            var numberOfDataItems = (int)parameters.End.Subtract(parameters.Start).TotalHours;   // Здесь должен быть switch по интервалу данных
+
+            foreach (var dataSet in dataSets)   // Наполняем датасет заданными значениями
+            {
+                foreach (var dateTime in Enumerable.Range(0, numberOfDataItems).Select(hour => parameters.Start.AddHours(hour)))
+                {
+                    dataSet.Add(dateTime, new DataItem { ItemValue = ConstantConsumption[dataSet.DataSource.EnergyResourceType], TimeStamp = dateTime });
+                }
+            }
+
+            return dataSets;
         }
 
         /// <summary>
