@@ -6,7 +6,7 @@ namespace EnergySupplyModel.Materials
     /// <summary>
     /// Класс данных о потреблении энергоресурсов, который содержит в себе элементы данных этого блока данных.
     /// </summary>
-    public class Data : Dictionary<DateTime, DataItem>
+    public class DataSet : Dictionary<DateTime, DataItem>
     {
         /// <summary>
         /// Характеристики источника данных.

@@ -27,7 +27,7 @@ namespace EnergySupplyModel
         /// <summary>
         /// Кэш считанных данных из файлов.
         /// </summary>
-        private static readonly List<Data> DataCache = new List<Data>();
+        private static readonly List<DataSet> DataCache = new List<DataSet>();
 
         /// <summary>
         /// Получить измеренные данные о потреблении энергоресурсов объектом.
@@ -35,7 +35,7 @@ namespace EnergySupplyModel
         /// <param name="dataSource">Источник данных.</param>
         /// <param name="parameters">Параметры времени и даты для запроса данных.</param>
         /// <returns>Словарь данных потребления.</returns>
-        public static Data GetMeasuredData(DataSource dataSource, InputDateTimeParameters parameters)
+        public static DataSet GetMeasuredData(DataSource dataSource, InputDateTimeParameters parameters)
         {
             // Пытаемся найти данные указанного источника в кэше
             var resultData = DataCache.SingleOrDefault(q => q.DataSource.Equals(dataSource));
@@ -43,7 +43,7 @@ namespace EnergySupplyModel
             if (resultData != null)
                 return SelectData(resultData, parameters); ;
 
-            var newData = new List<Data>();    // Новый блок кэша данных, который будет добавлен к общему кэшу
+            var newData = new List<DataSet>();    // Новый блок кэша данных, который будет добавлен к общему кэшу
 
             using (var parser = new TextFieldParser(Filenames[dataSource.EnergyResourceType]))
             {
@@ -58,7 +58,7 @@ namespace EnergySupplyModel
                     {
                         foreach (var field in fields.Skip(1))   // Пропускаем заголовок для дат
                         {
-                            var data = new Data      // Создаем новые объекты данных для кэша
+                            var data = new DataSet      // Создаем новые объекты данных для кэша
                             {
                                 DataSource = new DataSource
                                 {
@@ -104,9 +104,9 @@ namespace EnergySupplyModel
         /// <param name="data">Данные для выборки.</param>
         /// <param name="parameters">Параметры выборки данных.</param>
         /// <returns>Массив данных потребления за указанный период времени.</returns>
-        private static Data SelectData(Data data, InputDateTimeParameters parameters)
+        private static DataSet SelectData(DataSet data, InputDateTimeParameters parameters)
         {
-            var result = new Data { DataSource = data.DataSource };
+            var result = new DataSet { DataSource = data.DataSource };
 
             foreach (var item in data.Where(q => q.Key >= parameters.Start && q.Key < parameters.End))
                 result.Add(item.Key, item.Value);

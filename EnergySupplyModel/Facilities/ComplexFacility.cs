@@ -17,9 +17,9 @@ namespace EnergySupplyModel.Facilities
         /// </summary>
         /// <param name="parameters">Параметры времени и даты для запроса данных.</param>
         /// <returns>Данные потребления.</returns>
-        public IEnumerable<Data> GetSummaryConsumption(InputDateTimeParameters parameters)
+        public IEnumerable<DataSet> GetSummaryConsumption(InputDateTimeParameters parameters)
         {
-            var result = new List<Data>();
+            var result = new List<DataSet>();
 
             if (Subfacilities == null)
                 return result;
@@ -33,7 +33,7 @@ namespace EnergySupplyModel.Facilities
 
             foreach (var energyResourceGroup in energyResourceGroups)
             {
-                var newData = new Data
+                var newData = new DataSet
                 {
                     DataSource = new DataSource
                     {
@@ -63,7 +63,7 @@ namespace EnergySupplyModel.Facilities
         /// <param name="facility">Объект, данные которого получаем.</param>
         /// <param name="parameters">Параметры времени и даты для запроса данных.</param>
         /// <returns>Данные потребления.</returns>
-        protected IEnumerable<Data> GetSubfacilityData(Facility facility, InputDateTimeParameters parameters)
+        protected IEnumerable<DataSet> GetSubfacilityData(Facility facility, InputDateTimeParameters parameters)
         {
             if (facility is ComplexFacility compexFacility)
                 return compexFacility.GetSummaryConsumption(parameters);

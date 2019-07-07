@@ -27,9 +27,9 @@ namespace EnergySupplyModel.Facilities
         /// </summary>
         /// <param name="parameters">Параметры времени и даты для запроса данных.</param>
         /// <returns>Множество данных различного потребления.</returns>
-        public IEnumerable<Data> GetExpectedConsumption(InputDateTimeParameters parameters)
+        public IEnumerable<DataSet> GetExpectedConsumption(InputDateTimeParameters parameters)
         {
-            return new Data[] { };
+            return new DataSet[] { };
         }
 
         /// <summary>
@@ -37,9 +37,9 @@ namespace EnergySupplyModel.Facilities
         /// </summary>
         /// <param name="parameters">Параметры времени и даты для запроса данных.</param>
         /// <returns>Данные потребления.</returns>
-        public IEnumerable<Data> GetPotentialConsumption(InputDateTimeParameters parameters)
+        public IEnumerable<DataSet> GetPotentialConsumption(InputDateTimeParameters parameters)
         {
-            return new Data[] { };
+            return new DataSet[] { };
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace EnergySupplyModel.Facilities
         /// </summary>
         /// <param name="parameters">Параметры времени и даты для запроса данных.</param>
         /// <returns>Данные потребления.</returns>
-        public IEnumerable<Data> GetMeasuredConsumption(InputDateTimeParameters parameters)
+        public IEnumerable<DataSet> GetMeasuredConsumption(InputDateTimeParameters parameters)
         {
             var dataSources = new DataSource[]
             {

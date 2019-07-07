@@ -50,7 +50,7 @@
     <Compile Include="Facilities\ComplexFacility.cs" />
     <Compile Include="DatabaseModel.cs" />
     <Compile Include="Input\InputParameters.cs" />
-    <Compile Include="Materials\Data.cs" />
+    <Compile Include="Materials\DataSet.cs" />
     <Compile Include="Materials\DataItem.cs" />
     <Compile Include="Materials\DataSource.cs" />
     <Compile Include="Materials\EnergyResourceCost.cs" />
