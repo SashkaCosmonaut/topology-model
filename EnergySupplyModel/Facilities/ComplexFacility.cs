@@ -1,6 +1,4 @@
-﻿using EnergySupplyModel.Enumerations;
-using EnergySupplyModel.Materials;
-using System;
+﻿using EnergySupplyModel.Materials;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,18 +14,16 @@ namespace EnergySupplyModel.Facilities
         /// <summary>
         /// Суммарное значение потребления энергоресурса вложенными подобъектами данного объекта.
         /// </summary>
-        /// <param name="start">Начало периода измерения.</param>
-        /// <param name="end">Конец периода измерения.</param>
-        /// <param name="timeInterval">Требуемый интервал сбора данных.</param>
+        /// <param name="parameters">Параметры времени и даты для запроса данных.</param>
         /// <returns>Словарь данных потребления.</returns>
-        public IEnumerable<Data> GetSummaryConsumption(DateTime start, DateTime end, TimeInterval timeInterval)
+        public IEnumerable<Data> GetSummaryConsumption(InputDateTimeParameters parameters)
         {
             var result = new List<Data>();
 
             if (Subfacilities == null)
                 return result;
 
-            var measuredConsumptions = Subfacilities.SelectMany(q => q.GetMeasuredConsumption(start, end, timeInterval));
+            var measuredConsumptions = Subfacilities.SelectMany(q => q.GetMeasuredConsumption(parameters));
 
             if (!measuredConsumptions.Any())
                 return result;
@@ -42,7 +38,7 @@ namespace EnergySupplyModel.Facilities
                     {
                         EnergyResourceType = energyResourceGroup.Key,
                         FacilityName = Name,
-                        TimeInterval = energyResourceGroup.First().DataSource.TimeInterval  // Здесь должно быть приведение данных к одному интервалу
+                        TimeInterval = parameters.Interval  // Здесь должно быть приведение данных к одному интервалу
                     }
                 };
 

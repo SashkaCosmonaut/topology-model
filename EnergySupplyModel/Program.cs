@@ -51,8 +51,8 @@ namespace EnergySupplyModel
         protected static void CheckExprectedDiff(Facility facility)
         {
             // Получаем измеренное и ожидаемое значения потребления и группируем их по типам энергоресурсов
-            var measuredConsumption = facility.GetMeasuredConsumption(Params.Start, Params.End, Params.Step).GroupBy(q => q.DataSource.EnergyResourceType);
-            var expectedConsumption = facility.GetExpectedConsumption(Params.Start, Params.End).GroupBy(q => q.DataSource.EnergyResourceType);
+            var measuredConsumption = facility.GetMeasuredConsumption(Params.DateTimeParams).GroupBy(q => q.DataSource.EnergyResourceType);
+            var expectedConsumption = facility.GetExpectedConsumption(Params.DateTimeParams).GroupBy(q => q.DataSource.EnergyResourceType);
 
             foreach (var measuredEnergyResourceData in measuredConsumption)     // Перебираем данные по типам энергоресурсов
             {
@@ -83,8 +83,8 @@ namespace EnergySupplyModel
             if (facility is ComplexFacility complexFacility)    // Проверяем только если объект является комплексным 
             {
                 // Получаем измеренное и суммарное значения потребления и группируем их по типам энергоресурсов
-                var measuredConsumption = facility.GetMeasuredConsumption(Params.Start, Params.End, Params.Step).GroupBy(q => q.DataSource.EnergyResourceType);
-                var summaryConsumption = complexFacility.GetSummaryConsumption(Params.Start, Params.End, Params.Step).GroupBy(q => q.DataSource.EnergyResourceType);
+                var measuredConsumption = facility.GetMeasuredConsumption(Params.DateTimeParams).GroupBy(q => q.DataSource.EnergyResourceType);
+                var summaryConsumption = complexFacility.GetSummaryConsumption(Params.DateTimeParams).GroupBy(q => q.DataSource.EnergyResourceType);
 
                 foreach (var measuredEnergyResourceData in measuredConsumption)     // Перебираем данные по типам энергоресурсов
                 {
@@ -114,8 +114,8 @@ namespace EnergySupplyModel
         protected static void CheckEffectDiff(Facility facility)
         {
             // Получаем ожидаемое и потенциальное значения потребления и группируем их по типам энергоресурсов
-            var expectedConsumption = facility.GetExpectedConsumption(Params.Start, Params.End).GroupBy(q => q.DataSource.EnergyResourceType);
-            var potentialConsumption = facility.GetPotentialConsumption(Params.Start, Params.End).GroupBy(q => q.DataSource.EnergyResourceType);
+            var expectedConsumption = facility.GetExpectedConsumption(Params.DateTimeParams).GroupBy(q => q.DataSource.EnergyResourceType);
+            var potentialConsumption = facility.GetPotentialConsumption(Params.DateTimeParams).GroupBy(q => q.DataSource.EnergyResourceType);
 
             foreach (var expectedEnergyResourceData in expectedConsumption)         // Перебираем данные по типам энергоресурсов
             {

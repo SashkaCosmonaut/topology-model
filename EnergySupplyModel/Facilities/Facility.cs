@@ -19,10 +19,9 @@ namespace EnergySupplyModel.Facilities
         /// <summary>
         /// Функция рассчета ожидаемоего значения потребления энергоресурса с текущими характеристиками данного объекта.
         /// </summary>
-        /// <param name="start">Начало периода измерения.</param>
-        /// <param name="end">Конец периода измерения.</param>
+        /// <param name="parameters">Параметры времени и даты для запроса данных.</param>
         /// <returns>Множество данных различного потребления.</returns>
-        public IEnumerable<Data> GetExpectedConsumption(DateTime start, DateTime end)
+        public IEnumerable<Data> GetExpectedConsumption(InputDateTimeParameters parameters)
         {
             return new Data[] { };
         }
@@ -30,10 +29,9 @@ namespace EnergySupplyModel.Facilities
         /// <summary>
         /// Функция рассчета потенциального значения потребления энергоресурса с применением мероприятий по оптимизации.
         /// </summary>
-        /// <param name="start">Начало периода измерения.</param>
-        /// <param name="end">Конец периода измерения.</param>
+        /// <param name="parameters">Параметры времени и даты для запроса данных.</param>
         /// <returns>Данные потребления.</returns>
-        public IEnumerable<Data> GetPotentialConsumption(DateTime start, DateTime end)
+        public IEnumerable<Data> GetPotentialConsumption(InputDateTimeParameters parameters)
         {
             return new Data[] { };
         }
@@ -41,11 +39,9 @@ namespace EnergySupplyModel.Facilities
         /// <summary>
         /// Получить измеренное значение потребления энергоресурса со счётчика объекта.
         /// </summary>
-        /// <param name="start">Начало периода измерения.</param>
-        /// <param name="end">Конец периода измерения.</param>
-        /// <param name="timeInterval">Требуемый интервал сбора данных.</param>
+        /// <param name="parameters">Параметры времени и даты для запроса данных.</param>
         /// <returns>Данные потребления.</returns>
-        public IEnumerable<Data> GetMeasuredConsumption(DateTime start, DateTime end, TimeInterval timeInterval)
+        public IEnumerable<Data> GetMeasuredConsumption(InputDateTimeParameters parameters)
         {
             var dataSources = new DataSource[]
             {
@@ -53,17 +49,17 @@ namespace EnergySupplyModel.Facilities
                 {
                     EnergyResourceType = EnergyResourceType.ColdWater,
                     FacilityName = Name,
-                    TimeInterval = timeInterval
+                    TimeInterval = parameters.Interval
                 },
                 new DataSource
                 {
                     EnergyResourceType = EnergyResourceType.Electricity,
                     FacilityName = Name,
-                    TimeInterval = timeInterval
+                    TimeInterval = parameters.Interval
                 }
             };
 
-            return dataSources.Select(dataSource => DatabaseModel.GetMeasuredData(dataSource, start, end));
+            return dataSources.Select(dataSource => DatabaseModel.GetMeasuredData(dataSource, parameters));
         }
     }
 }

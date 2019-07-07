@@ -32,16 +32,15 @@ namespace EnergySupplyModel
         /// Получить измеренные данные о потреблении энергоресурсов объектом.
         /// </summary>
         /// <param name="dataSource">Источник данных.</param>
-        /// <param name="start">Начало периода измерения.</param>
-        /// <param name="end">Конец периода измерения.</param>
+        /// <param name="parameters">Параметры времени и даты для запроса данных.</param>
         /// <returns>Словарь данных потребления.</returns>
-        public static Data GetMeasuredData(DataSource dataSource, DateTime start, DateTime end)
+        public static Data GetMeasuredData(DataSource dataSource, InputDateTimeParameters parameters)
         {
             // Пытаемся найти данные указанного источника в кэше
             var resultData = DataCache.SingleOrDefault(q => q.DataSource.Equals(dataSource));
 
             if (resultData != null)
-                return resultData;
+                return SelectData(resultData, parameters); ;
 
             var newData = new List<Data>();    // Новый блок кэша данных, который будет добавлен к общему кэшу
 
@@ -81,21 +80,37 @@ namespace EnergySupplyModel
                         return null;
 
                     // Первый столбец - дата
-                    var datetime = DateTime.ParseExact(fields[0], "dd.MM.yy H:mm:ss", CultureInfo.InvariantCulture);
+                    var dateTime = DateTime.ParseExact(fields[0], "dd.MM.yy H:mm:ss", CultureInfo.InvariantCulture);
 
                     for (var i = 1; i < fields.Length; i++)     // Остальные столбцы - данные
-                        newData.ElementAt(i - 1).Add(datetime, 
+                        newData.ElementAt(i - 1).Add(dateTime, 
                             new DataItem
                             {
                                 ItemValue = double.Parse(fields[i]),
-                                TimeStamp = datetime                    // Тут должны быть добавлены метаданные
+                                TimeStamp = dateTime                    // Тут должны быть добавлены метаданные
                             });
                 }
             }
 
             DataCache.AddRange(newData);   // Сохраняем новые данные в общем кэше
 
-            return resultData;
+            return SelectData(resultData, parameters);
+        }
+
+        /// <summary>
+        /// Выбрать данные для заданного периода времени.
+        /// </summary>
+        /// <param name="data">Данные для выборки.</param>
+        /// <param name="parameters">Параметры выборки данных.</param>
+        /// <returns>Массив данных потребления за указанный период времени.</returns>
+        private static Data SelectData(Data data, InputDateTimeParameters parameters)
+        {
+            var result = new Data { DataSource = data.DataSource };
+
+            foreach (var item in data.Where(q => q.Key >= parameters.Start && q.Key < parameters.End))
+                result.Add(item.Key, item.Value);
+
+            return result;
         }
     }
 }
