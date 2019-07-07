@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InputDateTimeParameters.cs" />
     <Compile Include="Enumerations\DataSourceType.cs" />
     <Compile Include="Enumerations\TimeInterval.cs" />
     <Compile Include="Facilities\ComplexFacility.cs" />
