@@ -16,7 +16,7 @@ namespace EnergySupplyModel.Facilities
         /// Суммарное значение потребления энергоресурса вложенными подобъектами данного объекта.
         /// </summary>
         /// <param name="parameters">Параметры времени и даты для запроса данных.</param>
-        /// <returns>Словарь данных потребления.</returns>
+        /// <returns>Данные потребления.</returns>
         public IEnumerable<Data> GetSummaryConsumption(InputDateTimeParameters parameters)
         {
             var result = new List<Data>();
@@ -24,7 +24,7 @@ namespace EnergySupplyModel.Facilities
             if (Subfacilities == null)
                 return result;
 
-            var measuredConsumptions = Subfacilities.SelectMany(q => q.GetMeasuredConsumption(parameters));
+            var measuredConsumptions = Subfacilities.SelectMany(subFacility => GetSubfacilityData(subFacility, parameters));
 
             if (!measuredConsumptions.Any())
                 return result;
@@ -55,6 +55,20 @@ namespace EnergySupplyModel.Facilities
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Получить данные от подобъекта в зависимости от того, простой он или составной.
+        /// </summary>
+        /// <param name="facility">Объект, данные которого получаем.</param>
+        /// <param name="parameters">Параметры времени и даты для запроса данных.</param>
+        /// <returns>Данные потребления.</returns>
+        protected IEnumerable<Data> GetSubfacilityData(Facility facility, InputDateTimeParameters parameters)
+        {
+            if (facility is ComplexFacility compexFacility)
+                return compexFacility.GetSummaryConsumption(parameters);
+
+            return facility.GetMeasuredConsumption(parameters);
         }
     }
 }
