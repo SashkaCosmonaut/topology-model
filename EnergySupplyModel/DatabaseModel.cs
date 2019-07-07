@@ -68,7 +68,7 @@ namespace EnergySupplyModel
                                 }
                             };
 
-                            if (field == dataSource.FacilityName)   // Запоминаем объект данных для нужного объекта, чтобы потом не искать
+                            if (data.DataSource.Equals(dataSource))   // Запоминаем объект данных для нужного объекта, чтобы потом не искать
                                 resultData = data;
 
                             newData.Add(data);     // Сохраняем новые данные в кэш

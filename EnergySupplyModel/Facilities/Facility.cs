@@ -18,6 +18,11 @@ namespace EnergySupplyModel.Facilities
         public string Name { get; set; }
 
         /// <summary>
+        /// Постоянное потребление данного объекте в виде словаря, где ключ - тип энергоресурса, а значение - объем потребления.
+        /// </summary>
+        public Dictionary<EnergyResourceType, double> СonstantСonsumption { get; set; }
+
+        /// <summary>
         /// Функция рассчета ожидаемоего значения потребления энергоресурса с текущими характеристиками данного объекта.
         /// </summary>
         /// <param name="parameters">Параметры времени и даты для запроса данных.</param>

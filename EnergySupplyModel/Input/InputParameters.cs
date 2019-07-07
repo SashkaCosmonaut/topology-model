@@ -1,6 +1,8 @@
-﻿using EnergySupplyModel.Facilities;
+﻿using EnergySupplyModel.Enumerations;
+using EnergySupplyModel.Facilities;
 using EnergySupplyModel.Materials;
 using System;
+using System.Collections.Generic;
 
 namespace EnergySupplyModel.Input
 {
@@ -63,32 +65,49 @@ namespace EnergySupplyModel.Input
         /// На самом верхнем уровне в качестве объекта рассматривается всё предприятие в целом, которое разбивается на совокупность подобъектов: 
         /// территории, здания, цеха, участки, вплоть до отдельного станка или единицы оборудования.
         /// </summary>
-        public ComplexFacility Factory { get; set; } = new ComplexFacility
+        public ComplexFacility Factory { get; set; }
+
+        /// <summary>
+        /// Инициализация входных параметров.
+        /// </summary>
+        public InputParameters()
         {
-            Name = "Factory",
-            Subfacilities = new[]
+            var constantСonsumption = new Dictionary<EnergyResourceType, double>
             {
-                new ComplexFacility
+                { EnergyResourceType.ColdWater, 50 },
+                { EnergyResourceType.Electricity, 10 }
+            };
+
+            Factory = new ComplexFacility
+            {
+                Name = "Factory",
+                СonstantСonsumption = constantСonsumption,
+                Subfacilities = new[]
                 {
-                    Name = "Workshop1",
-                    Subfacilities = new []
+                    new ComplexFacility
                     {
-                        new Facility { Name = "Area1.1" },
-                        new Facility { Name = "Area1.2" },
-                        new Facility { Name = "Area1.3" },
-                    }
-                },
-                new ComplexFacility
-                {
-                    Name = "Workshop2",
-                    Subfacilities = new []
+                        Name = "Workshop1",
+                        СonstantСonsumption = constantСonsumption,
+                        Subfacilities = new []
+                        {
+                            new Facility { Name = "Area1.1", СonstantСonsumption = constantСonsumption },
+                            new Facility { Name = "Area1.2", СonstantСonsumption = constantСonsumption },
+                            new Facility { Name = "Area1.3", СonstantСonsumption = constantСonsumption },
+                        }
+                    },
+                    new ComplexFacility
                     {
-                        new Facility { Name = "Area2.1" },
-                        new Facility { Name = "Area2.2" },
-                        new Facility { Name = "Area2.3" },
-                    }
-                },
-            }
-        };
+                        Name = "Workshop2",
+                        СonstantСonsumption = constantСonsumption,
+                        Subfacilities = new []
+                        {
+                            new Facility { Name = "Area2.1", СonstantСonsumption = constantСonsumption },
+                            new Facility { Name = "Area2.2", СonstantСonsumption = constantСonsumption },
+                            new Facility { Name = "Area2.3", СonstantСonsumption = constantСonsumption },
+                        }
+                    },
+                }
+            };
+        }
     }
 }
