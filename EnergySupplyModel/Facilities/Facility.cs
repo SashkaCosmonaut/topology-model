@@ -27,7 +27,7 @@ namespace EnergySupplyModel.Facilities
         /// </summary>
         /// <param name="parameters">Параметры времени и даты для запроса данных.</param>
         /// <returns>Множество данных различного потребления.</returns>
-        public IEnumerable<DataSet> GetExpectedConsumption(InputDateTimeParameters parameters)
+        public virtual IEnumerable<DataSet> GetExpectedConsumption(InputDateTimeParameters parameters)
         {
             // Для каждого типа постоянного потребления энергоресрсов создаём датасет
             var dataSets = ConstantConsumption.Keys.Select(energyResourceType => new DataSet

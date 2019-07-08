@@ -1,5 +1,6 @@
 ﻿using EnergySupplyModel.Input;
 using EnergySupplyModel.Materials;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -69,6 +70,38 @@ namespace EnergySupplyModel.Facilities
                 return compexFacility.GetSummaryConsumption(parameters);
 
             return facility.GetMeasuredConsumption(parameters);
+        }
+
+        /// <summary>
+        /// Функция рассчета ожидаемоего значения потребления энергоресурса составного объекта.
+        /// </summary>
+        /// <param name="parameters">Параметры времени и даты для запроса данных.</param>
+        /// <returns>Множество данных различного потребления.</returns>
+        public override IEnumerable<DataSet> GetExpectedConsumption(InputDateTimeParameters parameters)
+        {
+            var currentExpected = base.GetExpectedConsumption(parameters);  // Получаем ожидаемое потребление текущего объекта
+
+            // Собираем все типы нергоресурсов, которые есть у этого объекта
+            var energyResourceTypes = currentExpected.Select(q => q.DataSource.EnergyResourceType);
+
+            // Собираем в общую кучу данные со всех подобъектов
+            var subfacilitiesData = Subfacilities.SelectMany(q => q.GetExpectedConsumption(parameters));
+
+            foreach (var energyResourceType in energyResourceTypes) // Перебирем все типы энергоресурсов
+            {
+                // Выбираем из данных подобектов данные только текущего типа энергоресурсов
+                var subfacilitiesEnergyResourceData = subfacilitiesData.Where(q => q.DataSource.EnergyResourceType == energyResourceType);
+
+                // Берём ожидаемое потребление текущего объекта текущего типа
+                var currentExpectedEnergyResourceData = currentExpected.SingleOrDefault(q => q.DataSource.EnergyResourceType == energyResourceType);
+
+                foreach (var item in currentExpectedEnergyResourceData) // Добавляем значения вложенных объектов
+                {
+                    item.Value.ItemValue += subfacilitiesEnergyResourceData.Sum(q => q[item.Key].ItemValue);
+                }
+            }
+
+            return currentExpected;
         }
     }
 }
