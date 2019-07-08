@@ -57,7 +57,7 @@
     <Compile Include="Materials\EnergyResourceConsumption.cs" />
     <Compile Include="Enumerations\EnergyResourceType.cs" />
     <Compile Include="Facilities\Facility.cs" />
-    <Compile Include="Materials\ManufacturedProduction.cs" />
+    <Compile Include="Materials\ProductionCost.cs" />
     <Compile Include="Enumerations\ProductType.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
