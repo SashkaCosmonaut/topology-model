@@ -23,6 +23,12 @@ namespace EnergySupplyModel.Facilities
         public Dictionary<EnergyResourceType, double> ConstantConsumption { get; set; }
 
         /// <summary>
+        /// Производительность объекта, которая задаётся как словарь, в котором ключ - это тип продукции, а значение - 
+        /// это словарь, в котором ключ - это тип энергоресурса, а значение - объем его потребления для изготовления единицы продукции.
+        /// </summary>
+        public Dictionary<ProductType, Dictionary<EnergyResourceType, double>> Productivity { get; set; }
+
+        /// <summary>
         /// Функция рассчета ожидаемоего значения потребления энергоресурса с текущими характеристиками данного объекта.
         /// </summary>
         /// <param name="parameters">Параметры времени и даты для запроса данных.</param>
@@ -45,13 +51,34 @@ namespace EnergySupplyModel.Facilities
 
             foreach (var dataSet in dataSets)   // Наполняем датасет заданными значениями
             {
+                // Формируем множество объектов дат за указанный период времени от start до end и перебираем его
                 foreach (var dateTime in Enumerable.Range(0, numberOfDataItems).Select(hour => parameters.Start.AddHours(hour)))
                 {
-                    dataSet.Add(dateTime, new DataItem { ItemValue = ConstantConsumption[dataSet.DataSource.EnergyResourceType], TimeStamp = dateTime });
+                    dataSet.Add(dateTime, new DataItem
+                    {
+                        // Потребление состоит из постоянного и зависящего от производительности 
+                        ItemValue = ConstantConsumption[dataSet.DataSource.EnergyResourceType] + GetProductionConsumption(dataSet.DataSource.EnergyResourceType, dateTime),
+                        TimeStamp = dateTime
+                    });
                 }
             }
 
             return dataSets;
+        }
+    
+        /// <summary>
+        /// Получить значене потребленного энергоресурса для определенного момента времени
+        /// </summary>
+        /// <param name="energyResourceType">Тип энергоресурса.</param>
+        /// <param name="timeStamp">Момент времени.</param>
+        /// <returns>Значение потребленного энергоресурса в момент времени.</returns>
+        protected double GetProductionConsumption(EnergyResourceType energyResourceType, DateTime timeStamp)
+        {
+            if (Productivity == null || !Productivity.Any())
+                return 0;
+
+            // В плане надо задавать в какой момент времени какие изделия производим и в каких количествах (надо домножить)
+            return Productivity.Values.SelectMany(q => q).Where(q => q.Key == energyResourceType).Sum(q => q.Value);
         }
 
         /// <summary>

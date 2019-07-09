@@ -72,12 +72,21 @@ namespace EnergySupplyModel.Input
         /// </summary>
         public InputParameters()
         {
+            // Постоянное потребление объектов
             var constantСonsumption = new Dictionary<EnergyResourceType, double>
             {
                 { EnergyResourceType.ColdWater, 50 },
                 { EnergyResourceType.Electricity, 10 }
             };
 
+            // Производительность объектов - кол-во затрачиваемых ресурсов для изготовления единиц продукции
+            var productivity = new Dictionary<ProductType, Dictionary<EnergyResourceType, double>>
+            {
+                { ProductType.Bolt, new Dictionary<EnergyResourceType, double> { { EnergyResourceType.ColdWater, 200 }, { EnergyResourceType.Electricity, 20 }  } },
+                { ProductType.Nut, new Dictionary<EnergyResourceType, double> { { EnergyResourceType.ColdWater, 100 }, { EnergyResourceType.Electricity, 10 }  } }
+            };
+
+            // Иерархие объектов предприятия и их параметры
             Factory = new ComplexFacility
             {
                 Name = "Factory",
@@ -90,9 +99,9 @@ namespace EnergySupplyModel.Input
                         ConstantConsumption = constantСonsumption,
                         Subfacilities = new []
                         {
-                            new Facility { Name = "Area1.1", ConstantConsumption = constantСonsumption },
-                            new Facility { Name = "Area1.2", ConstantConsumption = constantСonsumption },
-                            new Facility { Name = "Area1.3", ConstantConsumption = constantСonsumption },
+                            new Facility { Name = "Area1.1", ConstantConsumption = constantСonsumption, Productivity = productivity },
+                            new Facility { Name = "Area1.2", ConstantConsumption = constantСonsumption, Productivity = productivity  },
+                            new Facility { Name = "Area1.3", ConstantConsumption = constantСonsumption, Productivity = productivity  },
                         }
                     },
                     new ComplexFacility
@@ -101,11 +110,11 @@ namespace EnergySupplyModel.Input
                         ConstantConsumption = constantСonsumption,
                         Subfacilities = new []
                         {
-                            new Facility { Name = "Area2.1", ConstantConsumption = constantСonsumption },
-                            new Facility { Name = "Area2.2", ConstantConsumption = constantСonsumption },
-                            new Facility { Name = "Area2.3", ConstantConsumption = constantСonsumption },
+                            new Facility { Name = "Area2.1", ConstantConsumption = constantСonsumption, Productivity = productivity  },
+                            new Facility { Name = "Area2.2", ConstantConsumption = constantСonsumption, Productivity = productivity  },
+                            new Facility { Name = "Area2.3", ConstantConsumption = constantСonsumption, Productivity = productivity  },
                         }
-                    },
+                    }
                 }
             };
         }
