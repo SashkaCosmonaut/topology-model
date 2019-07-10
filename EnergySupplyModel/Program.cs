@@ -128,12 +128,12 @@ namespace EnergySupplyModel
                 if (potentialEnergyResourceData == null)
                     continue;
 
-                // Рассчитываем ожидаемую и потенциальную стоимости
-                var expectedCost = expectedEnergyResourceData.SelectMany(q => q).Sum(q => Params.EnergyResourceCost.Invoke(q.Value)) +
-                                   expectedEnergyResourceData.SelectMany(q => q).Sum(q => Params.Penalty.Invoke(q.Value));
+                // Рассчитываем ожидаемую и потенциальную стоимости, суммируя значения за весь период и ото всех источников
+                var expectedCost = expectedEnergyResourceData.Sum(q => q.Sum(w => Params.EnergyResourceCost.Invoke(w.Value, q.DataSource))) +
+                                   expectedEnergyResourceData.Sum(q => q.Sum(w => Params.Penalty.Invoke(w.Value, q.DataSource)));
 
-                var potentialCost = potentialEnergyResourceData.SelectMany(q => q).Sum(q => Params.EnergyResourceCost.Invoke(q.Value)) +
-                                    potentialEnergyResourceData.SelectMany(q => q).Sum(q => Params.Penalty.Invoke(q.Value)) +
+                var potentialCost = potentialEnergyResourceData.Sum(q => q.Sum(w => Params.EnergyResourceCost.Invoke(w.Value, q.DataSource))) +
+                                    potentialEnergyResourceData.Sum(q => q.Sum(w => Params.Penalty.Invoke(w.Value, q.DataSource))) +
                                     Params.ActivityCost;
 
                 var effectDiff = expectedCost - potentialCost;

@@ -37,27 +37,47 @@ namespace EnergySupplyModel.Input
         public InputDateTimeParameters DateTimeParams { get; set; } = new InputDateTimeParameters();
 
         /// <summary>
-        /// Функция расчета стоимости энергоресурса в текущий момент времени.
+        /// Функция расчета стоимости энергоресурса в укзанный момент времени и для указанного энергоресурса.
         /// </summary>
-        public Func<DataItem, double> EnergyResourceCost { get; set; } = (dataItem) =>
+        public Func<DataItem, DataSource, double> EnergyResourceCost { get; set; } = (dataItem, dataSource) =>
         {
             var result = dataItem.ItemValue;
 
-            if (dataItem.TimeStamp.DayOfWeek == DayOfWeek.Saturday || dataItem.TimeStamp.DayOfWeek == DayOfWeek.Sunday)
-                return result * 5;
+            switch (dataSource.EnergyResourceType)
+            {
+                case EnergyResourceType.Electricity:
+                    if (dataItem.TimeStamp.DayOfWeek == DayOfWeek.Saturday || dataItem.TimeStamp.DayOfWeek == DayOfWeek.Sunday)
+                        return result * 5;
 
-            if (dataItem.TimeStamp.TimeOfDay.Hours < 6 || dataItem.TimeStamp.TimeOfDay.Hours > 20)
-                return result * 5;
+                    if (dataItem.TimeStamp.TimeOfDay.Hours < 6 || dataItem.TimeStamp.TimeOfDay.Hours > 20)
+                        return result * 5;
 
-            return result * 10;
+                    return result * 10;
+
+                case EnergyResourceType.ColdWater:
+                    return result * 5;
+
+                default:
+                    return result;
+            }
         };
 
         /// <summary>
-        /// Функция расчета штрафа за превышение объема потребления ресурса.
+        /// Функция расчета штрафа за превышение объема потребления в указанный момент времени и для указанного энергоресурса.
         /// </summary>
-        public Func<DataItem, double> Penalty { get; set; } = (dataItem) =>
+        public Func<DataItem, DataSource, double> Penalty { get; set; } = (dataItem, dataSource) =>
         {
-            return dataItem.ItemValue > 100 ? 100 : 0;
+            switch (dataSource.EnergyResourceType)
+            {
+                case EnergyResourceType.Electricity:
+                    return dataItem.ItemValue > 100 ? 100 : 0;
+
+                case EnergyResourceType.ColdWater:
+                    return dataItem.ItemValue > 1000 ? 100 : 0;
+
+                default:
+                    return 0;
+            }
         };
 
         /// <summary>
