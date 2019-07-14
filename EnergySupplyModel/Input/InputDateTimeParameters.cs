@@ -16,7 +16,7 @@ namespace EnergySupplyModel.Input
         /// <summary>
         /// Конец периода анализа.
         /// </summary>
-        public DateTime End { get; set; } = new DateTime(2010, 01, 11);
+        public DateTime End { get; set; } = new DateTime(2010, 01, 15);
 
         /// <summary>
         /// Шаг разбиения периода времени.
