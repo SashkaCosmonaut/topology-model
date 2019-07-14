@@ -102,7 +102,7 @@ namespace EnergySupplyModel.Input
             // Производительность объектов - кол-во затрачиваемых ресурсов для изготовления единиц продукции
             var productivity = new Dictionary<ProductType, Dictionary<EnergyResourceType, double>>
             {
-                { ProductType.Bolt, new Dictionary<EnergyResourceType, double> { { EnergyResourceType.ColdWater, 200 }, { EnergyResourceType.Electricity, 20 }  } },
+                { ProductType.Bolt, new Dictionary<EnergyResourceType, double> { { EnergyResourceType.ColdWater, 100 }, { EnergyResourceType.Electricity, 15 }  } },
                 { ProductType.Nut, new Dictionary<EnergyResourceType, double> { { EnergyResourceType.ColdWater, 100 }, { EnergyResourceType.Electricity, 10 }  } }
             };
 
