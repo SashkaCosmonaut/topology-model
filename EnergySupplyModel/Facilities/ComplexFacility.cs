@@ -25,7 +25,7 @@ namespace EnergySupplyModel.Facilities
             if (Subfacilities == null)
                 return result;
 
-            var measuredConsumptions = Subfacilities.SelectMany(subFacility => GetSubfacilityData(subFacility, parameters));
+            var measuredConsumptions = Subfacilities.SelectMany(subFacility => GetSubfacilityData(subFacility, parameters)).ToArray();
 
             if (!measuredConsumptions.Any())
                 return result;
@@ -85,7 +85,7 @@ namespace EnergySupplyModel.Facilities
             var energyResourceTypes = currentExpected.Select(q => q.DataSource.EnergyResourceType);
 
             // Собираем в общую кучу данные со всех подобъектов
-            var subfacilitiesData = Subfacilities.SelectMany(q => q.GetExpectedConsumption(parameters));
+            var subfacilitiesData = Subfacilities.SelectMany(q => q.GetExpectedConsumption(parameters)).ToArray();
 
             foreach (var energyResourceType in energyResourceTypes) // Перебирем все типы энергоресурсов
             {
