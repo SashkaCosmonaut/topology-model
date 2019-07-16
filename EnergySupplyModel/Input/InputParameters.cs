@@ -95,16 +95,40 @@ namespace EnergySupplyModel.Input
             // Постоянное потребление объектов
             var constantСonsumption = new Dictionary<EnergyResourceType, double>
             {
-                { EnergyResourceType.ColdWater, 50 },
-                { EnergyResourceType.Electricity, 10 }
+                { EnergyResourceType.ColdWater, 1 },
+                { EnergyResourceType.Electricity, 1 }
             };
 
             // Производительность объектов - кол-во затрачиваемых ресурсов для изготовления единиц продукции
             var productivity = new Dictionary<ProductType, Dictionary<EnergyResourceType, double>>
             {
-                { ProductType.Bolt, new Dictionary<EnergyResourceType, double> { { EnergyResourceType.ColdWater, 100 }, { EnergyResourceType.Electricity, 15 }  } },
-                { ProductType.Nut, new Dictionary<EnergyResourceType, double> { { EnergyResourceType.ColdWater, 100 }, { EnergyResourceType.Electricity, 10 }  } }
+                { ProductType.Bolt, new Dictionary<EnergyResourceType, double> { { EnergyResourceType.ColdWater, 11 }, { EnergyResourceType.Electricity, 1 }  } },
+                { ProductType.Nut, new Dictionary<EnergyResourceType, double> { { EnergyResourceType.ColdWater, 9.5 }, { EnergyResourceType.Electricity, 1 }  } }
             };
+
+            // План производства болтов для участков цеха 1
+            Dictionary<ProductType, int> boltProductionPlan(DateTime dateTime)
+            {
+                if (dateTime.Hour > 7)                      // Только в рабочее время, с 8 до 23 включительно, производим
+                    return new Dictionary<ProductType, int>
+                    {
+                        { ProductType.Bolt, 50 }
+                    };
+
+                return new Dictionary<ProductType, int>();
+            }
+
+            // План производства гаек для участков цеха 2
+            Dictionary<ProductType, int> nutProductionPlan(DateTime dateTime)
+            {
+                if (dateTime.Hour > 7)                      // Только в рабочее время, с 8 до 23 включительно, производим
+                    return new Dictionary<ProductType, int>
+                    {
+                        { ProductType.Nut, 50 }
+                    };
+
+                return new Dictionary<ProductType, int>();
+            }
 
             // Иерархие объектов предприятия и их параметры
             Factory = new ComplexFacility
@@ -119,9 +143,9 @@ namespace EnergySupplyModel.Input
                         ConstantConsumption = constantСonsumption,
                         Subfacilities = new []
                         {
-                            new Facility { Name = "Area1.1", ConstantConsumption = constantСonsumption, Productivity = productivity },
-                            new Facility { Name = "Area1.2", ConstantConsumption = constantСonsumption, Productivity = productivity  },
-                            new Facility { Name = "Area1.3", ConstantConsumption = constantСonsumption, Productivity = productivity  },
+                            new Facility { Name = "Area1.1", ConstantConsumption = constantСonsumption, Productivity = productivity, ProductionPlan = boltProductionPlan },
+                            new Facility { Name = "Area1.2", ConstantConsumption = constantСonsumption, Productivity = productivity, ProductionPlan = boltProductionPlan },
+                            new Facility { Name = "Area1.3", ConstantConsumption = constantСonsumption, Productivity = productivity, ProductionPlan = boltProductionPlan },
                         }
                     },
                     new ComplexFacility
@@ -130,9 +154,9 @@ namespace EnergySupplyModel.Input
                         ConstantConsumption = constantСonsumption,
                         Subfacilities = new []
                         {
-                            new Facility { Name = "Area2.1", ConstantConsumption = constantСonsumption, Productivity = productivity  },
-                            new Facility { Name = "Area2.2", ConstantConsumption = constantСonsumption, Productivity = productivity  },
-                            new Facility { Name = "Area2.3", ConstantConsumption = constantСonsumption, Productivity = productivity  },
+                            new Facility { Name = "Area2.1", ConstantConsumption = constantСonsumption, Productivity = productivity, ProductionPlan = nutProductionPlan },
+                            new Facility { Name = "Area2.2", ConstantConsumption = constantСonsumption, Productivity = productivity, ProductionPlan = nutProductionPlan },
+                            new Facility { Name = "Area2.3", ConstantConsumption = constantСonsumption, Productivity = productivity, ProductionPlan = nutProductionPlan },
                         }
                     }
                 }
