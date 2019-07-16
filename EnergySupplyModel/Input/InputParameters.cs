@@ -27,14 +27,14 @@ namespace EnergySupplyModel.Input
         public double EpsilonC = 800;
 
         /// <summary>
-        /// Затраты на мероприятия по оптимизации данного объекта.
-        /// </summary>
-        public double ActivityCost { get; set; } = 1000;
-
-        /// <summary>
         /// Параметры времени и даты для модели. 
         /// </summary>
         public InputDateTimeParameters DateTimeParams { get; set; } = new InputDateTimeParameters();
+
+        /// <summary>
+        /// Множество всех мероприятий, которые применяются на предприятии.
+        /// </summary>
+        public Measure[] Measures { get; set; }
 
         /// <summary>
         /// Функция расчета стоимости энергоресурса в укзанный момент времени и для указанного энергоресурса.
