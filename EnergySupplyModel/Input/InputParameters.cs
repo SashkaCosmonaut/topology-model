@@ -130,33 +130,48 @@ namespace EnergySupplyModel.Input
                 return new Dictionary<ProductType, int>();
             }
 
+            // Параметры участков первого и второго цехов
+            var area1Parameters = new FacilityParameters
+            {
+                ConstantConsumption = constantСonsumption,
+                Productivity = productivity,
+                ProductionPlan = boltProductionPlan
+            };
+
+            var area2Parameters = new FacilityParameters
+            {
+                ConstantConsumption = constantСonsumption,
+                Productivity = productivity,
+                ProductionPlan = nutProductionPlan
+            };
+
             // Иерархие объектов предприятия и их параметры
             Factory = new ComplexFacility
             {
                 Name = "Factory",
-                ConstantConsumption = constantСonsumption,
+                Parameters = new FacilityParameters { ConstantConsumption = constantСonsumption },
                 Subfacilities = new[]
                 {
                     new ComplexFacility
                     {
                         Name = "Workshop1",
-                        ConstantConsumption = constantСonsumption,
+                        Parameters = new FacilityParameters { ConstantConsumption = constantСonsumption },
                         Subfacilities = new []
                         {
-                            new Facility { Name = "Area1.1", ConstantConsumption = constantСonsumption, Productivity = productivity, ProductionPlan = boltProductionPlan },
-                            new Facility { Name = "Area1.2", ConstantConsumption = constantСonsumption, Productivity = productivity, ProductionPlan = boltProductionPlan },
-                            new Facility { Name = "Area1.3", ConstantConsumption = constantСonsumption, Productivity = productivity, ProductionPlan = boltProductionPlan },
+                            new Facility { Name = "Area1.1", Parameters = area1Parameters },
+                            new Facility { Name = "Area1.2", Parameters = area1Parameters  },
+                            new Facility { Name = "Area1.3", Parameters = area1Parameters  },
                         }
                     },
                     new ComplexFacility
                     {
                         Name = "Workshop2",
-                        ConstantConsumption = constantСonsumption,
+                        Parameters = new FacilityParameters { ConstantConsumption = constantСonsumption },
                         Subfacilities = new []
                         {
-                            new Facility { Name = "Area2.1", ConstantConsumption = constantСonsumption, Productivity = productivity, ProductionPlan = nutProductionPlan },
-                            new Facility { Name = "Area2.2", ConstantConsumption = constantСonsumption, Productivity = productivity, ProductionPlan = nutProductionPlan },
-                            new Facility { Name = "Area2.3", ConstantConsumption = constantСonsumption, Productivity = productivity, ProductionPlan = nutProductionPlan },
+                            new Facility { Name = "Area2.1", Parameters = area2Parameters },
+                            new Facility { Name = "Area2.2", Parameters = area2Parameters },
+                            new Facility { Name = "Area2.3", Parameters = area2Parameters },
                         }
                     }
                 }
