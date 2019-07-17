@@ -149,29 +149,29 @@ namespace EnergySupplyModel.Input
             Factory = new ComplexFacility
             {
                 Name = "Factory",
-                Parameters = new FacilityParameters { ConstantConsumption = constantСonsumption },
+                CurrentParameters = new FacilityParameters { ConstantConsumption = constantСonsumption },
                 Subfacilities = new[]
                 {
                     new ComplexFacility
                     {
                         Name = "Workshop1",
-                        Parameters = new FacilityParameters { ConstantConsumption = constantСonsumption },
+                        CurrentParameters = new FacilityParameters { ConstantConsumption = constantСonsumption },
                         Subfacilities = new []
                         {
-                            new Facility { Name = "Area1.1", Parameters = area1Parameters },
-                            new Facility { Name = "Area1.2", Parameters = area1Parameters  },
-                            new Facility { Name = "Area1.3", Parameters = area1Parameters  },
+                            new Facility { Name = "Area1.1", CurrentParameters = area1Parameters },
+                            new Facility { Name = "Area1.2", CurrentParameters = area1Parameters },
+                            new Facility { Name = "Area1.3", CurrentParameters = area1Parameters },
                         }
                     },
                     new ComplexFacility
                     {
                         Name = "Workshop2",
-                        Parameters = new FacilityParameters { ConstantConsumption = constantСonsumption },
+                        CurrentParameters = new FacilityParameters { ConstantConsumption = constantСonsumption },
                         Subfacilities = new []
                         {
-                            new Facility { Name = "Area2.1", Parameters = area2Parameters },
-                            new Facility { Name = "Area2.2", Parameters = area2Parameters },
-                            new Facility { Name = "Area2.3", Parameters = area2Parameters },
+                            new Facility { Name = "Area2.1", CurrentParameters = area2Parameters },
+                            new Facility { Name = "Area2.2", CurrentParameters = area2Parameters },
+                            new Facility { Name = "Area2.3", CurrentParameters = area2Parameters },
                         }
                     }
                 }

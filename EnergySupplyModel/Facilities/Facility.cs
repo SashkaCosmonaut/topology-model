@@ -19,9 +19,14 @@ namespace EnergySupplyModel.Facilities
         public string Name { get; set; }
 
         /// <summary>
-        /// Параметры данного объекта предприятия.
+        /// Текущие параметры данного объекта предприятия.
         /// </summary>
-        public FacilityParameters Parameters { get; set; }
+        public FacilityParameters CurrentParameters { get; set; }
+
+        /// <summary>
+        /// Параметры данного объекта предприятия после выполнения мероприятий.
+        /// </summary>
+        public FacilityParameters AfterMesuresParameters { get; set; }
 
         /// <summary>
         /// Функция рассчета ожидаемоего значения потребления энергоресурса с текущими характеристиками данного объекта.
@@ -30,10 +35,35 @@ namespace EnergySupplyModel.Facilities
         /// <returns>Множество данных различного потребления.</returns>
         public virtual IEnumerable<DataSet> GetExpectedConsumption(InputDateTimeParameters dateTimeParameters)
         {
-            if (Parameters == null)
+            return GetConsumptionByParameters(dateTimeParameters, CurrentParameters, Name);
+        }
+
+        /// <summary>
+        /// Функция рассчета потенциального значения потребления энергоресурса с применением мероприятий по оптимизации.
+        /// </summary>
+        /// <param name="dateTimeParameters">Параметры времени и даты для запроса данных.</param>
+        /// <returns>Данные потребления.</returns>
+        public IEnumerable<DataSet> GetPotentialConsumption(InputDateTimeParameters dateTimeParameters)
+        {
+            if (AfterMesuresParameters == null)
                 return new DataSet[] { };
 
-            var energyResourceTypes = GetAllEnergyResourceTypes();
+            return GetConsumptionByParameters(dateTimeParameters, AfterMesuresParameters, Name);
+        }
+
+        /// <summary>
+        /// Получить потребление некоторого объекта в соответствии с параметрами.
+        /// </summary>
+        /// <param name="dateTimeParameters">Временные параметры запроса получения данных.</param>
+        /// <param name="facilityParameters">Параметры объекта предприятия.</param>
+        /// <param name="facilityName">Наименование объекта предприятия.</param>
+        /// <returns>Множество данных различного типа потребления.</returns>
+        protected static IEnumerable<DataSet> GetConsumptionByParameters(InputDateTimeParameters dateTimeParameters, FacilityParameters facilityParameters, string facilityName)
+        {
+            if (facilityParameters == null)     // Без параметров предприятия делать нечего
+                return new DataSet[] { };
+
+            var energyResourceTypes = GetAllEnergyResourceTypes(facilityParameters);
 
             // Для каждого типа потребляемых энергоресрсов создаём датасет
             var dataSets = energyResourceTypes.Select(energyResourceType => new DataSet
@@ -41,7 +71,7 @@ namespace EnergySupplyModel.Facilities
                 DataSource = new DataSource
                 {
                     EnergyResourceType = energyResourceType,
-                    FacilityName = Name,
+                    FacilityName = facilityName,
                     TimeInterval = dateTimeParameters.Interval
                 }
             }).ToArray();
@@ -52,15 +82,15 @@ namespace EnergySupplyModel.Facilities
             // Формируем множество объектов дат за указанный период времени от start до end и перебираем его
             foreach (var dateTime in Enumerable.Range(0, numberOfDataItems).Select(hour => dateTimeParameters.Start.AddHours(hour)))
             {
-                var productionConsumption = GetProductionConsumption(dateTime); // Получаем значение потребления в данный момент
+                var productionConsumption = GetProductionConsumption(dateTime, facilityParameters); // Получаем значение потребления в данный момент
 
                 foreach (var dataSet in dataSets)   // Наполняем датасеты значениями соответствующих типов
                 {
                     var energyResourceType = dataSet.DataSource.EnergyResourceType;
 
                     // Потребление состоит из постоянного и зависящего от производительности
-                    var currentConstantConsumption = Parameters.ConstantConsumption.ContainsKey(energyResourceType)
-                        ? Parameters.ConstantConsumption[energyResourceType]
+                    var currentConstantConsumption = facilityParameters.ConstantConsumption.ContainsKey(energyResourceType)
+                        ? facilityParameters.ConstantConsumption[energyResourceType]
                         : 0;
 
                     var currentProductionConsumption = productionConsumption.ContainsKey(energyResourceType)
@@ -82,20 +112,21 @@ namespace EnergySupplyModel.Facilities
         /// Получить все типы потребляемых энергоресурсов.
         /// </summary>
         /// <returns>Множество типов энерогоресурсов.</returns>
-        protected IEnumerable<EnergyResourceType> GetAllEnergyResourceTypes()
+        protected static IEnumerable<EnergyResourceType> GetAllEnergyResourceTypes(FacilityParameters facilityParameters)
         {
-            if (Parameters == null)
+            if (facilityParameters == null)
                 return new EnergyResourceType[] { };
 
-            // Узнаем, какие энергоресурсы потребляются постоянно и перемено и суммируем
-            var constantConsumptionTypes = Parameters.ConstantConsumption != null
-                ? Parameters.ConstantConsumption.Keys.ToArray() 
+            // Узнаем, какие энергоресурсы потребляются постоянно и перемено
+            var constantConsumptionTypes = facilityParameters.ConstantConsumption != null
+                ? facilityParameters.ConstantConsumption.Keys.ToArray() 
                 : new EnergyResourceType[] { };
 
-            var productionConsumptionTypes = Parameters.Productivity != null 
-                ? Parameters.Productivity.SelectMany(q => q.Value.Keys)
+            var productionConsumptionTypes = facilityParameters.Productivity != null 
+                ? facilityParameters.Productivity.SelectMany(q => q.Value.Keys)
                 : new EnergyResourceType[] { };
 
+            // Объединяем множества и удаляем повторения
             return Enumerable.Concat(constantConsumptionTypes, productionConsumptionTypes).Distinct();
         }
     
@@ -104,17 +135,17 @@ namespace EnergySupplyModel.Facilities
         /// </summary>
         /// <param name="timeStamp">Момент времени.</param>
         /// <returns>Значение потребленного энергоресурса в момент времени.</returns>
-        protected Dictionary<EnergyResourceType, double> GetProductionConsumption(DateTime timeStamp)
+        protected static Dictionary<EnergyResourceType, double> GetProductionConsumption(DateTime timeStamp, FacilityParameters facilityParameters)
         {
-            if (Parameters == null || Parameters.Productivity == null || 
-                Parameters.ProductionPlan == null || !Parameters.Productivity.Any())
+            if (facilityParameters == null || facilityParameters.Productivity == null ||
+                facilityParameters.ProductionPlan == null || !facilityParameters.Productivity.Any())
                     return new Dictionary<EnergyResourceType, double>();
 
-            var productionVolumes = Parameters.ProductionPlan.Invoke(timeStamp);
+            var productionVolumes = facilityParameters.ProductionPlan.Invoke(timeStamp);
 
             // Получаем все объемы потребленных энергоресурсов на производство изделий определённого количества
             var productionConsumption = productionVolumes.Select(production =>
-                Parameters. Productivity[production.Key].ToDictionary(
+                facilityParameters. Productivity[production.Key].ToDictionary(
                         consumption => consumption.Key, 
                         consumption => consumption.Value * production.Value));
 
@@ -123,16 +154,6 @@ namespace EnergySupplyModel.Facilities
                 .SelectMany(consumption => consumption)
                 .ToLookup(consumption => consumption.Key, consumption => consumption.Value)
                 .ToDictionary(consumption => consumption.Key, consumption => consumption.Sum());
-        }
-
-        /// <summary>
-        /// Функция рассчета потенциального значения потребления энергоресурса с применением мероприятий по оптимизации.
-        /// </summary>
-        /// <param name="dateTimeParameters">Параметры времени и даты для запроса данных.</param>
-        /// <returns>Данные потребления.</returns>
-        public IEnumerable<DataSet> GetPotentialConsumption(InputDateTimeParameters dateTimeParameters)
-        {
-            return new DataSet[] { };
         }
 
         /// <summary>
