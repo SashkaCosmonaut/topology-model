@@ -1,6 +1,7 @@
 ﻿using EnergySupplyModel.Enumerations;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EnergySupplyModel.Facilities
 {
@@ -26,5 +27,22 @@ namespace EnergySupplyModel.Facilities
         /// Может браться из файла или БД, аналогично тому, как берутся данные потребления со средств измерения.
         /// </summary>
         public Func<DateTime, Dictionary<ProductType, int>> ProductionPlan { get; set; }
+
+        /// <summary>
+        /// Заполнить недостающие, являющиеся null, свойства текущего объекта параметров,
+        /// данными из другого объекта параметров, если его параметры не null.
+        /// </summary>
+        /// <param name="otherFacilityParameters">Другой объект параметров.</param>
+        public void FillMissingData(FacilityParameters otherFacilityParameters)
+        {
+            if (ConstantConsumption == null && otherFacilityParameters.ConstantConsumption != null)
+                ConstantConsumption = otherFacilityParameters.ConstantConsumption.ToDictionary(q => q.Key, q => q.Value);
+
+            if (Productivity == null && otherFacilityParameters.Productivity != null)
+                Productivity = otherFacilityParameters.Productivity.ToDictionary(q => q.Key, q => q.Value.ToDictionary(w => w.Key, w => w.Value));
+
+            if (ProductionPlan == null && otherFacilityParameters.ProductionPlan != null)
+                ProductionPlan = otherFacilityParameters.ProductionPlan.Clone() as Func<DateTime, Dictionary<ProductType, int>>;
+        }
     }
 }

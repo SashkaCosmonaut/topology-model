@@ -48,6 +48,9 @@ namespace EnergySupplyModel.Facilities
             if (AfterMesuresParameters == null)
                 return new DataSet[] { };
 
+            // Если в новых параметрах какие-то параметры не заданы, используем параметры по умолчанию
+            AfterMesuresParameters.FillMissingData(CurrentParameters);
+
             return GetConsumptionByParameters(dateTimeParameters, AfterMesuresParameters, Name);
         }
 
