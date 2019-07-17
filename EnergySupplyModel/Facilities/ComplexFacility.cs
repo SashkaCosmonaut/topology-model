@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace EnergySupplyModel.Facilities
 {
+    /// <summary>
+    /// Составной объект предприятия.
+    /// </summary>
     public class ComplexFacility : Facility
     {
         /// <summary>
@@ -14,7 +17,7 @@ namespace EnergySupplyModel.Facilities
         public IEnumerable<Facility> Subfacilities { get; set; }
 
         /// <summary>
-        /// Суммарное значение потребления энергоресурса вложенными подобъектами данного объекта.
+        /// Суммарное значение потребления энергоресурсов вложенными подобъектами данного объекта.
         /// </summary>
         /// <param name="parameters">Параметры времени и даты для запроса данных.</param>
         /// <returns>Данные потребления.</returns>
