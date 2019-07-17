@@ -32,5 +32,14 @@ namespace EnergySupplyModel.Materials
         /// Агрегированная оценка качества данных в диапазоне [0..1].
         /// </summary>
         public double DQTotalAssessment { get; set; }
+
+        /// <summary>
+        /// На данный момент при преобразовании элемента данных в строку интересно только его значение.
+        /// </summary>
+        /// <returns>Строковое представление элемента данных, содержащее только его значение.</returns>
+        public override string ToString()
+        {
+            return ItemValue.ToString("F");
+        }
     }
 }
