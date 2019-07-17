@@ -75,11 +75,11 @@ namespace EnergySupplyModel.Input
         /// <summary>
         /// Функция расчета стоимости энергоресурса в укзанный момент времени и для указанного энергоресурса.
         /// </summary>
-        public Func<DataItem, DataSource, double> EnergyResourceCost { get; set; } = (dataItem, dataSource) =>
+        public Func<DataItem, EnergyResourceType, double> EnergyResourceCost { get; set; } = (dataItem, energyResourceType) =>
         {
             var result = dataItem.ItemValue;
 
-            switch (dataSource.EnergyResourceType)
+            switch (energyResourceType)
             {
                 case EnergyResourceType.Electricity:
                     if (dataItem.TimeStamp.DayOfWeek == DayOfWeek.Saturday || dataItem.TimeStamp.DayOfWeek == DayOfWeek.Sunday)
@@ -101,9 +101,9 @@ namespace EnergySupplyModel.Input
         /// <summary>
         /// Функция расчета штрафа за превышение объема потребления в указанный момент времени и для указанного энергоресурса.
         /// </summary>
-        public Func<DataItem, DataSource, double> Penalty { get; set; } = (dataItem, dataSource) =>
+        public Func<DataItem, EnergyResourceType, double> Penalty { get; set; } = (dataItem, energyResourceType) =>
         {
-            switch (dataSource.EnergyResourceType)
+            switch (energyResourceType)
             {
                 case EnergyResourceType.Electricity:
                     return dataItem.ItemValue > 100 ? 100 : 0;
@@ -129,14 +129,14 @@ namespace EnergySupplyModel.Input
         public InputParameters()
         {
             // Постоянное потребление объектов
-            Func<DateTime, Dictionary<EnergyResourceType, double>> constantСonsumption = (dateTime) =>
+            Dictionary<EnergyResourceType, double> constantСonsumption(DateTime dateTime)
             {
                 return new Dictionary<EnergyResourceType, double>
                 {
                     { EnergyResourceType.ColdWater, 1 },
                     { EnergyResourceType.Electricity, 1 }
                 };
-            };
+            }
 
             // Производительность объектов - кол-во затрачиваемых ресурсов для изготовления единиц продукции
             var productivity = new Dictionary<ProductType, Dictionary<EnergyResourceType, double>>

@@ -134,11 +134,11 @@ namespace EnergySupplyModel
                     continue;
 
                 // Рассчитываем ожидаемую и потенциальную стоимости, суммируя значения за весь период и ото всех источников
-                var expectedCost = expectedEnergyResourceData.Sum(q => q.Sum(w => Params.EnergyResourceCost.Invoke(w.Value, q.DataSource))) +
-                                   expectedEnergyResourceData.Sum(q => q.Sum(w => Params.Penalty.Invoke(w.Value, q.DataSource)));
+                var expectedCost = expectedEnergyResourceData.Sum(q => q.Sum(w => Params.EnergyResourceCost.Invoke(w.Value, q.DataSource.EnergyResourceType))) +
+                                   expectedEnergyResourceData.Sum(q => q.Sum(w => Params.Penalty.Invoke(w.Value, q.DataSource.EnergyResourceType)));
 
-                var potentialCost = potentialEnergyResourceData.Sum(q => q.Sum(w => Params.EnergyResourceCost.Invoke(w.Value, q.DataSource))) +
-                                    potentialEnergyResourceData.Sum(q => q.Sum(w => Params.Penalty.Invoke(w.Value, q.DataSource)));
+                var potentialCost = potentialEnergyResourceData.Sum(q => q.Sum(w => Params.EnergyResourceCost.Invoke(w.Value, q.DataSource.EnergyResourceType))) +
+                                    potentialEnergyResourceData.Sum(q => q.Sum(w => Params.Penalty.Invoke(w.Value, q.DataSource.EnergyResourceType)));
 
                 // Добавляем затраты на мероприятия, если они есть
                 potentialCost +=  facility?.AppliedMeasure?.Cost ?? 0;
