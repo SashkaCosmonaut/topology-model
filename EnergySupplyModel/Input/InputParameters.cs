@@ -42,10 +42,13 @@ namespace EnergySupplyModel.Input
                 Cost = 100,
                 NewFacilityParameters = new FacilityParameters
                 {
-                    ConstantConsumption = new Dictionary<EnergyResourceType, double>
+                    ConstantConsumption = (dateTime) =>
                     {
-                        { EnergyResourceType.ColdWater, 0 },
-                        { EnergyResourceType.Electricity, 0 }
+                        return new Dictionary<EnergyResourceType, double>
+                        {
+                            { EnergyResourceType.ColdWater, 0 },
+                            { EnergyResourceType.Electricity, 0 }
+                        };
                     }
                 }
             },
@@ -126,10 +129,13 @@ namespace EnergySupplyModel.Input
         public InputParameters()
         {
             // Постоянное потребление объектов
-            var constantСonsumption = new Dictionary<EnergyResourceType, double>
+            Func<DateTime, Dictionary<EnergyResourceType, double>> constantСonsumption = (dateTime) =>
             {
-                { EnergyResourceType.ColdWater, 1 },
-                { EnergyResourceType.Electricity, 1 }
+                return new Dictionary<EnergyResourceType, double>
+                {
+                    { EnergyResourceType.ColdWater, 1 },
+                    { EnergyResourceType.Electricity, 1 }
+                };
             };
 
             // Производительность объектов - кол-во затрачиваемых ресурсов для изготовления единиц продукции

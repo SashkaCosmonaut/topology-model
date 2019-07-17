@@ -67,7 +67,7 @@ namespace EnergySupplyModel.Facilities
             if (facilityParameters == null)     // Без параметров предприятия делать нечего
                 return new DataSet[] { };
 
-            var energyResourceTypes = GetAllEnergyResourceTypes(facilityParameters);
+            var energyResourceTypes = GetAllEnergyResourceTypes(dateTimeParameters, facilityParameters);
 
             // Для каждого типа потребляемых энергоресрсов создаём датасет
             var dataSets = energyResourceTypes.Select(energyResourceType => new DataSet
@@ -92,9 +92,11 @@ namespace EnergySupplyModel.Facilities
                 {
                     var energyResourceType = dataSet.DataSource.EnergyResourceType;
 
+                    var constantConsumption = facilityParameters.ConstantConsumption.Invoke(dateTime);
+
                     // Потребление состоит из постоянного и зависящего от производительности
-                    var currentConstantConsumption = facilityParameters.ConstantConsumption.ContainsKey(energyResourceType)
-                        ? facilityParameters.ConstantConsumption[energyResourceType]
+                    var currentConstantConsumption = constantConsumption.ContainsKey(energyResourceType)
+                        ? constantConsumption[energyResourceType]
                         : 0;
 
                     var currentProductionConsumption = productionConsumption.ContainsKey(energyResourceType)
@@ -115,15 +117,17 @@ namespace EnergySupplyModel.Facilities
         /// <summary>
         /// Получить все типы потребляемых энергоресурсов.
         /// </summary>
+        /// <param name="dateTimeParameters">Временные параметры запроса получения данных.</param>
+        /// <param name="facilityParameters">Параметры объекта предприятия.</param>
         /// <returns>Множество типов энерогоресурсов.</returns>
-        protected static IEnumerable<EnergyResourceType> GetAllEnergyResourceTypes(FacilityParameters facilityParameters)
+        protected static IEnumerable<EnergyResourceType> GetAllEnergyResourceTypes(InputDateTimeParameters dateTimeParameters, FacilityParameters facilityParameters)
         {
             if (facilityParameters == null)
                 return new EnergyResourceType[] { };
 
             // Узнаем, какие энергоресурсы потребляются постоянно и перемено
             var constantConsumptionTypes = facilityParameters.ConstantConsumption != null
-                ? facilityParameters.ConstantConsumption.Keys.ToArray() 
+                ? facilityParameters.ConstantConsumption.Invoke(dateTimeParameters.Start).Keys.ToArray() 
                 : new EnergyResourceType[] { };
 
             var productionConsumptionTypes = facilityParameters.Productivity != null 

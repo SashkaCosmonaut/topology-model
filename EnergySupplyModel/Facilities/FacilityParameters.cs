@@ -11,9 +11,11 @@ namespace EnergySupplyModel.Facilities
     public class FacilityParameters
     {
         /// <summary>
-        /// Постоянное потребление данного объекте в виде словаря, где ключ - тип энергоресурса, а значение - объем потребления.
+        /// Функция расчета постоянного потребления данного объекта в зависимости от времени, возвращающая словарь, 
+        /// где ключ - тип энергоресурса, а значение - объем потребления.Предполагается, что ключи словаря 
+        /// возвращаемого значения со временем всегда одинаковые. 
         /// </summary>
-        public Dictionary<EnergyResourceType, double> ConstantConsumption { get; set; }
+        public Func<DateTime, Dictionary<EnergyResourceType, double>> ConstantConsumption { get; set; }
 
         /// <summary>
         /// Производительность объекта, которая задаётся как словарь, в котором ключ - это тип продукции, а значение - 
@@ -36,7 +38,7 @@ namespace EnergySupplyModel.Facilities
         public void FillMissingData(FacilityParameters otherFacilityParameters)
         {
             if (ConstantConsumption == null && otherFacilityParameters.ConstantConsumption != null)
-                ConstantConsumption = otherFacilityParameters.ConstantConsumption.ToDictionary(q => q.Key, q => q.Value);
+                ConstantConsumption = otherFacilityParameters.ConstantConsumption.Clone() as Func<DateTime, Dictionary<EnergyResourceType, double>>;
 
             if (Productivity == null && otherFacilityParameters.Productivity != null)
                 Productivity = otherFacilityParameters.Productivity.ToDictionary(q => q.Key, q => q.Value.ToDictionary(w => w.Key, w => w.Value));
