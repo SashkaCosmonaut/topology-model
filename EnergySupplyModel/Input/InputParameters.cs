@@ -34,7 +34,40 @@ namespace EnergySupplyModel.Input
         /// <summary>
         /// Множество всех мероприятий, которые применяются на предприятии.
         /// </summary>
-        public Measure[] Measures { get; set; }
+        public Measure[] Measures { get; set; } = new Measure[]
+        {
+            new Measure
+            {
+                Name = "Мероприятие на Area1.3",
+                Cost = 100,
+                NewFacilityParameters = new FacilityParameters
+                {
+                    ConstantConsumption = new Dictionary<EnergyResourceType, double>
+                    {
+                        { EnergyResourceType.ColdWater, 0 },
+                        { EnergyResourceType.Electricity, 0 }
+                    }
+                }
+            },
+            new Measure
+            {
+                Name = "Мероприятие на Area2.3",
+                Cost = 10000,
+                NewFacilityParameters = new FacilityParameters
+                {
+                    ProductionPlan = (dateTime) =>
+                    {
+                        if (dateTime.Hour < 8 || dateTime.Hour > 19)
+                            return new Dictionary<ProductType, int>
+                            {
+                                { ProductType.Nut, 50 }
+                            };
+
+                        return new Dictionary<ProductType, int>();
+                    }
+                }
+            }
+        };
 
         /// <summary>
         /// Функция расчета стоимости энергоресурса в укзанный момент времени и для указанного энергоресурса.
@@ -160,7 +193,7 @@ namespace EnergySupplyModel.Input
                         {
                             new Facility { Name = "Area1.1", CurrentParameters = area1Parameters },
                             new Facility { Name = "Area1.2", CurrentParameters = area1Parameters },
-                            new Facility { Name = "Area1.3", CurrentParameters = area1Parameters },
+                            new Facility { Name = "Area1.3", CurrentParameters = area1Parameters, AfterMesuresParameters = Measures[0].NewFacilityParameters },
                         }
                     },
                     new ComplexFacility
@@ -171,7 +204,7 @@ namespace EnergySupplyModel.Input
                         {
                             new Facility { Name = "Area2.1", CurrentParameters = area2Parameters },
                             new Facility { Name = "Area2.2", CurrentParameters = area2Parameters },
-                            new Facility { Name = "Area2.3", CurrentParameters = area2Parameters },
+                            new Facility { Name = "Area2.3", CurrentParameters = area2Parameters, AfterMesuresParameters = Measures[1].NewFacilityParameters },
                         }
                     }
                 }
