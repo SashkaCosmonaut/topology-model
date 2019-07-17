@@ -114,9 +114,14 @@ namespace EnergySupplyModel
         /// <param name="facility">Проверяемый объект предприятия.</param>
         protected static void CheckEffectDiff(Facility facility)
         {
-            // Получаем ожидаемое и потенциальное значения потребления и группируем их по типам энергоресурсов
-            var expectedConsumption = facility.GetExpectedConsumption(Params.DateTimeParams).GroupBy(q => q.DataSource.EnergyResourceType);
+            // Получаем потенциальное значениe потребления и группируем данные по типам энергоресурсов
             var potentialConsumption = facility.GetPotentialConsumption(Params.DateTimeParams).GroupBy(q => q.DataSource.EnergyResourceType);
+
+            if (potentialConsumption == null || !potentialConsumption.Any())
+                return;
+
+            // Получаем ожидаемое значениe потребления и группируем данные по типам энергоресурсов
+            var expectedConsumption = facility.GetExpectedConsumption(Params.DateTimeParams).GroupBy(q => q.DataSource.EnergyResourceType);
 
             foreach (var expectedEnergyResourceData in expectedConsumption)         // Перебираем данные по типам энергоресурсов
             {
