@@ -24,9 +24,10 @@ namespace EnergySupplyModel.Facilities
         public FacilityParameters CurrentParameters { get; set; }
 
         /// <summary>
-        /// Параметры данного объекта предприятия после выполнения мероприятий.
+        /// Примененное к данному объекту мероприятие с обновленными параметрами
+        /// данного объекта предприятия после выполнения мероприятий.
         /// </summary>
-        public FacilityParameters AfterMesuresParameters { get; set; }
+        public Measure AppliedMeasure { get; set; }
 
         /// <summary>
         /// Функция рассчета ожидаемоего значения потребления энергоресурса с текущими характеристиками данного объекта.
@@ -45,13 +46,13 @@ namespace EnergySupplyModel.Facilities
         /// <returns>Данные потребления.</returns>
         public IEnumerable<DataSet> GetPotentialConsumption(InputDateTimeParameters dateTimeParameters)
         {
-            if (AfterMesuresParameters == null)
+            if (AppliedMeasure == null || AppliedMeasure.NewFacilityParameters == null)
                 return new DataSet[] { };
 
             // Если в новых параметрах какие-то параметры не заданы, используем параметры по умолчанию
-            AfterMesuresParameters.FillMissingData(CurrentParameters);
+            AppliedMeasure.NewFacilityParameters.FillMissingData(CurrentParameters);
 
-            return GetConsumptionByParameters(dateTimeParameters, AfterMesuresParameters, Name);
+            return GetConsumptionByParameters(dateTimeParameters, AppliedMeasure.NewFacilityParameters, Name);
         }
 
         /// <summary>

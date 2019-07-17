@@ -193,7 +193,7 @@ namespace EnergySupplyModel.Input
                         {
                             new Facility { Name = "Area1.1", CurrentParameters = area1Parameters },
                             new Facility { Name = "Area1.2", CurrentParameters = area1Parameters },
-                            new Facility { Name = "Area1.3", CurrentParameters = area1Parameters, AfterMesuresParameters = Measures[0].NewFacilityParameters },
+                            new Facility { Name = "Area1.3", CurrentParameters = area1Parameters, AppliedMeasure = Measures[0] },
                         }
                     },
                     new ComplexFacility
@@ -204,7 +204,7 @@ namespace EnergySupplyModel.Input
                         {
                             new Facility { Name = "Area2.1", CurrentParameters = area2Parameters },
                             new Facility { Name = "Area2.2", CurrentParameters = area2Parameters },
-                            new Facility { Name = "Area2.3", CurrentParameters = area2Parameters, AfterMesuresParameters = Measures[1].NewFacilityParameters },
+                            new Facility { Name = "Area2.3", CurrentParameters = area2Parameters, AppliedMeasure = Measures[1] },
                         }
                     }
                 }

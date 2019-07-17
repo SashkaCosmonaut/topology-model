@@ -141,7 +141,7 @@ namespace EnergySupplyModel
                                     potentialEnergyResourceData.Sum(q => q.Sum(w => Params.Penalty.Invoke(w.Value, q.DataSource)));
 
                 // Добавляем затраты на мероприятия, если они есть
-                potentialCost += Params.Measures != null ? Params.Measures.Sum(measure => measure.Cost) : 0;
+                potentialCost +=  facility?.AppliedMeasure?.Cost ?? 0;
 
                 var effectDiff = expectedCost - potentialCost;
 
